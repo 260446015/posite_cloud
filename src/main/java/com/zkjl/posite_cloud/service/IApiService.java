@@ -1,7 +1,6 @@
 package com.zkjl.posite_cloud.service;
 
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
-import com.zkjl.posite_cloud.domain.pojo.JobInfo;
 
 /**
  * @author yindawei
@@ -9,5 +8,7 @@ import com.zkjl.posite_cloud.domain.pojo.JobInfo;
  **/
 public interface IApiService {
 
-    JobInfo createJob(JobDTO jobDTO);
+    JobDTO createJob(JobDTO jobDTO);
+
+    Boolean updateJob(JobDTO jobDTO);
 }

@@ -3,14 +3,14 @@ server:
 spring:
   data:
     mongodb:
-      host: 127.0.0.1
-      port: 27017
-      database: local
+      host: 112.244.72.30
+      port: 44335
+      database: keyperson
   redis:
     #数据库索引
     database: 0
-    host: 127.0.0.1
-    port: 6379
+    host: 112.244.72.30
+    port: 44334
     password:
     jedis:
       pool:

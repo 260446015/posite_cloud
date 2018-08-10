@@ -2,16 +2,12 @@ package com.zkjl.posite_cloud.controller;
 
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
-import com.zkjl.posite_cloud.domain.pojo.JobInfo;
 import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IApiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -27,9 +23,9 @@ public class ApiController extends BaseController {
     @Resource
     private IApiService apiService;
 
-    @PostMapping(value = "createRedisJob")
+    @PostMapping(value = "createJob")
     public ApiResult createRedisJob(@RequestBody JobDTO jobDTO) {
-        JobInfo jobInfo;
+        JobDTO jobInfo;
         try {
             String username = getCurrentUser().getUsername();
             if (StringUtils.isEmpty(username)) {
@@ -42,5 +38,30 @@ public class ApiController extends BaseController {
             return error("创建任务失败，失败原因:" + e.getMessage());
         }
         return success(jobInfo);
+    }
+    @PostMapping(value = "updateJob")
+    public ApiResult updateJob(@RequestBody JobDTO jobDTO) {
+        Boolean flag;
+        try {
+            String username = getCurrentUser().getUsername();
+            if (StringUtils.isEmpty(username)) {
+                throw new CustomerException("用户名为空");
+            }
+            jobDTO.setUsername(username);
+            flag = apiService.updateJob(jobDTO);
+        } catch (Exception e) {
+            log.error("创建任务失败，失败原因:" + e.getMessage());
+            return error("创建任务失败，失败原因:" + e.getMessage());
+        }
+        return success(flag);
+    }
+
+    /**
+     * 获取数据
+     * @return
+     */
+    @GetMapping(value = "retrieveData")
+    public ApiResult retrieveData(){
+        return null;
     }
 }
