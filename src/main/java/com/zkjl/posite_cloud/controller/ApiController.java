@@ -1,11 +1,14 @@
 package com.zkjl.posite_cloud.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
+import com.zkjl.posite_cloud.domain.pojo.JobInfo;
 import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IApiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,6 +65,52 @@ public class ApiController extends BaseController {
      */
     @GetMapping(value = "retrieveData")
     public ApiResult retrieveData(){
-        return null;
+        JSONObject result = null;
+        String username;
+        try {
+            username = this.getCurrentUser().getUsername();
+            result = apiService.realTimeData(username);
+        } catch (Exception e) {
+            log.error("获取数据实时进度出错!",e.getMessage());
+            return error("获取数据实时进度出错!");
+        }
+        return success(result);
     }
+
+    /**
+     * 获取发展阶段分析
+     * @return
+     */
+    @GetMapping(value = "development")
+    public ApiResult development(){
+        JSONObject result = null;
+        String username;
+        try {
+            username = this.getCurrentUser().getUsername();
+            result = apiService.developmentData(username);
+        } catch (Exception e) {
+            log.error("获取发展阶段分析出错!",e.getMessage());
+            return error("获取发展阶段分析出错!");
+        }
+        return success(result);
+    }
+
+    /**
+     * 获取实时注册信息
+     * @return
+     */
+    @GetMapping(value = "timeRegist")
+    public ApiResult realTimeRegist(Integer pageNum,Integer pageSize){
+        PageImpl<JobInfo> result = null;
+        String username;
+        try {
+            username = this.getCurrentUser().getUsername();
+            result = apiService.realTimeRegist(username,pageNum,pageSize);
+        } catch (Exception e) {
+            log.error("获取实时注册信息出错!",e.getMessage());
+            return error("获取实时注册信息出错!");
+        }
+        return successPages(result);
+    }
+
 }

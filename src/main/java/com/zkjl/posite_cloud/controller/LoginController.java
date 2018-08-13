@@ -9,9 +9,11 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.security.auth.login.AccountExpiredException;
@@ -54,5 +56,11 @@ public class LoginController extends BaseController{
             }
         }
         return error(message);
+    }
+
+    @GetMapping(value = "login")
+    private ModelAndView login(ModelAndView modelAndView){
+        modelAndView.setViewName("login");
+        return modelAndView;
     }
 }
