@@ -65,7 +65,7 @@ public class ApiController extends BaseController {
      */
     @GetMapping(value = "retrieveData")
     public ApiResult retrieveData(){
-        JSONObject result = null;
+        JSONObject result;
         String username;
         try {
             username = this.getCurrentUser().getUsername();
@@ -83,7 +83,7 @@ public class ApiController extends BaseController {
      */
     @GetMapping(value = "development")
     public ApiResult development(){
-        JSONObject result = null;
+        JSONObject result;
         String username;
         try {
             username = this.getCurrentUser().getUsername();
@@ -101,7 +101,7 @@ public class ApiController extends BaseController {
      */
     @GetMapping(value = "timeRegist")
     public ApiResult realTimeRegist(Integer pageNum,Integer pageSize){
-        PageImpl<JobInfo> result = null;
+        PageImpl<JobInfo> result;
         String username;
         try {
             username = this.getCurrentUser().getUsername();

@@ -194,5 +194,5 @@ public class ShiroDbRealm extends AuthorizingRealm {
 			return true;
 		}
 	}
-	
+
 }

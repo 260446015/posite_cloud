@@ -44,7 +44,7 @@ public class ShiroConfiguration {
 
 		filterChainDefinitionMap.put("/login.html", "anon");
 		filterChainDefinitionMap.put("/**/*.html", "anon");
-		filterChainDefinitionMap.put("/**/*", "authc");
+		filterChainDefinitionMap.put("/api/*", "authc");
 
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
@@ -53,7 +53,6 @@ public class ShiroConfiguration {
 
 		shiroFilterFactoryBean.setSecurityManager(getDefaultWebSecurityManager());
 		shiroFilterFactoryBean.setLoginUrl("/login");//测试使用
-		//	shiroFilterFactoryBean.setLoginUrl("http://zhaoshang.huishu.com.cn:9323/login.do");//线上使用
 		shiroFilterFactoryBean.setSuccessUrl("/");
 		shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized.do");
 		shiroFilterFactoryBean.setFilters(filters);

@@ -50,9 +50,10 @@ public class ApiService implements IApiService {
         String taskId = getTaskId(jobDTO);
         Query query = new Query();
         query.addCriteria(Criteria.where("taskid").is(taskId)).with(Sort.by(Sort.Direction.DESC, "creationTime"));
-        JobInfo one = mongoTemplate.findOne(query, JobInfo.class, Constans.T_JOBINFO);
+        JobInfo one = mongoTemplate.findOne(query, JobInfo.class, Constans.T_MOBILEDATAS);
         if (one != null) {
             BeanUtils.copyProperties(one, jobDTO);
+            jobDTO.setLevel(getLevel(jobDTO));
             return jobDTO;
         }
         List<JobInfo> preSaveDatas = new ArrayList<>();
