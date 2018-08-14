@@ -1,9 +1,12 @@
 package com.zkjl.posite_cloud.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.Constans;
 import com.zkjl.posite_cloud.common.util.MD5Util;
+import com.zkjl.posite_cloud.common.util.MD5Utils;
 import com.zkjl.posite_cloud.common.util.PageUtil;
+import com.zkjl.posite_cloud.common.util.RequestUtils;
 import com.zkjl.posite_cloud.dao.JobInfoRepository;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.pojo.JobInfo;
@@ -187,4 +190,53 @@ public class ApiService implements IApiService {
         return level;
     }
 
+    @Override
+    public JSONObject getSentiment() {
+        long c = System.currentTimeMillis() / 1000;
+        String token = MD5Utils.generateToken(c);
+        String url = "http://114.55.179.202:8199/restserver/index/query/fullQuery?page_no=1&page_size=10&call_id=" + c + "&token=" + token + "&appid=**";
+
+        JSONObject json = new JSONObject();
+
+        //相关词
+        JSONArray array = new JSONArray();
+
+        array.add("部队");
+
+        array.add("大人");
+
+        array.add("杀人");
+
+        json.put("related", array);
+
+        //行业
+
+        json.put("industry", 1000);
+
+        //排序字段
+
+        json.put("sortField", "publishTime");
+        //排序方式
+
+        json.put("sortType", "desc");
+
+        json.put("related", array);
+
+        //查询时间范围
+
+        json.put("start_time", "2018 - 01 - 01 00:00:00 ");
+
+        json.put("end_time", "2018 - 07 - 22 23:59:59 ");
+
+
+        System.out.println(json.toString());
+        long st = System.currentTimeMillis();
+        JSONObject response = RequestUtils.sendPost(url, json.toString());
+        long et = System.currentTimeMillis();
+
+        System.out.println(et - st);
+
+        System.out.println(response);
+        return response;
+    }
 }

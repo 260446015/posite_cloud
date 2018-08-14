@@ -20,4 +20,6 @@ public interface IApiService {
     JSONObject developmentData(String username) throws Exception;
 
     PageImpl<JobInfo> realTimeRegist(String username, Integer pageNum, Integer pageSize);
+
+    JSONObject getSentiment();
 }

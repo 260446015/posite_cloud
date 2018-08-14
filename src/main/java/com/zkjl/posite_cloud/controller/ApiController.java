@@ -113,4 +113,12 @@ public class ApiController extends BaseController {
         return successPages(result);
     }
 
+    /**
+     * 获取舆情信息接口
+     */
+    @GetMapping(value = "sentiment")
+    public ApiResult sentiment(){
+        return success(apiService.getSentiment());
+    }
+
 }
