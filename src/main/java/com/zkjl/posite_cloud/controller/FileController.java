@@ -1,6 +1,7 @@
 package com.zkjl.posite_cloud.controller;
 
 import com.zkjl.posite_cloud.common.ApiResult;
+import com.zkjl.posite_cloud.common.SystemControllerLog;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IFileService;
@@ -36,6 +37,7 @@ public class FileController extends BaseController {
      */
     @PostMapping(value = "file/upload")
     @RequiresPermissions(value = {"upload1","upload2"},logical = Logical.OR)
+    @SystemControllerLog()
     @ApiOperation(value = "文件上传")
     public ApiResult upload(HttpServletRequest req) {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) req;

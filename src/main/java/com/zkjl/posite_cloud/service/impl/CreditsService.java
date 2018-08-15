@@ -2,6 +2,7 @@ package com.zkjl.posite_cloud.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.zkjl.posite_cloud.common.util.EmailUtils;
 import com.zkjl.posite_cloud.common.util.PageUtil;
 import com.zkjl.posite_cloud.dao.CreditsRepository;
 import com.zkjl.posite_cloud.dao.JobInfoRepository;
@@ -110,23 +111,25 @@ public class CreditsService implements ICreditsService {
         list.forEach(jobInfo -> {
             String mobile = jobInfo.getMobile();
             JSONArray data = jobInfo.getData();
-            data.forEach(element -> {
-                JSONObject perElement = (JSONObject) JSONObject.toJSON(element);
-                Boolean ifsuccess = perElement.getBoolean("success");
-                if (ifsuccess) {
-                    Boolean ifregister = perElement.getBoolean("register");
-                    if (ifregister) {
-                        Set<JSONObject> jsonObjects = checkMobile.get(mobile);
-                        if (jsonObjects == null) {
-                            Set<JSONObject> innerData = new HashSet<>();
-                            innerData.add(perElement);
-                            checkMobile.put(mobile, innerData);
-                        } else {
-                            jsonObjects.add(perElement);
+            if(data != null) {
+                data.forEach(element -> {
+                    JSONObject perElement = (JSONObject) JSONObject.toJSON(element);
+                    Boolean ifsuccess = perElement.getBoolean("success");
+                    if (ifsuccess) {
+                        Boolean ifregister = perElement.getBoolean("register");
+                        if (ifregister) {
+                            Set<JSONObject> jsonObjects = checkMobile.get(mobile);
+                            if (jsonObjects == null) {
+                                Set<JSONObject> innerData = new HashSet<>();
+                                innerData.add(perElement);
+                                checkMobile.put(mobile, innerData);
+                            } else {
+                                jsonObjects.add(perElement);
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         });
         List<Map.Entry<String, Set<JSONObject>>> list2 = new ArrayList<>(checkMobile.entrySet());
 
@@ -158,5 +161,10 @@ public class CreditsService implements ICreditsService {
         });
         System.out.println(result);
         return result;
+    }
+
+    @Override
+    public void sendEmail() throws Exception {
+        EmailUtils.sendEamil();
     }
 }

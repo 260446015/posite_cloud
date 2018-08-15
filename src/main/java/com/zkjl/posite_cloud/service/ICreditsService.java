@@ -11,4 +11,6 @@ import org.springframework.data.domain.PageImpl;
 public interface ICreditsService {
 
     PageImpl<JSONObject> creditsWarining(CreditsDTO creditsDTO) throws Exception;
+
+    void sendEmail() throws Exception;
 }
