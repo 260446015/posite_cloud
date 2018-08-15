@@ -6,6 +6,7 @@ import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IFileService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +35,7 @@ public class FileController extends BaseController {
      * @return
      */
     @PostMapping(value = "file/upload")
-    @RequiresPermissions(value = {"upload1","upload2"})
+    @RequiresPermissions(value = {"upload1","upload2"},logical = Logical.OR)
     @ApiOperation(value = "文件上传")
     public ApiResult upload(HttpServletRequest req) {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) req;
