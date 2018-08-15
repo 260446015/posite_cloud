@@ -180,9 +180,9 @@ public class ApiController extends BaseController {
     /**
      * 按任务id查询进度
      */
-    @GetMapping(value = "searchByTaskid")
+    @GetMapping(value = "searchByTaskidPlan")
     @ApiOperation(value = "按任务id查询进度")
-    public ApiResult searchByTaskid(String taskId) {
+    public ApiResult searchByTaskidPlan(String taskId) {
         JSONObject result;
         try {
             result = apiService.searchByTaskidPlan(taskId);
