@@ -2,6 +2,7 @@ package com.zkjl.posite_cloud.shiro;
 
 import com.zkjl.posite_cloud.dao.UserRepository;
 import com.zkjl.posite_cloud.domain.pojo.User;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -40,7 +41,8 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		LOGGER.info("===============进行权限配置================");
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 		User user = (User) principals.getPrimaryPrincipal();
-		List<String> permissions = Arrays.asList(user.getPermission());
+		String[] split = user.getPermission().split(",");
+		List<String> permissions = Arrays.asList(split);
 		authorizationInfo.addStringPermissions(permissions);
 		return authorizationInfo;
 	}
@@ -102,4 +104,5 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		principals.add(loginName, super.getName());
 		super.clearCachedAuthenticationInfo(principals);
 	}
+
 }
