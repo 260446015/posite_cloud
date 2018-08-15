@@ -3,16 +3,18 @@ package com.zkjl.posite_cloud.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
-import com.zkjl.posite_cloud.domain.pojo.JobInfo;
+import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
+import com.zkjl.posite_cloud.domain.vo.JobinfoVO;
 import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IApiService;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author yindawei
@@ -26,15 +28,18 @@ public class ApiController extends BaseController {
     @Resource
     private IApiService apiService;
 
-    @PostMapping(value = "createJob")
-    public ApiResult createRedisJob(@RequestBody JobDTO jobDTO) {
+    @GetMapping(value = "createJob")
+    public ApiResult createRedisJob(String datas) {
         JobDTO jobInfo;
         try {
             String username = getCurrentUser().getUsername();
             if (StringUtils.isEmpty(username)) {
                 throw new CustomerException("用户名为空");
             }
+            JobDTO jobDTO = new JobDTO();
             jobDTO.setUsername(username);
+            jobDTO.setDatas(datas);
+            jobDTO.setStatus("start");
             jobInfo = apiService.createJob(jobDTO);
         } catch (Exception e) {
             log.error("创建任务失败，失败原因:" + e.getMessage());
@@ -64,6 +69,7 @@ public class ApiController extends BaseController {
      * @return
      */
     @GetMapping(value = "retrieveData")
+    @ApiOperation(value = "获取数据")
     public ApiResult retrieveData(){
         JSONObject result;
         String username;
@@ -82,6 +88,7 @@ public class ApiController extends BaseController {
      * @return
      */
     @GetMapping(value = "development")
+    @ApiOperation(value = "获取发展阶段分析")
     public ApiResult development(){
         JSONObject result;
         String username;
@@ -100,25 +107,70 @@ public class ApiController extends BaseController {
      * @return
      */
     @GetMapping(value = "timeRegist")
-    public ApiResult realTimeRegist(Integer pageNum,Integer pageSize){
-        PageImpl<JobInfo> result;
+    @ApiOperation(value = "获取实时注册信息")
+    public ApiResult realTimeRegist(){
+        List<JSONObject> result;
         String username;
         try {
             username = this.getCurrentUser().getUsername();
-            result = apiService.realTimeRegist(username,pageNum,pageSize);
+            result = apiService.realTimeRegist(username);
         } catch (Exception e) {
             log.error("获取实时注册信息出错!",e.getMessage());
             return error("获取实时注册信息出错!");
         }
-        return successPages(result);
+        return success(result);
+    }
+
+    /**
+     * 获取redis任务信息
+     * @return
+     */
+    @GetMapping(value = "listJob")
+    @ApiOperation(value = "获取任务信息")
+    public ApiResult listRedisJob(){
+        List<JobinfoVO> result;
+        String username;
+        try {
+            username = this.getCurrentUser().getUsername();
+            result = apiService.listJob(username);
+        } catch (Exception e) {
+            log.error("获取redis任务信息出错!",e.getMessage());
+            return error("获取任务信息出错!");
+        }
+        return success(result);
     }
 
     /**
      * 获取舆情信息接口
      */
-    @GetMapping(value = "sentiment")
-    public ApiResult sentiment(){
-        return success(apiService.getSentiment());
+    @PostMapping(value = "sentiment")
+    @ApiOperation(value = "获取舆情信息接口")
+    public ApiResult sentiment(@RequestBody SentimentDTO sentimentDTO){
+        JSONObject result;
+        try {
+            result = apiService.getSentiment(sentimentDTO);
+        } catch (Exception e) {
+            log.error("获取舆情信息接口出错!",e.getMessage());
+            return error("获取舆情信息接口出错!");
+        }
+        return success(result);
     }
+
+    /**
+     * 按任务id查询进度
+     */
+    @GetMapping(value = "searchByTaskid")
+    @ApiOperation(value = "按任务id查询进度")
+    public ApiResult searchByTaskid(String taskId){
+        JSONObject result;
+        try {
+            result = apiService.searchByTaskid(taskId);
+        } catch (Exception e) {
+            log.error("按任务id查询进度出错!",e.getMessage());
+            return error("按任务id查询进度出错!");
+        }
+        return success(result);
+    }
+
 
 }

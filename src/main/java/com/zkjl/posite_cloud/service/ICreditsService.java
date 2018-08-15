@@ -1,8 +1,8 @@
 package com.zkjl.posite_cloud.service;
 
 import com.alibaba.fastjson.JSONObject;
-
-import java.util.List;
+import com.zkjl.posite_cloud.domain.dto.CreditsDTO;
+import org.springframework.data.domain.PageImpl;
 
 /**
  * @author yindawei
@@ -10,5 +10,5 @@ import java.util.List;
  **/
 public interface ICreditsService {
 
-    List<JSONObject> creditsWarining(String username) throws Exception;
+    PageImpl<JSONObject> creditsWarining(CreditsDTO creditsDTO) throws Exception;
 }

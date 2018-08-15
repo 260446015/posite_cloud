@@ -1,0 +1,94 @@
+
+html, body {
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+    color: #333;
+}
+.layui-form-select dl {
+    padding:0;
+    border: 0;
+}
+
+table {
+     border-collapse: separate;
+     border-spacing:1px;
+}
+
+.layui-form-select dl dd.layui-this {
+    background-color: #0d99e7;
+}
+body i{
+    font-style: normal;
+}
+body .fl{
+    float: left;
+}
+body .fr{
+    float: right;
+}
+body .cr{
+    cursor: pointer;
+}
+.layui-laypage a, .layui-laypage span {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0 16px;
+    height: 38px;
+    line-height: 38px;
+    margin: 0 -1px 5px 0;
+    background-color: #fff;
+    color: #333;
+    margin: 0 4px;
+    font-size: 12px;
+    border-radius: 2px;
+    font-size: 16px;
+}
+.layui-laypage .layui-laypage-curr .layui-laypage-em {
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    padding: 1px;
+    width: 100%;
+    height: 100%;
+    background-color: #2a93ed;
+}
+#listpage{
+    margin: 20px 0;
+}
+.layui-form-checked[lay-skin=primary] i {
+    border-color: #2a93ed;
+    background-color: #2a93ed;
+    color: #fff;
+}
+.layui-form-checkbox[lay-skin=primary]:hover i {
+    border-color: #2a93ed;
+    color: #fff;
+}
+
+
+
+
+
+
+
+
+@font-face {font-family: "iconfont";
+    src: url('//at.alicdn.com/t/font_792316_8n3d9hmhxl4.eot?t=1534232807353'); /* IE9*/
+    src: url('//at.alicdn.com/t/font_792316_8n3d9hmhxl4.eot?t=1534232807353#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('data:application/x-font-woff;charset=utf-8;base64,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') format('woff'),
+    url('//at.alicdn.com/t/font_792316_8n3d9hmhxl4.ttf?t=1534232807353') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+    url('//at.alicdn.com/t/font_792316_8n3d9hmhxl4.svg?t=1534232807353#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+    font-family:"iconfont" !important;
+    font-size:16px;
+    font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-bianji:before { content: "\e655"; }
+
+.icon-shanchu:before { content: "\e661"; }

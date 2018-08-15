@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title class="title" data-href="index">后台管理-用户</title>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=0, maximum-scale=0, user-scalable=no">
+    <meta name="Author" Content="jianghaifei"/>
+    <meta http-equiv="cache-control" content="no-cache">
+    <link rel="shortcut icon" href="../img/logozkjl2.png">
+
+    <!--不缓存-->
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <META HTTP-EQUIV="expires" CONTENT="0">
+
+    <script src="../js/common/jquery-3.3.1.min.js"></script>
+    <!--animate-->
+    <link rel="stylesheet" href="../css/common/animate.css">
+    <!--layui-->
+    <link rel="stylesheet" href="../res/layui/css/layui.css">
+
+    <!--自定义-->
+    <link rel="stylesheet" href="../css/common/common.css?version=0">
+    <link rel="stylesheet" href="../css/common/layout.css?version=0">
+    <link rel="stylesheet" href="../css/guanli.css?version=0">
+    <style>
+        body{
+            background: #edeef2;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <img class="logobox" src="../img/logozkjl1.png" alt="">
+    <div class="title">
+        <p>重点人网络筛查平台</p>
+        <p>Key    person    screening</p>
+    </div>
+    <div class="hd_nav">
+        <a href="../index.html">首页</a>
+        <a href="importan.html">重点人员</a>
+        <a href="jifenyj.html">积分预警</a>
+        <!--<a href="report.html">生成报告</a>-->
+        <a href="caijishezhi.html">采集设置</a>
+        <!--<a>追踪人员</a>-->
+        <a class="hd_active" href="houtai_user.html">后台管理</a>
+    </div>
+    <dl class="hd_dl">
+        <dd><span class="usernamecon"></span><img src="../img/defaultimg.png" alt=""></dd>
+        <dt class="hd_dt layui-anim layui-anim-upbit">
+            <p class="logout">退出登录</p>
+            <p>个人中心</p>
+        </dt>
+    </dl>
+</header>
+<section>
+    <div class="se_title">
+        <p><a href="../index.html">HOME</a>   /   后台管理-用户</p>
+    </div>
+
+    <div class="section">
+        <div class="htbtnbox">
+            <a href="houtai_user.html" class="ht_btn ht_active">用户管理</a>
+            <a href="houtai_quanxian.html" class="ht_btn">权限管理</a>
+            <a style="border-right: 1px solid #ccc;" href="houtai_rizhi.html" class="ht_btn">日志管理</a>
+        </div>
+
+        <div class="sc_title">用户列表</div>
+
+        <div class="bz_box">
+            <div class="bz_li">
+                <label>用户名</label>
+                <input type="text" class="layui-input" placeholder="请输入要查询的用户名">
+            </div>
+            <div class="bz_li">
+                <label>姓名</label>
+                <input type="text" class="layui-input" placeholder="请输入要查询的姓名">
+            </div>
+            <div class="bz_li">
+                <label>注册时间</label>
+                <input type="text" class="layui-input" id="begin" placeholder="开始时间">
+                <input type="text" class="layui-input" id="last" placeholder="结束时间" style="margin-left: 10px;">
+            </div>
+
+            <div class="layui-btn layui-btn-normal baocunbtn">查询</div>
+            <div class="layui-btn layui-btn-normal baocunbtn bc_btnadd">添加用户</div>
+        </div>
+
+        <div class="bz_tablebox">
+            <table cellspacing="0" cellpadding="0" class="bz_table">
+                <tr style="" class="bz_firtr">
+                    <th>序号</th>
+                    <th>姓名</th>
+                    <th>用户名</th>
+                    <th>性别</th>
+                    <th>年龄</th>
+                    <th>手机号</th>
+                    <th>邮箱</th>
+                    <th>单位部门</th>
+                    <th>岗位</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>姜先生</td>
+                        <td>葫芦娃</td>
+                        <td>男</td>
+                        <td>29</td>
+                        <td>17610988656</td>
+                        <td>1465089870@qq.com</td>
+                        <td>承德市公安局</td>
+                        <td>网络安全</td>
+                        <td><span class="layui-btn layui-btn-normal baocunbtn">启用</span></td>
+                        <td>
+                            <span class="iconfont icon-bianji"></span>
+                            <span class="iconfont icon-shanchu"></span>
+                        </td>
+                    </tr>
+                    <tr class="sc_zdgray">
+                        <td>1</td>
+                        <td>姜先生</td>
+                        <td>葫芦娃</td>
+                        <td>男</td>
+                        <td>29</td>
+                        <td>17610988656</td>
+                        <td>1465089870@qq.com</td>
+                        <td>承德市公安局</td>
+                        <td>网络安全</td>
+                        <td><span class="layui-btn layui-btn-normal baocunbtn bz_jinyong">启用</span></td>
+                        <td>
+                            <span class="iconfont icon-bianji"></span>
+                            <span class="iconfont icon-shanchu"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>姜先生</td>
+                        <td>葫芦娃</td>
+                        <td>男</td>
+                        <td>29</td>
+                        <td>17610988656</td>
+                        <td>1465089870@qq.com</td>
+                        <td>承德市公安局</td>
+                        <td>网络安全</td>
+                        <td><span class="layui-btn layui-btn-normal baocunbtn">启用</span></td>
+                        <td>
+                            <span class="iconfont icon-bianji"></span>
+                            <span class="iconfont icon-shanchu"></span>
+                        </td>
+                    </tr>
+                    <tr class="sc_zdgray">
+                        <td>1</td>
+                        <td>姜先生</td>
+                        <td>葫芦娃</td>
+                        <td>男</td>
+                        <td>29</td>
+                        <td>17610988656</td>
+                        <td>1465089870@qq.com</td>
+                        <td>承德市公安局</td>
+                        <td>网络安全</td>
+                        <td><span class="layui-btn layui-btn-normal baocunbtn">启用</span></td>
+                        <td>
+                            <span class="iconfont icon-bianji"></span>
+                            <span class="iconfont icon-shanchu"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>姜先生</td>
+                        <td>葫芦娃</td>
+                        <td>男</td>
+                        <td>29</td>
+                        <td>17610988656</td>
+                        <td>1465089870@qq.com</td>
+                        <td>承德市公安局</td>
+                        <td>网络安全</td>
+                        <td><span class="layui-btn layui-btn-normal baocunbtn">启用</span></td>
+                        <td>
+                            <span class="iconfont icon-bianji"></span>
+                            <span class="iconfont icon-shanchu"></span>
+                        </td>
+                    </tr>
+                    <tr class="sc_zdgray">
+                        <td>1</td>
+                        <td>姜先生</td>
+                        <td>葫芦娃</td>
+                        <td>男</td>
+                        <td>29</td>
+                        <td>17610988656</td>
+                        <td>1465089870@qq.com</td>
+                        <td>承德市公安局</td>
+                        <td>网络安全</td>
+                        <td><span class="layui-btn layui-btn-normal baocunbtn">启用</span></td>
+                        <td>
+                            <span class="iconfont icon-bianji"></span>
+                            <span class="iconfont icon-shanchu"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>姜先生</td>
+                        <td>葫芦娃</td>
+                        <td>男</td>
+                        <td>29</td>
+                        <td>17610988656</td>
+                        <td>1465089870@qq.com</td>
+                        <td>承德市公安局</td>
+                        <td>网络安全</td>
+                        <td><span class="layui-btn layui-btn-normal baocunbtn">启用</span></td>
+                        <td>
+                            <span class="iconfont icon-bianji"></span>
+                            <span class="iconfont icon-shanchu"></span>
+                        </td>
+                    </tr>
+                    <tr class="sc_zdgray">
+                        <td>1</td>
+                        <td>姜先生</td>
+                        <td>葫芦娃</td>
+                        <td>男</td>
+                        <td>29</td>
+                        <td>17610988656</td>
+                        <td>1465089870@qq.com</td>
+                        <td>承德市公安局</td>
+                        <td>网络安全</td>
+                        <td><span class="layui-btn layui-btn-normal baocunbtn">启用</span></td>
+                        <td>
+                            <span class="iconfont icon-bianji"></span>
+                            <span class="iconfont icon-shanchu"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>姜先生</td>
+                        <td>葫芦娃</td>
+                        <td>男</td>
+                        <td>29</td>
+                        <td>17610988656</td>
+                        <td>1465089870@qq.com</td>
+                        <td>承德市公安局</td>
+                        <td>网络安全</td>
+                        <td><span class="layui-btn layui-btn-normal baocunbtn">启用</span></td>
+                        <td>
+                            <span class="iconfont icon-bianji"></span>
+                            <span class="iconfont icon-shanchu"></span>
+                        </td>
+                    </tr>
+                    <tr class="sc_zdgray">
+                        <td>1</td>
+                        <td>姜先生</td>
+                        <td>葫芦娃</td>
+                        <td>男</td>
+                        <td>29</td>
+                        <td>17610988656</td>
+                        <td>1465089870@qq.com</td>
+                        <td>承德市公安局</td>
+                        <td>网络安全</td>
+                        <td><span class="layui-btn layui-btn-normal baocunbtn">启用</span></td>
+                        <td>
+                            <span class="iconfont icon-bianji"></span>
+                            <span class="iconfont icon-shanchu"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="demo" class="listpage"></div>
+        </div>
+    </div>
+</section>
+
+<div id="propo_box" class="propo_box">
+    <div class="bz_li">
+        <label>用户名</label>
+        <input type="text" class="layui-input" placeholder="请输入用户名">
+    </div>
+    <div class="bz_li">
+        <label>姓名</label>
+        <input type="text" class="layui-input" placeholder="请输入姓名">
+    </div>
+    <div class="bz_li">
+        <label>性别</label>
+        <input type="text" class="layui-input" placeholder="请输入性别">
+    </div>
+    <div class="bz_li">
+        <label>年龄</label>
+        <input type="text" class="layui-input" placeholder="请输入年龄">
+    </div>
+    <div class="bz_li">
+        <label>手机号</label>
+        <input type="text" class="layui-input" placeholder="请输入手机号码">
+    </div>
+    <div class="bz_li">
+        <label>邮箱</label>
+        <input type="text" class="layui-input" placeholder="请输入邮箱">
+    </div>
+    <div class="bz_li">
+        <label>单位部门</label>
+        <input type="text" class="layui-input" placeholder="请输入单位部门">
+    </div>
+    <div class="bz_li">
+        <label>岗位</label>
+        <input type="text" class="layui-input" placeholder="请输入岗位">
+    </div>
+
+    <div class="" style="text-align: center;">
+        <span class="layui-btn layui-btn-normal baocunbtn pro_queding">确定</span>
+        <span class="layui-btn layui-btn-normal baocunbtn pro_quxiao">取消</span>
+    </div>
+</div>
+</body>
+<script src="../res/layui/layui.all.js"></script>
+<script src="../js/common/common.js?versin=0"></script>
+<script>
+    layui.use(['laypage', 'layer','upload','laydate']);
+    var upload = layui.upload;
+    var laypage = layui.laypage;
+    var laydate = layui.laydate;
+    //常规用法
+    laydate.render({
+        elem: '#begin'
+    });
+    laydate.render({
+        elem: '#last'
+    });
+
+    //分页
+    laypage.render({
+        elem: 'demo'
+        ,count: 100
+        ,layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+        ,jump: function(obj){
+            console.log(obj)
+        }
+    });
+    zdrysc.setpagecss();
+
+
+    //启用与禁用
+    $(".bz_tablebox").on("click",".baocunbtn",function () {
+        layer.confirm('确定要进行该操作吗？', {
+            skin: 'layui-layer-lan', //样式类名
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            layer.closeAll()
+        }, function(){
+            layer.closeAll()
+        });
+    });
+    //删除
+    $(".bz_tablebox").on("click",".icon-shanchu",function () {
+        layer.confirm('确定要删除该用户吗？', {
+            skin: 'layui-layer-lan', //样式类名
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            layer.closeAll()
+        }, function(){
+            layer.closeAll()
+        });
+    });
+    //编辑
+    $(".bz_tablebox").on("click",".icon-bianji",function () {
+        $(".pro_queding").attr("data-href","1");
+        layer.open({
+            title: '新增用户',
+            area: ['760px', '330px'],
+            type: 1,
+            skin: 'layui-layer-lan', //样式类名
+            closeBtn: 1, //不显示关闭按钮
+            anim: 1,
+            content: $('#propo_box'),
+            cancel: function () {
+                $("#propo_box").hide();
+            }
+        });
+    });
+
+    //添加用户
+    $(".bc_btnadd").click(function () {
+        $(".pro_queding").attr("data-href","2");
+        layer.open({
+            title: '新增用户',
+            area: ['760px', '330px'],
+            type: 1,
+            skin: 'layui-layer-lan', //样式类名
+            closeBtn: 1, //不显示关闭按钮
+            anim: 1,
+            content: $('#propo_box'),
+            cancel: function () {
+                $("#propo_box").hide();
+            }
+        });
+    });
+
+    $(".pro_quxiao").click(function () {
+       layer.closeAll();
+        $("#propo_box").hide();
+    });
+
+    $(".pro_queding").click(function () {
+        var _index = $(this).attr("data-href");
+        if(_index=="1"){//edit
+
+        }else if(_index=="2"){//add
+
+        }
+        layer.closeAll();
+        $("#propo_box").hide();
+    });
+
+</script>
+</html>

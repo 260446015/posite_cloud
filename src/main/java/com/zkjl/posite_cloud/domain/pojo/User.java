@@ -29,7 +29,11 @@ public class User {
      */
     private Date creationTime;
     /**
-     * 拥有角色
+     * 职位
      */
-    private Role role;
+    private String jobLevel;
+    /**
+     * 拥有权限
+     */
+    private String permission;
 }

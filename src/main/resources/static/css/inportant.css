@@ -1,0 +1,121 @@
+
+
+body .layui-form-select{
+    height: 30px;
+}
+.layui-input-block {
+    margin-left: 100px;
+    min-height: 36px;
+}
+.layui-form-item {
+     margin-bottom: 0;
+    clear: both;
+}
+
+
+.zd_box{
+    padding: 0 2%;
+    clear: both;
+}
+.zd_box div{
+    height: 30px;
+    line-height: 30px;
+}
+.zd_box div span{
+    float: left;
+    width: 20%;
+    text-align: center;
+}
+
+
+
+
+
+
+/*预警设置*/
+.section{
+    background: #fff;
+}
+.yj_top{
+    width: 100%;
+    padding-top: 30px;
+}
+.yj_top li{
+    float: left;
+    width: 9.1%;
+    height: 100px;
+    margin: 0 1%;
+}
+
+.yj_li1{
+    border-top: 1px solid #ccc;
+}
+.yj_li2{
+
+}
+.yj_li2 p{
+    width: 6px;
+    height: 6px;
+    margin: 0 auto;
+    border-radius: 3px;
+
+}
+.yj_li2 dl{
+    width: 70%;
+    margin: 20px auto 0 auto;
+    padding: 3px 0;
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+}
+
+.yj_blue{
+    background: #0aa4ea;
+}
+.yj_orange{
+    background: #ff9416;
+}
+.yj_red{
+    background: red;
+}
+
+/*按钮盒子*/
+.btnbox{
+    overflow: hidden;
+    clear: both;
+    padding-left: 30px;
+    margin-bottom: 30px;
+}
+.yj_btn{
+    float: left;
+    width: 100px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    background: #0aa4ea;
+    color: #fff;
+    margin-right: 15px;
+}
+
+.yj_lanse span{
+    background: #1ba3fe;
+    opacity: 0.8;
+    color: #000;
+}
+.yj_chengse span{
+    background: #ff9416;
+    opacity: 0.8;
+    color: #000;
+}
+.yj_hongse span{
+    background: red;
+    opacity: 0.8;
+    color: #000;
+}
+
+.zd_box .baocunbtn{
+    float: none;
+    height: 24px;
+    line-height: 24px;
+    padding: 0 10px;
+}

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title class="title" data-href="index">比重设置</title>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=0, maximum-scale=0, user-scalable=no">
+    <meta name="Author" Content="jianghaifei"/>
+    <meta http-equiv="cache-control" content="no-cache">
+    <link rel="shortcut icon" href="../img/logozkjl2.png">
+
+    <!--不缓存-->
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <META HTTP-EQUIV="expires" CONTENT="0">
+
+    <script src="../js/common/jquery-3.3.1.min.js"></script>
+    <!--animate-->
+    <link rel="stylesheet" href="../css/common/animate.css">
+    <!--layui-->
+    <link rel="stylesheet" href="../res/layui/css/layui.css">
+
+    <!--自定义-->
+    <link rel="stylesheet" href="../css/common/common.css?version=0">
+    <link rel="stylesheet" href="../css/common/layout.css?version=0">
+    <link rel="stylesheet" href="../css/caiji.css?version=0">
+    <style>
+        body{
+            background: #edeef2;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <img class="logobox" src="../img/logozkjl1.png" alt="">
+    <div class="title">
+        <p>重点人网络筛查平台</p>
+        <p>Key    person    screening</p>
+    </div>
+    <div class="hd_nav">
+        <a href="../index.html">首页</a>
+        <a href="importan.html">重点人员</a>
+        <a href="jifenyj.html">积分预警</a>
+        <!--<a href="report.html">生成报告</a>-->
+        <a href="caijishezhi.html">采集设置</a>
+        <!--<a>追踪人员</a>-->
+        <a href="houtai_user.html">后台管理</a>
+    </div>
+    <dl class="hd_dl">
+        <dd><span class="usernamecon"></span><img src="../img/defaultimg.png" alt=""></dd>
+        <dt class="hd_dt layui-anim layui-anim-upbit">
+            <p class="logout">退出登录</p>
+            <p>个人中心</p>
+        </dt>
+    </dl>
+</header>
+<section>
+    <div class="se_title">
+        <p><a href="../index.html">HOME</a>   /   比重设置</p>
+    </div>
+
+    <div class="cjad_box" style="padding-top: 20px;">
+        <div class="sc_title">积分设置</div>
+        <div class="bz_box">
+            <div class="bz_li">
+                <label>网络赌博</label>
+                <input type="text" class="layui-input" value="10">
+            </div>
+            <div class="bz_li">
+                <label>网络贷款</label>
+                <input type="text" class="layui-input" value="7">
+            </div>
+            <div class="bz_li">
+                <label>色情网站</label>
+                <input type="text" class="layui-input" value="5">
+            </div>
+            <div class="bz_li">
+                <label>网络游戏</label>
+                <input type="text" class="layui-input" value="2">
+            </div>
+            <div class="bz_li">
+                <label>网络直播</label>
+                <input type="text" class="layui-input" value="1">
+            </div>
+            <div class="layui-btn layui-btn-normal baocunbtn">保存</div>
+        </div>
+        <div class="sc_title">预警级别设置</div>
+        <div class="bz_box">
+            <div class="bz_li">
+                <label>蓝色预警</label>
+                <input type="text" class="layui-input" value="10">
+            </div>
+            <div class="bz_li">
+                <label>橙色预警</label>
+                <input type="text" class="layui-input" value="10">
+            </div>
+            <div class="bz_li">
+                <label>红色预警</label>
+                <input type="text" class="layui-input" value="10">
+            </div>
+            <div class="layui-btn layui-btn-normal baocunbtn">保存</div>
+        </div>
+    </div>
+</section>
+</body>
+<script src="../res/layui/layui.all.js"></script>
+<script src="../js/common/common.js?versin=0"></script>
+<script>
+    layui.use(['laypage', 'layer','upload']);
+    var upload = layui.upload;
+    var laypage = layui.laypage;
+
+
+</script>
+</html>

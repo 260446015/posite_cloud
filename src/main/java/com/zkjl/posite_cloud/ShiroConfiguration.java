@@ -40,7 +40,7 @@ public class ShiroConfiguration {
 		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
 
 		//配置访问权限 anon：表示全部放权的资源路径，authc：表示需要认证才可以访问
-		filterChainDefinitionMap.put("/logout", "logout");
+//		filterChainDefinitionMap.put("/logout", "logout");
 
 		filterChainDefinitionMap.put("/login.html", "anon");
 		filterChainDefinitionMap.put("/**/*.html", "anon");
@@ -54,7 +54,7 @@ public class ShiroConfiguration {
 		shiroFilterFactoryBean.setSecurityManager(getDefaultWebSecurityManager());
 		shiroFilterFactoryBean.setLoginUrl("/login");//测试使用
 		shiroFilterFactoryBean.setSuccessUrl("/");
-		shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized.do");
+		shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized");
 		shiroFilterFactoryBean.setFilters(filters);
 		return shiroFilterFactoryBean;
 	}

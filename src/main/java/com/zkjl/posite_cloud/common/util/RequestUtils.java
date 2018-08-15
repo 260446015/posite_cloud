@@ -12,6 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author yindawei
@@ -39,5 +42,18 @@ public class RequestUtils {
             logger.error("请求舆情接口出错", e);
         }
         return result;
+    }
+
+    public static String assembling(Map<String, Object> params) {
+        StringBuilder sb = new StringBuilder();
+        Set<Map.Entry<String, Object>> entrySet = params.entrySet();
+        for (Iterator<Map.Entry<String, Object>> iterator = entrySet.iterator(); iterator.hasNext();) {
+            Map.Entry<String, Object> entry = iterator.next();
+            String name = entry.getKey();
+            Object value = entry.getValue();
+            sb.append(name).append("=").append(value.toString()).append("&");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
     }
 }

@@ -2,8 +2,10 @@ package com.zkjl.posite_cloud.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
-import com.zkjl.posite_cloud.domain.pojo.JobInfo;
-import org.springframework.data.domain.PageImpl;
+import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
+import com.zkjl.posite_cloud.domain.vo.JobinfoVO;
+
+import java.util.List;
 
 /**
  * @author yindawei
@@ -19,7 +21,11 @@ public interface IApiService {
 
     JSONObject developmentData(String username) throws Exception;
 
-    PageImpl<JobInfo> realTimeRegist(String username, Integer pageNum, Integer pageSize);
+    List<JSONObject> realTimeRegist(String username);
 
-    JSONObject getSentiment();
+    JSONObject getSentiment(SentimentDTO sentimentDTO);
+
+    List<JobinfoVO> listJob(String username);
+
+    JSONObject searchByTaskid(String taskId);
 }

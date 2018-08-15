@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title class="title" data-href="index">采集上传</title>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=0, maximum-scale=0, user-scalable=no">
+    <meta name="Author" Content="jianghaifei"/>
+    <meta http-equiv="cache-control" content="no-cache">
+    <link rel="shortcut icon" href="../img/logozkjl2.png">
+
+    <!--不缓存-->
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <META HTTP-EQUIV="expires" CONTENT="0">
+
+    <script src="../js/common/jquery-3.3.1.min.js"></script>
+    <!--animate-->
+    <link rel="stylesheet" href="../css/common/animate.css">
+    <!--layui-->
+    <link rel="stylesheet" href="../res/layui/css/layui.css">
+
+    <!--自定义-->
+    <link rel="stylesheet" href="../css/common/common.css?version=0">
+    <link rel="stylesheet" href="../css/common/layout.css?version=0">
+    <link rel="stylesheet" href="../css/caiji.css?version=0">
+    <style>
+        body{
+            background: #edeef2;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <img class="logobox" src="../img/logozkjl1.png" alt="">
+    <div class="title">
+        <p>重点人网络筛查平台</p>
+        <p>Key    person    screening</p>
+    </div>
+    <div class="hd_nav">
+        <a href="../index.html">首页</a>
+        <a href="importan.html">重点人员</a>
+        <a href="jifenyj.html">积分预警</a>
+        <!--<a href="report.html">生成报告</a>-->
+        <a href="caijishezhi.html">采集设置</a>
+        <!--<a>追踪人员</a>-->
+        <a href="houtai_user.html">后台管理</a>
+    </div>
+    <dl class="hd_dl">
+        <dd><span class="usernamecon"></span><img src="../img/defaultimg.png" alt=""></dd>
+        <dt class="hd_dt layui-anim layui-anim-upbit">
+            <p class="logout">退出登录</p>
+            <p>个人中心</p>
+        </dt>
+    </dl>
+</header>
+<section>
+    <div class="se_title">
+        <p><a href="../index.html">HOME</a>   /   采集上传</p>
+    </div>
+
+   <div class="cjad_box" style="min-height: 600px;">
+       <div class="cjad_btnbox">
+           <a href="addcaiji.html" class="cjad_btn cjad_active">数据上传</a>
+           <a href="addshuru.html" class="cjad_btn">数据添加</a>
+       </div>
+       <div class="uploadbox" id="test10">
+           <img src="../img/iploadimg.png" alt="">
+           <p>点击上传，或将文件拖拽到此处</p>
+       </div>
+       <p class="shuoming">注意事项：上传的文件格式为txt文件，文件中各手机号占一整行，下一行回车键隔开；</p>
+       <button class="layui-btn layui-btn-fluid uploadbtn layui-btn-normal" id="uploadactive" style="display: none;">确定</button>
+   </div>
+</section>
+</body>
+<script src="../res/layui/layui.all.js"></script>
+<script src="../js/common/common.js?versin=0"></script>
+<script>
+    layui.use(['laypage', 'layer','upload']);
+    var upload = layui.upload;
+    var laypage = layui.laypage;
+    uploadonemore()
+    //文件上传
+    function uploadonemore() {
+        var uploadkey = true;
+        upload.render({
+            elem: '#test10'
+            , url: ctx + 'api/file/upload'
+            , accept: 'file' //普通文件
+            , data: {
+
+            },
+            xhrFields: {
+                withCredentials: true
+            }
+            , auto: false
+            , bindAction: "#uploadactive"
+            , choose: function (obj) {
+                obj.preview(function (index, file, result) {
+                    var typeup = file.name.split(".").pop();
+                    //console.log(typeup)
+                    if(typeup=="txt"){
+                        $("#uploadactive").fadeIn();
+                    }
+                });
+            }
+            , before: function (obj) {
+                var loa = layer.load(1, {shade: [0.1, '#000']})
+            }
+            , done: function (res) {
+                console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                window.location = "caijishezhi.html";
+            }
+            , error: function (index, upload) {
+
+            }
+        });
+    }
+
+</script>
+</html>

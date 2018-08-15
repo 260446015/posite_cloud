@@ -2,15 +2,18 @@ package com.zkjl.posite_cloud.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
+import com.zkjl.posite_cloud.domain.dto.CreditsDTO;
 import com.zkjl.posite_cloud.service.ICreditsService;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @author yindawei
@@ -24,17 +27,25 @@ public class CreditsController extends BaseController{
     private static Logger log = LoggerFactory.getLogger(CreditsController.class);
     @Resource
     private ICreditsService creditsService;
-    @GetMapping(value = "warning")
-    public ApiResult creditsWarning(){
+
+    /**
+     * 积分预警
+     * @param creditsDTO
+     * @return
+     */
+    @PostMapping(value = "warning")
+    @ApiOperation(value = "积分预警")
+    public ApiResult creditsWarning(@RequestBody CreditsDTO creditsDTO){
         String username = this.getCurrentUser().getUsername();
-        List<JSONObject> result = null;
+        PageImpl<JSONObject> result;
         try {
-            result = creditsService.creditsWarining(username);
+            creditsDTO.setUsername(username);
+            result = creditsService.creditsWarining(creditsDTO);
         } catch (Exception e) {
             log.error("分析积分预警失败！",e.getMessage());
             return error("分析积分预警失败！");
         }
-        return success(result);
+        return successPages(result);
     }
 
 }

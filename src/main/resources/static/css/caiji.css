@@ -1,0 +1,180 @@
+
+
+
+.import_left{
+    width: 16%;
+    min-height: 600px;
+    background: #fff;
+    float: left;
+}
+/*左侧*/
+.sc_renwu{
+    overflow: hidden;
+    margin-top: 20px;
+}
+.sc_renwu li{
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    text-align: center;
+    cursor: pointer;
+}
+.sc_renwu li span{
+    float: left;
+}
+.sc_renwu li a{
+    float: right;
+}
+.sc_renwu li:hover{
+    background: rgba(0,0,0,.3);
+    color: #fff;
+}
+
+
+/*右侧*/
+.import_righ{
+    width: 82.5%;
+    min-height: 600px;
+    float: right;
+}
+.im_top{
+    height: 110px;
+    background: #fff;
+    padding: 0 2%;
+}
+.im_btn{
+    width: 120px;
+    height: 30px;
+    background: #1e8cea;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+    float: right;
+    color: #fff;
+    margin: 15px 20px 0 20px;
+}
+.im_btnbox{
+    overflow: hidden;
+}
+.im_jindu{
+    width: 100%;
+}
+body .layui-progress{
+    margin-top: 20px;
+}
+.im_p{
+    font-weight: bold;
+}
+/*内容区*/
+.im_btm{
+    background: #fff;
+    padding: 0 2%;
+    margin-top: 20px;
+    overflow: hidden;
+}
+.im_search{
+    margin: 10px 0;
+    padding: 10px 0;
+}
+.im_search input{
+    float: left;
+    width: 88%;
+}
+.im_search button{
+    height: 37px;
+    line-height: 37px;
+    padding: 0 34px;
+    margin-left: 1%;
+}
+
+.im_content{
+    width: 100%;
+    min-height: 350px;
+}
+.im_content div{
+    height: 30px;
+    width: 100%;
+    line-height: 30px;
+}
+.im_content div span{
+    width: 33%;
+    float: left;
+    text-align: center;
+}
+
+/*独步*/
+.imlp_left{
+
+}
+.imlp_left span{
+    font-size: 12px;
+}
+.imlp_left input{
+    width: 30px;
+    padding: 3px 5px;
+    font-size: 12px;
+    text-align: center;
+}
+
+
+
+/*采集上传*/
+.cjad_box{
+    overflow: hidden;
+    background: #fff;
+}
+.cjad_btnbox{
+    border: 1px solid #ccc;
+    float: left;
+    clear: both;
+    overflow: hidden;
+    margin: 20px;
+}
+.cjad_box .cjad_btn{
+    width: 120px;
+    height: 31px;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+    float: left;
+}
+.cjad_active{
+    background: #1e8cea;
+    color: #fff;
+}
+.uploadbox{
+    width: 1000px;
+    height: 300px;
+    border: 1px dashed #ccc;
+    margin: 80px auto 5px auto;
+    clear: both;
+}
+.uploadbox img{
+    display: block;
+    margin: 80px auto 10px auto;
+}
+.uploadbox p{
+    text-align: center;
+    color: #999;
+}
+.shuoming{
+    width: 1000px;
+    color: #999;
+    margin: 0 auto;
+}
+.uploadbtn{
+    display: block;
+    width: 1000px;
+    margin: 50px auto;
+}
+
+/*采集添加*/
+.caijibox{
+    display: block;
+    width: 940px;
+    padding: 30px;
+    height: 240px;
+    margin: 80px auto 5px auto;
+    clear: both;
+}
+

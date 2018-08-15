@@ -5,18 +5,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.Constans;
 import com.zkjl.posite_cloud.common.util.MD5Util;
 import com.zkjl.posite_cloud.common.util.MD5Utils;
-import com.zkjl.posite_cloud.common.util.PageUtil;
 import com.zkjl.posite_cloud.common.util.RequestUtils;
+import com.zkjl.posite_cloud.dao.CreditsRepository;
 import com.zkjl.posite_cloud.dao.JobInfoRepository;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
+import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
+import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
 import com.zkjl.posite_cloud.domain.pojo.JobInfo;
-import com.zkjl.posite_cloud.enums.WeightEnum;
+import com.zkjl.posite_cloud.domain.vo.JobinfoVO;
 import com.zkjl.posite_cloud.service.IApiService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -45,6 +46,8 @@ public class ApiService implements IApiService {
     private JobInfoRepository jobInfoRepository;
     @Resource
     private MongoTemplate mongoTemplate;
+    @Resource
+    private CreditsRepository creditsRepository;
 
     private static final Logger log = LoggerFactory.getLogger(ApiService.class);
 
@@ -60,7 +63,8 @@ public class ApiService implements IApiService {
             return jobDTO;
         }
         List<JobInfo> preSaveDatas = new ArrayList<>();
-        jobDTO.getDatas().forEach(mobile -> {
+        List<String> mobiles = Arrays.asList(jobDTO.getDatas());
+        mobiles.forEach(mobile -> {
             JobInfo jobInfo = new JobInfo();
             jobInfo.setTaskid(taskId);
             jobInfo.setUsername(jobDTO.getUsername());
@@ -85,7 +89,8 @@ public class ApiService implements IApiService {
         log.info("当前生成的jobinfo信息:" + jobDTO);
         log.info("当前生成的redisId:" + redisId);
         ListOperations listOperations = stringRedisTemplate.opsForList();
-        jobDTO.getDatas().forEach(mobile -> listOperations.rightPush(redisId, mobile));
+        List<String> mobiles = Arrays.asList(jobDTO.getDatas());
+        mobiles.forEach(mobile -> listOperations.rightPush(redisId, mobile));
     }
 
     @Override
@@ -146,16 +151,18 @@ public class ApiService implements IApiService {
         int yellow = 0;
         int living = 0;
         int game = 0;
+        List<CreditsWarn> all = creditsRepository.findAll();
+        CreditsWarn conf = all.get(0);
         for (Map.Entry<String, Set<JSONObject>> entry : check.entrySet()) {
             Set<JSONObject> value = entry.getValue();
             for (JSONObject jsonObject : value) {
-                if (jsonObject.getString("webtype").equals(WeightEnum.赌博.name())) {
+                if (jsonObject.getString("webtype").equals(conf.getGamble().getString("name"))) {
                     gamble += 1;
-                } else if (jsonObject.getString("webtype").equals(WeightEnum.贷款.name())) {
+                } else if (jsonObject.getString("webtype").equals(conf.getLoans().getString("name"))) {
                     loans += 1;
-                } else if (jsonObject.getString("webtype").equals(WeightEnum.涉黄.name())) {
+                } else if (jsonObject.getString("webtype").equals(conf.getYellow().getString("name"))) {
                     yellow += 1;
-                } else if (jsonObject.getString("webtype").equals(WeightEnum.直播.name())) {
+                } else if (jsonObject.getString("webtype").equals(conf.getLiving().getString("name"))) {
                     living += 1;
                 } else {
                     game += 1;
@@ -172,17 +179,35 @@ public class ApiService implements IApiService {
     }
 
     @Override
-    public PageImpl<JobInfo> realTimeRegist(String username, Integer pageNum, Integer pageSize) {
+    public List<JSONObject> realTimeRegist(String username) {
         List<JobInfo> total = jobInfoRepository.findByUsername(username);
         List<JobInfo> successData = total.stream().filter(action -> action.getData() != null).sorted((a, b) -> b.getId().compareTo(a.getId())).collect(Collectors.toList());
-        return (PageImpl<JobInfo>) PageUtil.pageBeagin(pageNum, pageSize, successData);
+        List<JSONObject> result = new ArrayList<>();
+        A:
+        for (JobInfo action : successData) {
+            JSONArray data = action.getData();
+            B:
+            for (Object obj : data) {
+                JSONObject element = new JSONObject();
+                JSONObject jsonObject = new JSONObject((Map<String, Object>) obj);
+                element.put("mobile", action.getMobile());
+                element.put("webtype", jsonObject.getString("webtype"));
+                element.put("app", jsonObject.getString("webname"));
+                result.add(element);
+                if (result.size() >= 20) {
+                    break A;
+                }
+            }
+        }
+        return result;
     }
 
     private Integer getLevel(JobDTO jobDTO) {
         Integer level;
-        if (jobDTO.getDatas().size() == 1) {
+        String[] split = jobDTO.getDatas().split(",");
+        if (split.length == 1) {
             level = 1;
-        } else if (jobDTO.getDatas().size() <= Constans.BATCH_COUNT_MIN) {
+        } else if (split.length <= Constans.BATCH_COUNT_MIN) {
             level = 2;
         } else {
             level = 3;
@@ -191,52 +216,78 @@ public class ApiService implements IApiService {
     }
 
     @Override
-    public JSONObject getSentiment() {
+    public JSONObject getSentiment(SentimentDTO sentimentDTO) {
         long c = System.currentTimeMillis() / 1000;
         String token = MD5Utils.generateToken(c);
-        String url = "http://114.55.179.202:8199/restserver/index/query/fullQuery?page_no=1&page_size=10&call_id=" + c + "&token=" + token + "&appid=**";
-
+        Map<String, Object> params = new HashMap<>();
+        params.put("page_no", sentimentDTO.getPageNum());
+        params.put("page_size", sentimentDTO.getPageSize());
+        params.put("call_id", c);
+        params.put("token", token);
+        params.put("appid", "**");
+        String assembling = RequestUtils.assembling(params);
         JSONObject json = new JSONObject();
-
         //相关词
         JSONArray array = new JSONArray();
-
-        array.add("部队");
-
-        array.add("大人");
-
-        array.add("杀人");
-
+        String[] msg = sentimentDTO.getMsg();
+        for (int i = 0; i < msg.length; i++) {
+            array.add(msg[i]);
+        }
         json.put("related", array);
-
         //行业
-
         json.put("industry", 1000);
-
         //排序字段
-
         json.put("sortField", "publishTime");
         //排序方式
-
         json.put("sortType", "desc");
-
         json.put("related", array);
-
         //查询时间范围
-
-        json.put("start_time", "2018 - 01 - 01 00:00:00 ");
-
-        json.put("end_time", "2018 - 07 - 22 23:59:59 ");
-
-
+        json.put("start_time", sentimentDTO.getBeginDate());
+        json.put("end_time", sentimentDTO.getEndDate());
         System.out.println(json.toString());
         long st = System.currentTimeMillis();
-        JSONObject response = RequestUtils.sendPost(url, json.toString());
+        JSONObject response = RequestUtils.sendPost(Constans.SENTIMENT_URL+"?"+assembling, json.toString());
         long et = System.currentTimeMillis();
-
         System.out.println(et - st);
-
         System.out.println(response);
         return response;
+    }
+
+    @Override
+    public List<JobinfoVO> listJob(String username) {
+        List<JobinfoVO> result = new ArrayList<>();
+        List<JobInfo> byUsername = jobInfoRepository.findByUsername(username);
+        Set<String> check = new HashSet<>();
+        List<JobInfo> collect = byUsername.stream().filter(action -> check.add(action.getTaskid())).collect(Collectors.toList());
+        Set<String> keys = stringRedisTemplate.keys(username + "*");
+        collect.forEach(action -> {
+            JobinfoVO vo = new JobinfoVO();
+            vo.setTaskId(action.getTaskid());
+            vo.setCreationTime(action.getCreationTime());
+            vo.setIfFinish(true);
+            for (String redisId : keys) {
+                if (redisId.contains(action.getTaskid())) {
+                    vo.setIfFinish(false);
+                }
+            }
+            result.add(vo);
+        });
+        return result;
+//        GroupBy groupBy = GroupBy.key("taskid").initialDocument("{count:0}").reduceFunction("function(doc, out){out.count++}")
+//                .finalizeFunction("function(out){return out;}");
+//        GroupByResults<JobInfo> res = mongoTemplate.group(Constans.T_MOBILEDATAS, groupBy, JobInfo.class);
+////        DBObject obj = res.getRawResults();
+////        BasicDBList dbList = (BasicDBList) obj.get("retval");
+//        List<Document> retval = (List) res.getRawResults().get("retval");
+//        retval.forEach(action ->{
+//            String taskid = action.getString("taskid");
+//            result.add(taskid);
+//        });
+    }
+
+    @Override
+    public JSONObject searchByTaskid(String taskId) {
+        List<JobinfoVO> byTaskId = jobInfoRepository.findByTaskid(taskId);
+        return null;
     }
 }

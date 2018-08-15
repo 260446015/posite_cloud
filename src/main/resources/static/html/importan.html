@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title class="title" data-href="index">重点人员列表</title>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=0, maximum-scale=0, user-scalable=no">
+    <meta name="Author" Content="jianghaifei"/>
+    <meta http-equiv="cache-control" content="no-cache">
+    <link rel="shortcut icon" href="../img/logozkjl2.png">
+
+    <!--不缓存-->
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <META HTTP-EQUIV="expires" CONTENT="0">
+
+    <script src="../js/common/jquery-3.3.1.min.js"></script>
+    <!--animate-->
+    <link rel="stylesheet" href="../css/common/animate.css">
+    <!--layui-->
+    <link rel="stylesheet" href="../res/layui/css/layui.css">
+
+    <!--自定义-->
+    <link rel="stylesheet" href="../css/common/common.css?version=0">
+    <link rel="stylesheet" href="../css/common/layout.css?version=0">
+    <link rel="stylesheet" href="../css/inportant.css?version=0">
+    <style>
+        body{
+            background: #edeef2;
+        }
+        .section{
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <img class="logobox" src="../img/logozkjl1.png" alt="">
+    <div class="title">
+        <p>重点人网络筛查平台</p>
+        <p>Key    person    screening</p>
+    </div>
+    <div class="hd_nav">
+        <a href="../index.html">首页</a>
+        <a class="hd_active" href="importan.html">重点人员</a>
+        <a href="jifenyj.html">积分预警</a>
+        <!--<a href="report.html">生成报告</a>-->
+        <a href="caijishezhi.html">采集设置</a>
+        <!--<a>追踪人员</a>-->
+        <a href="houtai_user.html">后台管理</a>
+    </div>
+    <dl class="hd_dl">
+        <dd><span class="usernamecon"></span><img src="../img/defaultimg.png" alt=""></dd>
+        <dt class="hd_dt layui-anim layui-anim-upbit">
+            <p class="logout">退出登录</p>
+            <p>个人中心</p>
+        </dt>
+    </dl>
+</header>
+<section>
+    <div class="se_title">
+        <p><a href="../index.html">HOME</a>   /   重点人员列表</p>
+    </div>
+    <div class="section">
+        <div class="bz_box layui-form" style="padding-top: 20px;">
+            <div class="bz_li">
+                <label>手机号码</label>
+                <input type="text" class="layui-input" placeholder="请输入要查询的手机号码">
+            </div>
+            <div class="bz_li">
+                <label>平台名称</label>
+                <input type="text" class="layui-input" placeholder="请输入要查询的平台名称">
+            </div>
+            <div class="bz_li">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">网站分类</label>
+                    <div class="layui-input-block" style="height: 30px;">
+                        <select name="interest" lay-filter="aihao" style="height: 30px;">
+                            <option value=""></option>
+                            <option value="网络赌博">网络赌博</option>
+                            <option value="网络贷款">网络贷款</option>
+                            <option value="色情网站">色情网站</option>
+                            <option value="网络直播">网络直播</option>
+                            <option value="网络游戏">网络游戏</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="bz_li">
+                <label>最低分数</label>
+                <input type="text" class="layui-input" placeholder="请输入最低分数">
+            </div>
+            <div class="bz_li">
+                <label>最高分数</label>
+                <input type="text" class="layui-input" placeholder="请输入最高分数">
+            </div>
+            <div class="layui-btn layui-btn-normal baocunbtn">查询</div>
+        </div>
+
+        <div class="zd_box">
+            <div class="sc_zdgray">
+                <span>序号</span>
+                <span>手机号</span>
+                <span>分数</span>
+                <span>采集时间</span>
+                <span>报告</span>
+            </div>
+            <div>
+                <span>1</span>
+                <span>17610988656</span>
+                <span>12</span>
+                <span>2018-12-12 12:!2:12</span>
+                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
+            </div>
+            <div class="sc_zdgray">
+                <span>1</span>
+                <span>17610988656</span>
+                <span>12</span>
+                <span>2018-12-12 12:!2:12</span>
+                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
+            </div>
+            <div>
+                <span>1</span>
+                <span>17610988656</span>
+                <span>12</span>
+                <span>2018-12-12 12:!2:12</span>
+                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
+            </div>
+            <div class="sc_zdgray">
+                <span>1</span>
+                <span>17610988656</span>
+                <span>12</span>
+                <span>2018-12-12 12:!2:12</span>
+                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
+            </div>
+            <div>
+                <span>1</span>
+                <span>17610988656</span>
+                <span>12</span>
+                <span>2018-12-12 12:!2:12</span>
+                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
+            </div>
+            <div class="sc_zdgray">
+                <span>1</span>
+                <span>17610988656</span>
+                <span>12</span>
+                <span>2018-12-12 12:!2:12</span>
+                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
+            </div>
+            <div>
+                <span>1</span>
+                <span>17610988656</span>
+                <span>12</span>
+                <span>2018-12-12 12:!2:12</span>
+                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
+            </div>
+            <div class="sc_zdgray">
+                <span>1</span>
+                <span>17610988656</span>
+                <span>12</span>
+                <span>2018-12-12 12:!2:12</span>
+                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
+            </div>
+            <div>
+                <span>1</span>
+                <span>17610988656</span>
+                <span>12</span>
+                <span>2018-12-12 12:!2:12</span>
+                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
+            </div>
+            <div class="sc_zdgray">
+                <span>1</span>
+                <span>17610988656</span>
+                <span>12</span>
+                <span>2018-12-12 12:!2:12</span>
+                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
+            </div>
+            <div>
+                <span>1</span>
+                <span>17610988656</span>
+                <span>12</span>
+                <span>2018-12-12 12:!2:12</span>
+                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
+            </div>
+            <div class="sc_zdgray">
+                <span>1</span>
+                <span>17610988656</span>
+                <span>12</span>
+                <span>2018-12-12 12:!2:12</span>
+                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
+            </div>
+            <div>
+                <span>1</span>
+                <span>17610988656</span>
+                <span>12</span>
+                <span>2018-12-12 12:!2:12</span>
+                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
+            </div>
+            <div class="sc_zdgray">
+                <span>1</span>
+                <span>17610988656</span>
+                <span>12</span>
+                <span>2018-12-12 12:!2:12</span>
+                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
+            </div>
+        </div>
+
+        <div id="demo" class="listpage"></div>
+    </div>
+</section>
+</body>
+<script src="../res/layui/layui.all.js"></script>
+<script src="../js/common/common.js?versin=0"></script>
+<script>
+    layui.use(['laypage', 'layer']);
+    var laypage = layui.laypage;
+    laypage.render({
+        elem: 'demo'
+        ,count: 100
+        ,layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+        ,jump: function(obj){
+            console.log(obj)
+        }
+    });
+    zdrysc.setpagecss();
+</script>
+</html>

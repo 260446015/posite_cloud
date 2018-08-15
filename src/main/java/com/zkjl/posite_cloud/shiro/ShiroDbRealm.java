@@ -1,8 +1,8 @@
 package com.zkjl.posite_cloud.shiro;
 
 import com.zkjl.posite_cloud.dao.UserRepository;
-import com.zkjl.posite_cloud.domain.pojo.Role;
 import com.zkjl.posite_cloud.domain.pojo.User;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -13,10 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.Objects;
+import java.util.List;
 
 /**
  * 身份校验核心类
@@ -39,7 +39,9 @@ public class ShiroDbRealm extends AuthorizingRealm {
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		LOGGER.info("===============进行权限配置================");
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-		
+		User user = (User) principals.getPrimaryPrincipal();
+		List<String> permissions = Arrays.asList(user.getPermission());
+		authorizationInfo.addStringPermissions(permissions);
 		return authorizationInfo;
 	}
 
@@ -68,7 +70,6 @@ public class ShiroDbRealm extends AuthorizingRealm {
 			principal = user;
 			credentials = user.getPassword();
 		}
-		ShiroUser shiroUser = new ShiroUser(user.getId(), user.getUsername(), user.getName(),user.getRole());
 		SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
 				principal ,credentials, getName());
 
@@ -78,8 +79,8 @@ public class ShiroDbRealm extends AuthorizingRealm {
 	@Override
 	public void onLogout(PrincipalCollection principals) {
 		super.clearCachedAuthorizationInfo(principals);
-		ShiroUser shiroUser = (ShiroUser) principals.getPrimaryPrincipal();
-		removeUserCache(shiroUser);
+		User user = (User) principals.getPrimaryPrincipal();
+		removeUserCache(user);
 	}
 
 	/**
@@ -87,8 +88,8 @@ public class ShiroDbRealm extends AuthorizingRealm {
 	 * 
 	 * @param shiroUser
 	 */
-	public void removeUserCache(ShiroUser shiroUser) {
-		removeUserCache(shiroUser.getLoginName());
+	public void removeUserCache(User user) {
+		removeUserCache(user.getUsername());
 	}
 	
 	/**
@@ -101,98 +102,4 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		principals.add(loginName, super.getName());
 		super.clearCachedAuthenticationInfo(principals);
 	}
-
-	/**
-	 * 自定义Authentication对象，使得Subject除了携带用户的登录名外还可以携带更多信息.
-	 */
-	public static class ShiroUser implements Serializable {
-		private static final long serialVersionUID = -5479583557463219088L;
-		private String id;
-		private String loginName;
-		private String name;
-		private Role role;
-
-		public ShiroUser(String id, String loginName, String name,Role role) {
-			super();
-			this.id = id;
-			this.loginName = loginName;
-			this.name = name;
-			this.role = role;
-		}
-
-
-		public String getLoginName() {
-			return loginName;
-		}
-
-		public void setLoginName(String loginName) {
-			this.loginName = loginName;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public String getId() {
-			return id;
-		}
-
-		public void setId(String id) {
-			this.id = id;
-		}
-
-		public Role getRole() {
-			return role;
-		}
-
-		public void setRole(Role role) {
-			this.role = role;
-		}
-
-		/**
-		 * 本函数输出将作为默认的<shiro:principal/>输出.
-		 */
-		@Override
-		public String toString() {
-			return loginName;
-		}
-
-		/**
-		 * 重载hashCode,只计算loginName;
-		 */
-		@Override
-		public int hashCode() {
-			return Objects.hashCode(loginName);
-		}
-
-		/**
-		 * 重载equals,只计算loginName;
-		 */
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
-				return false;
-			}
-			ShiroUser other = (ShiroUser) obj;
-			if (loginName == null) {
-				if (other.loginName != null) {
-					return false;
-				}
-			} else if (!loginName.equals(other.loginName)) {
-				return false;
-			}
-			return true;
-		}
-	}
-
 }
