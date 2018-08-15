@@ -41,6 +41,8 @@ public class CreditsService implements ICreditsService {
                 if (action.getString("mobile").equals(creditsDTO.getMobile())) {
                     flag = true;
                 }
+            } else {
+                flag = true;
             }
             return flag;
         }).filter(action -> {
