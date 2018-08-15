@@ -162,14 +162,30 @@ public class ApiController extends BaseController {
     }
 
     /**
+     * 按任务id查询
+     */
+    @GetMapping(value = "searchByTaskid")
+    @ApiOperation(value = "按任务id查询")
+    public ApiResult searchByTaskid(String taskId, Integer pageNum, Integer pageSize, String msg) {
+        JSONObject result;
+        try {
+            result = apiService.searchByTaskid(taskId, pageNum, pageSize, msg);
+        } catch (Exception e) {
+            log.error("按任务id查询出错!", e.getMessage());
+            return error("按任务id查询出错!");
+        }
+        return success(result);
+    }
+
+    /**
      * 按任务id查询进度
      */
     @GetMapping(value = "searchByTaskid")
     @ApiOperation(value = "按任务id查询进度")
-    public ApiResult searchByTaskid(String taskId, Integer pageNum, Integer pageSize) {
+    public ApiResult searchByTaskid(String taskId) {
         JSONObject result;
         try {
-            result = apiService.searchByTaskid(taskId, pageNum, pageSize);
+            result = apiService.searchByTaskidPlan(taskId);
         } catch (Exception e) {
             log.error("按任务id查询进度出错!", e.getMessage());
             return error("按任务id查询进度出错!");

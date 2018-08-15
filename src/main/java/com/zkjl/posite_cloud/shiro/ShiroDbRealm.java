@@ -1,6 +1,8 @@
 package com.zkjl.posite_cloud.shiro;
 
+import com.zkjl.posite_cloud.dao.RoleRepository;
 import com.zkjl.posite_cloud.dao.UserRepository;
+import com.zkjl.posite_cloud.domain.pojo.Role;
 import com.zkjl.posite_cloud.domain.pojo.User;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -14,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -31,6 +34,8 @@ public class ShiroDbRealm extends AuthorizingRealm {
 
 	@Autowired
 	private UserRepository userRepository;
+	@Resource
+	private RoleRepository roleRepository;
 	
 	
 	/**
@@ -41,7 +46,9 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		LOGGER.info("===============进行权限配置================");
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 		User user = (User) principals.getPrimaryPrincipal();
-		String[] split = user.getPermission().split(",");
+		String jobLevel = user.getJobLevel();
+		Role role = roleRepository.findByRolename(jobLevel);
+		String[] split = role.getPermission().split(",");
 		List<String> permissions = Arrays.asList(split);
 		authorizationInfo.addStringPermissions(permissions);
 		return authorizationInfo;

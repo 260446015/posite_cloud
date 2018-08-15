@@ -288,8 +288,20 @@ public class ApiService implements IApiService {
     }
 
     @Override
-    public JSONObject searchByTaskid(String taskId, Integer pageNum, Integer pageSize) {
+    public JSONObject searchByTaskid(String taskId, Integer pageNum, Integer pageSize,String msg) {
+        JSONObject result = new JSONObject();
+        List<JobInfo> byTaskId = jobInfoRepository.findByTaskid(taskId);
+        if(!StringUtils.isBlank(msg)){
+            byTaskId = byTaskId.stream().filter(action -> action.getMobile().equals(msg)).collect(Collectors.toList());
+        }
+        PageImpl<JobInfo> page = (PageImpl<JobInfo>) PageUtil.pageBeagin(pageNum, pageSize, byTaskId);
 
+        result.put("data", successPages(page));
+        return result;
+    }
+
+    @Override
+    public JSONObject searchByTaskidPlan(String taskId) {
         JSONObject result = new JSONObject();
         List<JobInfo> byTaskId = jobInfoRepository.findByTaskid(taskId);
         int successCount = 0;
@@ -298,10 +310,8 @@ public class ApiService implements IApiService {
                 successCount += 1;
             }
         }
-        PageImpl<JobInfo> page = (PageImpl<JobInfo>) PageUtil.pageBeagin(pageNum, pageSize, byTaskId);
         result.put("successCount", successCount);
         result.put("totalCount", byTaskId.size());
-        result.put("data", successPages(page));
         return result;
     }
 

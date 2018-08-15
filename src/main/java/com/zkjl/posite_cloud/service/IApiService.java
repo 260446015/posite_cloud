@@ -27,5 +27,7 @@ public interface IApiService {
 
     List<JobinfoVO> listJob(String username);
 
-    JSONObject searchByTaskid(String taskId, Integer pageNum, Integer pageSize);
+    JSONObject searchByTaskid(String taskId, Integer pageNum, Integer pageSize,String msg);
+
+    JSONObject searchByTaskidPlan(String taskId);
 }
