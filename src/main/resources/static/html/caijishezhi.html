@@ -29,6 +29,11 @@
         body{
             background: #edeef2;
         }
+        .layui-layer-content{
+            color: #fff;
+            background: #1e8cea;
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
@@ -64,10 +69,7 @@
             <div class="sc_title">任务列表</div>
 
             <ul class="sc_renwu">
-                <li><span>2018-23-12 12:!2:!2</span><a>生成报告</a></li>
-                <li><span>2018-23-12 12:!2:!2</span><a>生成报告</a></li>
-                <li><span>2018-23-12 12:!2:!2</span><a>生成报告</a></li>
-                <li><span>2018-23-12 12:!2:!2</span><a>生成报告</a></li>
+                <!--<li><span>2018-23-12 12:!2:!2</span><a>生成报告</a></li>-->
             </ul>
         </div>
 
@@ -81,17 +83,17 @@
                     <div class="im_btn">开始采集</div>
                 </div>
                 <div class="im_jindu">
-                    <p class="im_p">采集数据实时进度</p>
-                    <div class="layui-progress" lay-showpercent="true">
-                        <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+                    <p class="im_p">当前任务采集数据实时进度</p>
+                    <div class="layui-progress" lay-showpercent="true" lay-filter="jindutiao">
+                        <div class="layui-progress-bar layui-bg-blue jindushow" lay-percent="0%"></div>
                     </div>
                 </div>
             </div>
 
             <div class="im_btm">
                 <div class="layui-input-block im_search">
-                    <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输您要查询的内容" class="layui-input">
-                    <button class="layui-btn layui-btn-normal">查询</button>
+                    <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输您要查询的手机号码" class="layui-input numben">
+                    <button class="layui-btn layui-btn-normal btnchaxun">查询</button>
                 </div>
 
 
@@ -101,60 +103,13 @@
                         <span>APP名称</span>
                         <span>采集时间</span>
                     </div>
-                    <div>
-                        <span>17610988656</span>
-                        <span>Beplay</span>
-                        <span>2018-12-12 12:12:12</span>
-                    </div>
-                    <div class="sc_zdgray">
-                        <span>17610988656</span>
-                        <span>Beplay</span>
-                        <span>2018-12-12 12:12:12</span>
-                    </div>
-                    <div>
-                        <span>17610988656</span>
-                        <span>Beplay</span>
-                        <span>2018-12-12 12:12:12</span>
-                    </div>
-                    <div class="sc_zdgray">
-                        <span>17610988656</span>
-                        <span>Beplay</span>
-                        <span>2018-12-12 12:12:12</span>
-                    </div>
-                    <div>
-                        <span>17610988656</span>
-                        <span>Beplay</span>
-                        <span>2018-12-12 12:12:12</span>
-                    </div>
-                    <div class="sc_zdgray">
-                        <span>17610988656</span>
-                        <span>Beplay</span>
-                        <span>2018-12-12 12:12:12</span>
-                    </div>
-                    <div>
-                        <span>17610988656</span>
-                        <span>Beplay</span>
-                        <span>2018-12-12 12:12:12</span>
-                    </div>
-                    <div class="sc_zdgray">
-                        <span>17610988656</span>
-                        <span>Beplay</span>
-                        <span>2018-12-12 12:12:12</span>
-                    </div>
-                    <div>
-                        <span>17610988656</span>
-                        <span>Beplay</span>
-                        <span>2018-12-12 12:12:12</span>
-                    </div>
-                    <div class="sc_zdgray">
-                        <span>17610988656</span>
-                        <span>Beplay</span>
-                        <span>2018-12-12 12:12:12</span>
+                    <div class="im_contenlist">
+
                     </div>
                 </div>
 
                 <div class="im_lapge">
-                    <div id="demo" class="listpage"></div>
+                    <div id="listpage" class="listpage"></div>
                     <!--<div class="imlp_left">-->
                         <!--<span>显示行数</span>-->
                         <!--<input type="text" value="10">-->
@@ -167,33 +122,8 @@
 </body>
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
+<script src="../js/caijishezhi.js?versin=0"></script>
 <script>
-    layui.use(['laypage', 'layer']);
-    var laypage = layui.laypage;
-    laypage.render({
-        elem: 'demo'
-        ,count: 100
-        ,layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
-        ,jump: function(obj){
-            console.log(obj)
-        }
-    });
-    zdrysc.setpagecss();
 
-    //任务列表
-    $.ajax({
-        url: ctx + "api/listJob",
-        type: "get",
-        xhrFields: {
-            withCredentials: true
-        },
-        data:{},
-        success: function (res) {
-            console.log(res);
-            if (res.code != 0) {
-                return layer.msg(res.message, {anim: 6});
-            }
-        }
-    });
 </script>
 </html>

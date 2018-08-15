@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title class="title">超级链接</title>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=0, maximum-scale=0, user-scalable=no">
+    <meta name="Author" Content="jianghaifei"/>
+    <meta http-equiv="cache-control" content="no-cache">
+
+    <!--不缓存-->
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <META HTTP-EQUIV="expires" CONTENT="0">
+
+    <script src="../../js/common/jquery-3.3.1.min.js"></script>
+    <!--animate-->
+    <link rel="stylesheet" href="../../css/common/animate.css">
+    <!--layui-->
+    <link rel="stylesheet" href="../../res/layui/css/layui.css">
+
+    <!--自定义-->
+    <link rel="stylesheet" href="../../css/common/common.css?version=0">
+    <link rel="stylesheet" href="../../css/common/layout.css?version=0">
+    <link rel="stylesheet" href="../../css/hyperlink/hyperlink.css?version=0">
+    <style>
+        .ac_liulan {
+            float: right;
+            padding: 0 14px;
+        }
+
+        .lianjiebox .ac_jianjie {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #999;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .lianjiebox .ac_biaoti {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .ac_liulan {
+            margin-top: 10px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<header class="sy_top syblue">
+    <ul class="sy_ul">
+        <li class="sy_line times_f"></li>
+        <li class="sy_line" style="line-height: 18px;">
+            <div style="margin-top: -6px;" class="timey_r"></div>
+            <div class="time_z"></div>
+        </li>
+        <li class="sy_line">总访问量:<span class="allfangwen"></span></li>
+        <li>当前在线人数:<span class="allzaixian"></span></li>
+        <li class="back_index cr" style="border: 0;">返回首页</li>
+    </ul>
+    <div class="sy_div">
+        <img class="defalurimg"  src="../../img/defaultimg.png" alt="" onerror="clga.whenoerronheader(this)">
+        <span><span class="time_statue"></span>，<span class="cluseaname"></span></span>
+        <ul class="sy_divul layui-anim layui-anim-upbit">
+            <li class="loginout">退出登录</li>
+        </ul>
+    </div>
+</header>
+
+<section>
+    <div class="sr_top">
+        <img src="../../img/huibiao.png" class="animated zoomIn" alt="">
+        <p class="animated slideInUp">超级链接</p>
+    </div>
+    <!--链接部分-->
+    <ul class="lianjiebox">
+        <!--<li>-->
+            <!--<div class="lj_img"><img src="../../img/linksuper1.png" alt=""></div>-->
+
+            <!--<p class="ac_jianjie">全国交通违法信息综合平台全国交通违法信息综合平台</p>-->
+            <!--<p class="ac_biaoti">全国交通违法信息综合平台全国交通违法信息综合平台</p>-->
+            <!--<div class="ac_liulan">浏览：20</div>-->
+            <!--<div class="ac_miaoshu none"></div>-->
+        <!--</li>-->
+    </ul>
+    <div id="listpage"></div>
+</section>
+</body>
+<script src="../../res/layui/layui.all.js"></script>
+<script src="../../js/common/common.js?versin=0"></script>
+<script>
+    layui.use(['laydate', 'laypage', 'upload']);
+    var laydate = layui.laydate;
+    var laypage = layui.laypage;
+    var upload = layui.upload;
+
+    function setPageNo(count) {
+        laypage.render({
+            elem: 'listpage',
+            count: count,
+            first: '首页',
+            last: '尾页',
+            jump: function (obj, first) {
+                clga.setpagecss();
+                if (!first) {
+                    linkget(obj.curr - 1, "");
+                }
+            }
+        });
+    }
+
+    linkget(0, "");
+
+    function linkget(pageval, searchval) {
+        $.ajax({
+            url: ctx + "link/findAll",
+            type: "get",
+            data: {
+                pageSzie: 10,
+                pageNum: pageval,
+                search: searchval
+            },
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (res) {
+                console.log(res);
+                $(".lianjiebox").empty();
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                if (0 === pageval) {
+                    count = res.data.totalNumber;
+                    setPageNo(count);
+                }
+                $.each(res.data.dataList, function (i, item) {
+                    var list = '<li data-href="'+item.url+'" data-open="'+item.ifOpen+'">' +
+                        '<div class="lj_img"><img src="'+item.logo+'" alt="" onerror="clga.whenoerronimg(this)"></div>' +
+                        '<p class="ac_jianjie">'+item.remark+'</p>' +
+                        '<p class="ac_biaoti">'+item.name+'</p>' +
+                        '<div class="ac_liulan">浏览：'+item.hotCount+'</div>' +
+                        '<div class="ac_miaoshu none"></div>' +
+                        '        </li>'
+                    $(".lianjiebox").append(list);
+                });
+            }
+        });
+    };
+    $(".lianjiebox").on("click","li",function () {
+        var ourl = $(this).attr("data-href");
+        var aopen = $(this).attr("data-open");
+        if(aopen=="-1"){
+            return layer.msg("该链接已被禁用");
+        }
+        if(!ourl){
+            return;
+        }
+        if(ourl.split("http").length>1){
+            window.open(ourl,"_blank");
+        }
+    });
+</script>
+</html>

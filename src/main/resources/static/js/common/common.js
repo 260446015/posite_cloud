@@ -2,7 +2,6 @@ var h = $(window).height();
 var h1 = $("body").height();
 var w = $(window).width();
 console.log(h + "+" + w)
-var ctx = "http://localhost:8091/";
 var zdrysc = {
     base: '中科点击',
     user: 'jianghaife',
@@ -94,7 +93,7 @@ zdrysc.setpagecss = function () {
 //退出登录
 $(".logout").click(function () {
     $.ajax({
-        url: ctx + "logout",
+        url:"/logout",
         type: "get",
         xhrFields: {
             withCredentials: true
@@ -114,6 +113,19 @@ $(".logout").click(function () {
     });
 
 });
+
+//时间戳格式转换换
+zdrysc.timechange = function (time) {
+    var timedata = new Date(time);
+    var y = timedata.getFullYear();
+    var m = ((timedata.getMonth() + 1) > 9 ? (timedata.getMonth() + 1) : '0' + (timedata.getMonth() + 1));
+    var d =  (timedata.getDate() > 9 ? timedata.getDate() : '0' + timedata.getDate());
+    var h = (timedata.getHours() > 9 ? timedata.getHours() : '0' + timedata.getHours());
+    var min = (timedata.getMinutes() > 9 ? timedata.getMinutes() : '0' + timedata.getMinutes());
+    var s = (timedata.getSeconds() > 9 ? timedata.getSeconds() : '0' + timedata.getSeconds());
+    return y+'-'+m+'-'+d+'  '+h+':'+min+':'+s;
+};
+
 
 
 //个人信息设置

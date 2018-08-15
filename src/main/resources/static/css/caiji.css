@@ -17,10 +17,11 @@
     line-height: 30px;
     padding: 0 10px;
     text-align: center;
-    cursor: pointer;
+
 }
 .sc_renwu li span{
     float: left;
+    cursor: pointer;
 }
 .sc_renwu li a{
     float: right;
@@ -28,6 +29,31 @@
 .sc_renwu li:hover{
     background: rgba(0,0,0,.3);
     color: #fff;
+}
+.sc_renwu .re_active{
+    background: rgba(0,0,0,.3);
+    color: #fff;
+}
+.sc_renwu li .btntrue{
+    width: 70px;
+    height: 24px;
+    background: #1e8cea;
+    line-height: 24px;
+    text-align: center;
+    cursor: pointer;
+    color: #fff;
+    border-radius: 5px;
+    margin-top: 3px;
+}
+.sc_renwu li .btnfalse{
+    width: 70px;
+    height: 24px;
+    background: #ccc;
+    line-height: 24px;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+    margin-top: 3px;
 }
 
 
@@ -100,6 +126,10 @@ body .layui-progress{
     width: 33%;
     float: left;
     text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    min-height: 10px;
 }
 
 /*独步*/
@@ -177,4 +207,8 @@ body .layui-progress{
     margin: 80px auto 5px auto;
     clear: both;
 }
-
+.sc_zdgrayspan{
+    display: block;
+    padding: 0 30px;
+    text-align: center;
+}
