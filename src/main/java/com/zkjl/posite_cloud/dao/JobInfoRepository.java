@@ -1,7 +1,6 @@
 package com.zkjl.posite_cloud.dao;
 
 import com.zkjl.posite_cloud.domain.pojo.JobInfo;
-import com.zkjl.posite_cloud.domain.vo.JobinfoVO;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
@@ -13,5 +12,5 @@ import java.util.List;
 public interface JobInfoRepository extends MongoRepository<JobInfo,String> {
     List<JobInfo> findByUsername(String username);
 
-    List<JobinfoVO> findByTaskid(String taskId);
+    List<JobInfo> findByTaskid(String taskId);
 }

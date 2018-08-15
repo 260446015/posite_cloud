@@ -246,7 +246,7 @@ public class ApiService implements IApiService {
         json.put("end_time", sentimentDTO.getEndDate());
         System.out.println(json.toString());
         long st = System.currentTimeMillis();
-        JSONObject response = RequestUtils.sendPost(Constans.SENTIMENT_URL+"?"+assembling, json.toString());
+        JSONObject response = RequestUtils.sendPost(Constans.SENTIMENT_URL + "?" + assembling, json.toString());
         long et = System.currentTimeMillis();
         System.out.println(et - st);
         System.out.println(response);
@@ -287,7 +287,17 @@ public class ApiService implements IApiService {
 
     @Override
     public JSONObject searchByTaskid(String taskId) {
-        List<JobinfoVO> byTaskId = jobInfoRepository.findByTaskid(taskId);
-        return null;
+
+        JSONObject result = new JSONObject();
+        List<JobInfo> byTaskId = jobInfoRepository.findByTaskid(taskId);
+        int successCount = 0;
+        for (JobInfo jobInfo : byTaskId) {
+            if (jobInfo.getData() != null) {
+                successCount += 1;
+            }
+        }
+        result.put("successCount",successCount);
+        result.put("totalCount",byTaskId.size());
+        return result;
     }
 }
