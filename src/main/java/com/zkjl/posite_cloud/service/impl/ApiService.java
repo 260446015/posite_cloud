@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.Constans;
 import com.zkjl.posite_cloud.common.util.MD5Util;
 import com.zkjl.posite_cloud.common.util.MD5Utils;
+import com.zkjl.posite_cloud.common.util.PageUtil;
 import com.zkjl.posite_cloud.common.util.RequestUtils;
 import com.zkjl.posite_cloud.dao.CreditsRepository;
 import com.zkjl.posite_cloud.dao.JobInfoRepository;
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -286,7 +288,7 @@ public class ApiService implements IApiService {
     }
 
     @Override
-    public JSONObject searchByTaskid(String taskId) {
+    public JSONObject searchByTaskid(String taskId, Integer pageNum, Integer pageSize) {
 
         JSONObject result = new JSONObject();
         List<JobInfo> byTaskId = jobInfoRepository.findByTaskid(taskId);
@@ -296,8 +298,19 @@ public class ApiService implements IApiService {
                 successCount += 1;
             }
         }
-        result.put("successCount",successCount);
-        result.put("totalCount",byTaskId.size());
+        PageImpl<JobInfo> page = (PageImpl<JobInfo>) PageUtil.pageBeagin(pageNum, pageSize, byTaskId);
+        result.put("successCount", successCount);
+        result.put("totalCount", byTaskId.size());
+        result.put("data", successPages(page));
+        return result;
+    }
+
+    private JSONObject successPages(PageImpl<?> data) {
+        JSONObject result = new JSONObject();
+        result.put("dataList", data.getContent());
+        result.put("totalNumber", data.getTotalElements());
+        result.put("totalPage", data.getTotalPages());
+        result.put("pageNumber", data.getNumber());
         return result;
     }
 }

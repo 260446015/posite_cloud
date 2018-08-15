@@ -47,6 +47,7 @@ public class ApiController extends BaseController {
         }
         return success(jobInfo);
     }
+
     @PostMapping(value = "updateJob")
     public ApiResult updateJob(@RequestBody JobDTO jobDTO) {
         Boolean flag;
@@ -66,18 +67,19 @@ public class ApiController extends BaseController {
 
     /**
      * 获取数据
+     *
      * @return
      */
     @GetMapping(value = "retrieveData")
     @ApiOperation(value = "获取数据")
-    public ApiResult retrieveData(){
+    public ApiResult retrieveData() {
         JSONObject result;
         String username;
         try {
             username = this.getCurrentUser().getUsername();
             result = apiService.realTimeData(username);
         } catch (Exception e) {
-            log.error("获取数据实时进度出错!",e.getMessage());
+            log.error("获取数据实时进度出错!", e.getMessage());
             return error("获取数据实时进度出错!");
         }
         return success(result);
@@ -85,18 +87,19 @@ public class ApiController extends BaseController {
 
     /**
      * 获取发展阶段分析
+     *
      * @return
      */
     @GetMapping(value = "development")
     @ApiOperation(value = "获取发展阶段分析")
-    public ApiResult development(){
+    public ApiResult development() {
         JSONObject result;
         String username;
         try {
             username = this.getCurrentUser().getUsername();
             result = apiService.developmentData(username);
         } catch (Exception e) {
-            log.error("获取发展阶段分析出错!",e.getMessage());
+            log.error("获取发展阶段分析出错!", e.getMessage());
             return error("获取发展阶段分析出错!");
         }
         return success(result);
@@ -104,18 +107,19 @@ public class ApiController extends BaseController {
 
     /**
      * 获取实时注册信息
+     *
      * @return
      */
     @GetMapping(value = "timeRegist")
     @ApiOperation(value = "获取实时注册信息")
-    public ApiResult realTimeRegist(){
+    public ApiResult realTimeRegist() {
         List<JSONObject> result;
         String username;
         try {
             username = this.getCurrentUser().getUsername();
             result = apiService.realTimeRegist(username);
         } catch (Exception e) {
-            log.error("获取实时注册信息出错!",e.getMessage());
+            log.error("获取实时注册信息出错!", e.getMessage());
             return error("获取实时注册信息出错!");
         }
         return success(result);
@@ -123,18 +127,19 @@ public class ApiController extends BaseController {
 
     /**
      * 获取redis任务信息
+     *
      * @return
      */
     @GetMapping(value = "listJob")
     @ApiOperation(value = "获取任务信息")
-    public ApiResult listRedisJob(){
+    public ApiResult listRedisJob() {
         List<JobinfoVO> result;
         String username;
         try {
             username = this.getCurrentUser().getUsername();
             result = apiService.listJob(username);
         } catch (Exception e) {
-            log.error("获取redis任务信息出错!",e.getMessage());
+            log.error("获取redis任务信息出错!", e.getMessage());
             return error("获取任务信息出错!");
         }
         return success(result);
@@ -145,12 +150,12 @@ public class ApiController extends BaseController {
      */
     @PostMapping(value = "sentiment")
     @ApiOperation(value = "获取舆情信息接口")
-    public ApiResult sentiment(@RequestBody SentimentDTO sentimentDTO){
+    public ApiResult sentiment(@RequestBody SentimentDTO sentimentDTO) {
         JSONObject result;
         try {
             result = apiService.getSentiment(sentimentDTO);
         } catch (Exception e) {
-            log.error("获取舆情信息接口出错!",e.getMessage());
+            log.error("获取舆情信息接口出错!", e.getMessage());
             return error("获取舆情信息接口出错!");
         }
         return success(result);
@@ -161,12 +166,12 @@ public class ApiController extends BaseController {
      */
     @GetMapping(value = "searchByTaskid")
     @ApiOperation(value = "按任务id查询进度")
-    public ApiResult searchByTaskid(String taskId){
+    public ApiResult searchByTaskid(String taskId, Integer pageNum, Integer pageSize) {
         JSONObject result;
         try {
-            result = apiService.searchByTaskid(taskId);
+            result = apiService.searchByTaskid(taskId, pageNum, pageSize);
         } catch (Exception e) {
-            log.error("按任务id查询进度出错!",e.getMessage());
+            log.error("按任务id查询进度出错!", e.getMessage());
             return error("按任务id查询进度出错!");
         }
         return success(result);

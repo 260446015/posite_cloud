@@ -4,6 +4,7 @@ import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.domain.pojo.User;
 import com.zkjl.posite_cloud.service.IUserService;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ public class UserController extends BaseController {
      * @return
      */
     @PostMapping(value = "create")
-    @RequiresPermissions(value = {"create1","create2"})
+    @RequiresPermissions(value = {"create1","create2"},logical = Logical.OR)
     @ApiOperation(value = "创建更改用户")
     public ApiResult create(@RequestBody User user){
         User result;
