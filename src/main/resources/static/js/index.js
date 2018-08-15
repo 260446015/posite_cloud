@@ -1,8 +1,8 @@
 
 
 $(function () {
-    yuqinghuoqu(0,11);
     //舆情信息
+    yuqinghuoqu(0,11);
     function yuqinghuoqu(pagenum,pagesize) {
         $.ajax({
             url: "/api/sentiment",
@@ -53,5 +53,114 @@ $(function () {
             content: $(this).attr("data-href")
         });
     });
+
+    //获取实时注册情况
+    var keynum = 0;
+    regsintime();
+    function regsintime() {
+        $.ajax({
+            url: "/api/timeRegist",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {},
+            success: function (res) {
+                //console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                $.each(res.data,function (i,item) {
+                    if(i%2){
+                        list = '<li class="sc_zdgray">' +
+                            '<span>'+item.mobile+'</span>' +
+                            '<span>'+item.webtype+'</span>' +
+                            '<span>'+item.app+'</span>' +
+                            '</li>';
+                    }else{
+                        list = '<li>' +
+                            '<span>'+item.mobile+'</span>' +
+                            '<span>'+item.webtype+'</span>' +
+                            '<span>'+item.app+'</span>' +
+                            '</li>';
+                    }
+                    $(".list_box").append(list);
+                });
+                if(keynum==0){
+                    //滚动设置
+                    $('.list_lh li:even').addClass('lieven');
+                    $("div.list_lh").myScroll({
+                        speed: 30, //数值越大，速度越慢
+                        rowHeight: 30 //li的高度
+                    });
+                }
+                keynum++;
+            }
+        });
+        setTimeout(function () {
+            regsintime();
+        },3600000);
+    }
+
+    //图表占比分析
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    var app = {};
+    option = null;
+    app.title = '环形图';
+    option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            x: 'left',
+            data:['网络赌博','网络贷款','色情网站','网络游戏','网络直播']
+        },
+        color:['#f1c12e','#a88ee2','#4384f0','#01e0a4','#47bcfb'],
+        series: [
+            {
+                name: '',
+                type: 'pie',
+                radius: ['40%', '55%'],
+                data: []
+            }
+        ]
+    };
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+    $.ajax({
+        url: "/api/development",
+        type: "get",
+        xhrFields: {
+            withCredentials: true
+        },
+        data: {},
+        success: function (res) {
+            //console.log(res);
+            if (res.code != 0) {
+                return layer.msg(res.message, {anim: 6});
+            }
+            var num = res.data;
+            myChart.setOption({
+                series: [{
+                    // 根据名字对应到相应的系列
+                    name: '平台数量占比',
+                    data: [
+                        {value:num.gamble, name:'网络赌博'},
+                        {value:num.loans, name:'网络贷款'},
+                        {value:num.yellow, name:'色情网站'},
+                        {value:num.game, name:'网络游戏'},
+                        {value:num.living, name:'网络直播'}
+                    ]
+                }]
+            });
+            // 设置加载等待隐藏
+            myChart.hideLoading();
+        }
+    });
+
 
 });
