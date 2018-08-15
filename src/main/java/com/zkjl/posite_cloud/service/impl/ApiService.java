@@ -65,7 +65,7 @@ public class ApiService implements IApiService {
             return jobDTO;
         }
         List<JobInfo> preSaveDatas = new ArrayList<>();
-        List<String> mobiles = Arrays.asList(jobDTO.getDatas());
+        List<String> mobiles = Arrays.asList(jobDTO.getDatas().split(","));
         mobiles.forEach(mobile -> {
             JobInfo jobInfo = new JobInfo();
             jobInfo.setTaskid(taskId);
