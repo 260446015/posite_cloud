@@ -95,7 +95,8 @@ public class ApiService implements IApiService {
                 status = "start";
             }
             Integer level;
-            level = getLevel(jobDTO);
+            List<JobInfo> byTaskid = jobInfoRepository.findByTaskid(taskId);
+            level = getLevel(byTaskid.size());
             jobDTO.setLevel(level);
             String _redisId = jobDTO.getUsername() + "_" + taskId + "_" + jobDTO.getLevel() + "_" + status;
             String redisId = jobDTO.getUsername() + "_" + taskId + "_" + jobDTO.getLevel() + "_" + jobDTO.getStatus();
@@ -198,6 +199,16 @@ public class ApiService implements IApiService {
         if (split.length == 1) {
             level = 1;
         } else if (split.length <= Constans.BATCH_COUNT_MIN) {
+            level = 2;
+        } else {
+            level = 3;
+        }
+        return level;
+    }
+    private Integer getLevel(int level) {
+        if (level == 1) {
+            level = 1;
+        } else if (level <= Constans.BATCH_COUNT_MIN) {
             level = 2;
         } else {
             level = 3;

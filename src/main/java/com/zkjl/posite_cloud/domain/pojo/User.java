@@ -36,4 +36,28 @@ public class User {
      * 拥有权限
      */
     private String permission;
+    /**
+     * 是否启用
+     */
+    private Boolean ifEnable;
+    /**
+     * 过期时间
+     */
+    private String expireTime;
+    /**
+     * 邮箱
+     */
+    private String email;
+    /**
+     * 性别
+     */
+    private String sex;
+    /**
+     * 单位部门
+     */
+    private String department;
+    /**
+     * 岗位
+     */
+    private String job;
 }

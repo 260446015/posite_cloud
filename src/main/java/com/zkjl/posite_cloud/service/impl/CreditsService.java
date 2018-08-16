@@ -57,8 +57,9 @@ public class CreditsService implements ICreditsService {
         }).filter(action -> {
             boolean flag = false;
             if (!StringUtils.isBlank(creditsDTO.getWebname())) {
-                Set<JSONObject> data = (Set<JSONObject>) action.get("data");
-                for (JSONObject action2 : data) {
+                JSONArray data = (JSONArray) action.get("data");
+                for (Object obj : data) {
+                    JSONObject action2 = new JSONObject((Map<String, Object>) obj);
                     if (action2.getString("webname").equals(creditsDTO.getWebname())) {
                         flag = true;
                     }
@@ -70,8 +71,9 @@ public class CreditsService implements ICreditsService {
         }).filter(action -> {
             boolean flag = false;
             if (!StringUtils.isBlank(creditsDTO.getWebtype())) {
-                Set<JSONObject> data = (Set<JSONObject>) action.get("data");
-                for (JSONObject action2 : data) {
+                JSONArray data = (JSONArray) action.get("data");
+                for (Object obj : data) {
+                    JSONObject action2 = new JSONObject((Map<String, Object>) obj);
                     if (action2.getString("webtype").equals(creditsDTO.getWebtype())) {
                         flag = true;
                     }

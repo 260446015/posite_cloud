@@ -8,7 +8,9 @@ import com.zkjl.posite_cloud.service.IUserService;
 import com.zkjl.posite_cloud.shiro.ShiroUtil;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
+import org.apache.shiro.authc.ExpiredCredentialsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.security.auth.login.AccountExpiredException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -50,12 +51,14 @@ public class LoginController extends BaseController{
         if (error != null) {
             if (error.equals(IncorrectCredentialsException.class.getName())) {
                 message = MsgConstant.CREDENTIAL_ERROR;
-            } else if (error.equals(AccountExpiredException.class.getName())) {
+            } else if (error.equals(ExpiredCredentialsException.class.getName())) {
                 message = MsgConstant.ACCOUNTEXPIRED;
             } else if (error.equals(AccountStartException.class.getName())) {
                 message = MsgConstant.ACCOUNTSTART;
             } else if (error.equals(ExcessiveAttemptsException.class.getName())) {
                 message = MsgConstant.LOCKING;
+            }else if (error.equals(DisabledAccountException.class.getName())) {
+                message = MsgConstant.UNENABLE;
             }
         }
         return error(message);

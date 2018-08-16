@@ -87,5 +87,9 @@ public class MsgConstant {
 	public static final String REGISTER_ERROR = "申请失败，请稍后再试";
 	/**用户类型*/
 	public static final String USER_TYPE = "user";
+	/**
+	 * 用户未启用
+	 */
+	public static final String UNENABLE = "用户未启用";
 
 }
