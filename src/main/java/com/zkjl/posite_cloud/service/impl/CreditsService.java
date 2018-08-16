@@ -93,7 +93,7 @@ public class CreditsService implements ICreditsService {
             return flag;
         }).collect(Collectors.toList());
 
-        return (PageImpl<JSONObject>) PageUtil.pageBeagin(creditsDTO.getPageNum(), creditsDTO.getPageSize(), collect);
+        return (PageImpl<JSONObject>) PageUtil.pageBeagin(collect.size(), creditsDTO.getPageNum(), creditsDTO.getPageSize(), collect);
     }
 
     private String getWarnLevel(int sorce) {
@@ -113,7 +113,7 @@ public class CreditsService implements ICreditsService {
         list.forEach(jobInfo -> {
             String mobile = jobInfo.getMobile();
             JSONArray data = jobInfo.getData();
-            if(data != null) {
+            if (data != null) {
                 data.forEach(element -> {
                     JSONObject perElement = (JSONObject) JSONObject.toJSON(element);
                     Boolean ifsuccess = perElement.getBoolean("success");
@@ -143,15 +143,15 @@ public class CreditsService implements ICreditsService {
             JSONObject data = new JSONObject();
             int totalSorce = 0;
             for (JSONObject action2 : action.getValue()) {
-                if(conf.getLiving().getString("name").equals(action2.getString("webtype"))){
+                if (conf.getLiving().getString("name").equals(action2.getString("webtype"))) {
                     totalSorce += conf.getLiving().getInteger("sorce");
-                }else if(conf.getGamble().getString("name").equals(action2.getString("webtype"))){
+                } else if (conf.getGamble().getString("name").equals(action2.getString("webtype"))) {
                     totalSorce += conf.getGamble().getInteger("sorce");
-                }else if(conf.getYellow().getString("name").equals(action2.getString("webtype"))){
+                } else if (conf.getYellow().getString("name").equals(action2.getString("webtype"))) {
                     totalSorce += conf.getYellow().getInteger("sorce");
-                }else if(conf.getGame().getString("name").equals(action2.getString("webtype"))){
+                } else if (conf.getGame().getString("name").equals(action2.getString("webtype"))) {
                     totalSorce += conf.getGame().getInteger("sorce");
-                }else if(conf.getLoans().getString("name").equals(action2.getString("webtype"))){
+                } else if (conf.getLoans().getString("name").equals(action2.getString("webtype"))) {
                     totalSorce += conf.getLoans().getInteger("sorce");
                 }
             }

@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
  */
 public class PageUtil {
 
-    public static PageImpl<?> pageBeagin(int pageNum,int pageSize,List<?> data){
-        data = data.stream().skip(pageNum*pageSize).limit(pageSize).collect(Collectors.toList());
+    public static PageImpl<?> pageBeagin(int totalCount, int pageNum, int pageSize, List<?> data) {
+        data = data.stream().skip(pageNum * pageSize).limit(pageSize).collect(Collectors.toList());
         PageRequest pageRequest = PageRequest.of(pageNum, pageSize);
-       return new PageImpl<>(data,pageRequest,data.size());
+        return new PageImpl<>(data, pageRequest, totalCount);
     }
 }
