@@ -121,6 +121,9 @@ public class UserController extends BaseController {
             logger.error("查询用户失败!", e.getMessage());
             return error("查询用户失败!");
         }
+        if (result == null) {
+            return success(result);
+        }
         return successPages(result);
     }
 
@@ -128,7 +131,7 @@ public class UserController extends BaseController {
      * 根据id查询用户
      */
     @GetMapping(value = "findUserById")
-    public ApiResult findUserById(String id){
+    public ApiResult findUserById(String id) {
         User result;
         try {
             result = userService.findUserById(id);
