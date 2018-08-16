@@ -62,4 +62,8 @@ public class User {
      * 所属领域
      */
     private String domain;
+    /**
+     * 手机号
+     */
+    private String mobile;
 }
