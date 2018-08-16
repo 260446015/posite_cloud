@@ -3,6 +3,7 @@ package com.zkjl.posite_cloud.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.Constans;
+import com.zkjl.posite_cloud.common.util.DateUtils;
 import com.zkjl.posite_cloud.dao.CreditsRepository;
 import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
 import com.zkjl.posite_cloud.domain.pojo.JobInfo;
@@ -55,6 +56,9 @@ public class ReportService extends CreditsService implements IReportService {
         Query query = new Query();
         query.addCriteria(Criteria.where("taskid").is(mobile)).with(Sort.by(Sort.Direction.DESC, "creationTime"));
         List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
+        if (list.size() == 0) {
+            return null;
+        }
         List<JSONObject> jsonObjects = generatorList(list, conf.getUsername());
         List<JSONObject> blue = jsonObjects.stream().filter(action -> action.getInteger("sorce") <= conf.getBlueSorce()).sorted((a, b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
         List<JSONObject> yellow = jsonObjects.stream().filter(action -> action.getInteger("sorce") <= conf.getYellowSorce()).sorted((a, b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
@@ -63,6 +67,7 @@ public class ReportService extends CreditsService implements IReportService {
         result.put("blue", blue);
         result.put("yellow", yellow);
         result.put("red", red);
+        result.put("creationTime", DateUtils.getFormatString(list.get(0).getCreationTime()));
         getTotalKindCount(list, conf, result);
         return result;
     }
@@ -90,11 +95,11 @@ public class ReportService extends CreditsService implements IReportService {
                 }
             }
         }
-        result.put("gambleCount",gambleCount);
-        result.put("loansCount",loansCount);
-        result.put("yellowCount",yellowCount);
-        result.put("livingCount",livingCount);
-        result.put("gameCount",gameCount);
+        result.put("gambleCount", gambleCount);
+        result.put("loansCount", loansCount);
+        result.put("yellowCount", yellowCount);
+        result.put("livingCount", livingCount);
+        result.put("gameCount", gameCount);
     }
 
     private JSONObject generatorByMobile(String mobile, CreditsWarn conf) {
@@ -123,7 +128,7 @@ public class ReportService extends CreditsService implements IReportService {
         int game = 0;
         int totalSorce = 0;
         JSONArray data = jobInfo.getData();
-        if(data == null){
+        if (data == null) {
             return null;
         }
         for (Object action : data) {
@@ -151,8 +156,9 @@ public class ReportService extends CreditsService implements IReportService {
         result.put("living", living);
         result.put("game", game);
         result.put("totalSorce", totalSorce);
-        result.put("data",jobInfo.getData());
-        result.put("warnLevel",getWarnLevel(totalSorce,conf));
+        result.put("data", jobInfo.getData());
+        result.put("warnLevel", getWarnLevel(totalSorce, conf));
+        result.put("creationTime", DateUtils.getFormatString(jobInfo.getCreationTime()));
         return result;
     }
 }

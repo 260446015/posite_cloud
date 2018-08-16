@@ -2,6 +2,8 @@ package com.zkjl.posite_cloud.controller;
 
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
+import com.zkjl.posite_cloud.domain.dto.LogDTO;
+import com.zkjl.posite_cloud.domain.pojo.Log;
 import com.zkjl.posite_cloud.domain.pojo.User;
 import com.zkjl.posite_cloud.service.IUserService;
 import io.swagger.annotations.ApiOperation;
@@ -9,6 +11,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -56,6 +59,26 @@ public class UserController extends BaseController {
             return error("删除用户失败!");
         }
         return success(flag);
+    }
+
+    /**
+     * 查询日志
+     * @param log
+     * @return
+     */
+    @PostMapping(value = "findLog")
+    public ApiResult findLog(@RequestBody LogDTO log){
+        PageImpl<Log> result;
+        String username;
+        try {
+            username = this.getCurrentUser().getUsername();
+            log.setUsername(username);
+            result = userService.findLog(log);
+        } catch (Exception e) {
+            logger.error("查询日志失败!",e.getMessage());
+            return error("查询日志失败!");
+        }
+        return successPages(result);
     }
 
 
