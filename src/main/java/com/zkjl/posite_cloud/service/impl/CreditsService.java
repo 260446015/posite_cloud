@@ -2,6 +2,7 @@ package com.zkjl.posite_cloud.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.zkjl.posite_cloud.common.Constans;
 import com.zkjl.posite_cloud.common.util.EmailUtils;
 import com.zkjl.posite_cloud.common.util.PageUtil;
 import com.zkjl.posite_cloud.dao.CreditsRepository;
@@ -12,6 +13,10 @@ import com.zkjl.posite_cloud.domain.pojo.JobInfo;
 import com.zkjl.posite_cloud.service.ICreditsService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -29,10 +34,15 @@ public class CreditsService implements ICreditsService {
     private JobInfoRepository jobInfoRepository;
     @Resource
     private CreditsRepository creditsRepository;
+    @Resource
+    private MongoTemplate mongoTemplate;
 
     @Override
     public PageImpl<JSONObject> creditsWarining(CreditsDTO creditsDTO) throws Exception {
-        List<JobInfo> list = jobInfoRepository.findByUsername(creditsDTO.getUsername());
+//        List<JobInfo> list = jobInfoRepository.findByUsername(creditsDTO.getUsername());
+        Query query = new Query();
+        query.addCriteria(Criteria.where("username").is(creditsDTO.getUsername())).with(Sort.by(Sort.Direction.DESC,"creationTime"));
+        List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
         List<JSONObject> result = generatorList(list);
         System.out.println(result);
         List<JSONObject> collect = result.stream().filter(action -> {
@@ -91,58 +101,33 @@ public class CreditsService implements ICreditsService {
                 flag = true;
             }
             return flag;
-        }).collect(Collectors.toList());
+        }).sorted((a,b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
 
         return (PageImpl<JSONObject>) PageUtil.pageBeagin(collect.size(), creditsDTO.getPageNum(), creditsDTO.getPageSize(), collect);
     }
 
-    private String getWarnLevel(int sorce) {
-        if (sorce <= 5) {
+    private String getWarnLevel(int sorce,CreditsWarn conf) {
+        if (sorce <= conf.getBlueSorce()) {
             return "蓝色预警";
-        } else if (sorce <= 8) {
-            return "黄色预警";
-        } else if (sorce <= 20) {
+        } else if (sorce <= conf.getYellowSorce()) {
             return "橙色预警";
-        } else {
+        }  else {
             return "红色预警";
         }
     }
 
     protected List<JSONObject> generatorList(List<JobInfo> list) {
-        Map<String, Set<JSONObject>> checkMobile = new TreeMap<>();
-        list.forEach(jobInfo -> {
-            String mobile = jobInfo.getMobile();
-            JSONArray data = jobInfo.getData();
-            if (data != null) {
-                data.forEach(element -> {
-                    JSONObject perElement = (JSONObject) JSONObject.toJSON(element);
-                    Boolean ifsuccess = perElement.getBoolean("success");
-                    if (ifsuccess) {
-                        Boolean ifregister = perElement.getBoolean("register");
-                        if (ifregister) {
-                            Set<JSONObject> jsonObjects = checkMobile.get(mobile);
-                            if (jsonObjects == null) {
-                                Set<JSONObject> innerData = new HashSet<>();
-                                innerData.add(perElement);
-                                checkMobile.put(mobile, innerData);
-                            } else {
-                                jsonObjects.add(perElement);
-                            }
-                        }
-                    }
-                });
-            }
-        });
-        List<Map.Entry<String, Set<JSONObject>>> list2 = new ArrayList<>(checkMobile.entrySet());
-
-        Collections.sort(list2, (o1, o2) -> o2.getValue().size() - o1.getValue().size());
+        Set<String> check = new HashSet<>();
         List<JSONObject> result = new ArrayList<>();
+        List<JobInfo> collect = list.stream().filter(action -> check.add(action.getMobile()) && action.getData() != null).collect(Collectors.toList());
         List<CreditsWarn> all = creditsRepository.findAll();
         CreditsWarn conf = all.get(0);
-        list2.forEach(action -> {
+        collect.forEach(action -> {
             JSONObject data = new JSONObject();
             int totalSorce = 0;
-            for (JSONObject action2 : action.getValue()) {
+            JSONArray jsonArray = action.getData();
+            for (Object obj : jsonArray) {
+                JSONObject action2 = new JSONObject((Map<String, Object>) obj);
                 if (conf.getLiving().getString("name").equals(action2.getString("webtype"))) {
                     totalSorce += conf.getLiving().getInteger("sorce");
                 } else if (conf.getGamble().getString("name").equals(action2.getString("webtype"))) {
@@ -155,10 +140,12 @@ public class CreditsService implements ICreditsService {
                     totalSorce += conf.getLoans().getInteger("sorce");
                 }
             }
-            data.put("mobile", action.getKey());
-            data.put("registCount", action.getValue().size());
+            data.put("mobile", action.getMobile());
+            data.put("registCount", action.getData().size());
             data.put("sorce", totalSorce);
-            data.put("data", action.getValue());
+            data.put("data", action.getData());
+            data.put("creationTime",action.getCreationTime());
+            data.put("warnInfo",getWarnLevel(totalSorce,conf));
             result.add(data);
         });
         System.out.println(result);
