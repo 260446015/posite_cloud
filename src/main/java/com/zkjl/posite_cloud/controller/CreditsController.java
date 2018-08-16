@@ -2,6 +2,7 @@ package com.zkjl.posite_cloud.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
+import com.zkjl.posite_cloud.common.SystemControllerLog;
 import com.zkjl.posite_cloud.domain.dto.CreditsDTO;
 import com.zkjl.posite_cloud.service.ICreditsService;
 import io.swagger.annotations.ApiOperation;
@@ -49,6 +50,7 @@ public class CreditsController extends BaseController{
      * 发送邮件
      */
     @GetMapping(value = "sendEmail")
+    @SystemControllerLog(description = "发送邮件")
     public void sendEmail() throws Exception {
         creditsService.sendEmail();
     }

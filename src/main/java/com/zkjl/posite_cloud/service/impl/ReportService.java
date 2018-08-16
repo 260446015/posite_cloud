@@ -152,6 +152,7 @@ public class ReportService extends CreditsService implements IReportService {
         result.put("game", game);
         result.put("totalSorce", totalSorce);
         result.put("data",jobInfo.getData());
+        result.put("warnLevel",getWarnLevel(totalSorce,conf));
         return result;
     }
 }

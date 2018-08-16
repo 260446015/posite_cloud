@@ -37,7 +37,7 @@ public class FileController extends BaseController {
      */
     @PostMapping(value = "file/upload")
     @RequiresPermissions(value = {"upload1","upload2"},logical = Logical.OR)
-    @SystemControllerLog()
+    @SystemControllerLog(description = "添加采集-文件上传")
     @ApiOperation(value = "文件上传")
     public ApiResult upload(HttpServletRequest req) {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) req;

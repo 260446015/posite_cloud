@@ -2,6 +2,7 @@ package com.zkjl.posite_cloud.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
+import com.zkjl.posite_cloud.common.SystemControllerLog;
 import com.zkjl.posite_cloud.service.IReportService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ public class ReportController extends BaseController {
      * @return
      */
     @GetMapping(value = "report")
+    @SystemControllerLog(description = "生成报告")
     @ApiOperation(value = "获取报告信息")
     public ApiResult report(String mobile) {
         JSONObject result;

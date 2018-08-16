@@ -2,6 +2,7 @@ package com.zkjl.posite_cloud.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
+import com.zkjl.posite_cloud.common.SystemControllerLog;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
 import com.zkjl.posite_cloud.domain.vo.JobinfoVO;
@@ -29,6 +30,7 @@ public class ApiController extends BaseController {
     private IApiService apiService;
 
     @GetMapping(value = "createJob")
+    @SystemControllerLog(description = "添加采集-手动录入")
     public ApiResult createRedisJob(String datas) {
         JobDTO jobInfo;
         try {

@@ -1,6 +1,7 @@
 package com.zkjl.posite_cloud.controller;
 
 import com.zkjl.posite_cloud.common.ApiResult;
+import com.zkjl.posite_cloud.common.SystemControllerLog;
 import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
 import com.zkjl.posite_cloud.service.ICreditsConfService;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +29,7 @@ public class CreditsConfController extends BaseController{
      * @return
      */
     @PostMapping(value = "saveCreditsConf")
+    @SystemControllerLog(description = "比重设置")
     @ApiOperation(value = "保存修改配置的积分规则")
     public ApiResult save(@RequestBody CreditsWarn creditsWarn){
         CreditsWarn result;

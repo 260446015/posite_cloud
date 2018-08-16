@@ -39,7 +39,6 @@ public class CreditsService implements ICreditsService {
 
     @Override
     public PageImpl<JSONObject> creditsWarining(CreditsDTO creditsDTO) throws Exception {
-//        List<JobInfo> list = jobInfoRepository.findByUsername(creditsDTO.getUsername());
         Query query = new Query();
         query.addCriteria(Criteria.where("username").is(creditsDTO.getUsername())).with(Sort.by(Sort.Direction.DESC, "creationTime"));
         List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
@@ -106,7 +105,7 @@ public class CreditsService implements ICreditsService {
         return (PageImpl<JSONObject>) PageUtil.pageBeagin(collect.size(), creditsDTO.getPageNum(), creditsDTO.getPageSize(), collect);
     }
 
-    private String getWarnLevel(int sorce, CreditsWarn conf) {
+    protected String getWarnLevel(int sorce, CreditsWarn conf) {
         if (sorce <= conf.getBlueSorce()) {
             return "蓝色预警";
         } else if (sorce <= conf.getYellowSorce()) {
