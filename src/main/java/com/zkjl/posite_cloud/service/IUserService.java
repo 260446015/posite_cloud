@@ -18,4 +18,8 @@ public interface IUserService {
     PageImpl<Log> findLog(LogDTO log);
 
     PageImpl<User> findUser(UserDTO userDTO, User login);
+
+    User findUserById(String id);
+
+    boolean deleteLog(String id);
 }

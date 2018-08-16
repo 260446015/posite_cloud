@@ -86,6 +86,24 @@ public class UserController extends BaseController {
     }
 
     /**
+     * 删除日志
+     *
+     * @param id
+     * @return
+     */
+    @PostMapping(value = "deleteLog")
+    public ApiResult deleteLog(String id) {
+        boolean flag;
+        try {
+            flag = userService.deleteLog(id);
+        } catch (Exception e) {
+            logger.error("删除日志失败!", e.getMessage());
+            return error("删除日志失败!");
+        }
+        return success(flag);
+    }
+
+    /**
      * 查询用户
      *
      * @param userDTO
@@ -104,6 +122,21 @@ public class UserController extends BaseController {
             return error("查询日志失败!");
         }
         return successPages(result);
+    }
+
+    /**
+     * 根据id查询用户
+     */
+    @GetMapping(value = "findUserById")
+    public ApiResult findUserById(String id){
+        User result;
+        try {
+            result = userService.findUserById(id);
+        } catch (Exception e) {
+            logger.error("查询日志失败!", e.getMessage());
+            return error("查询日志失败!");
+        }
+        return success(result);
     }
 
 

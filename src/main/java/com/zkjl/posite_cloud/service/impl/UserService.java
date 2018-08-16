@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -141,5 +142,23 @@ public class UserService implements IUserService {
             return flag;
         }).collect(Collectors.toList());
         return (PageImpl<User>) PageUtil.pageBeagin(collect.size(), userDTO.getPageNum(), userDTO.getPageSize(), collect);
+    }
+
+    @Override
+    public User findUserById(String id) {
+        Optional<User> byId = userRepository.findById(id);
+        return byId.orElse(null);
+    }
+
+    @Override
+    public boolean deleteLog(String id) {
+        boolean flag = false;
+        try {
+            logRepository.deleteById(id);
+            flag = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return flag;
     }
 }
