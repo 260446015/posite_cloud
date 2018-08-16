@@ -57,7 +57,7 @@ public class EmailUtils {
         //创建邮件正文，为了避免邮件正文中文乱码问题，需要使用charset=UTF-8指明字符编码
         MimeBodyPart text = new MimeBodyPart();
         text.setContent("使用JavaMail创建的带附件的邮件", "text/html;charset=UTF-8");
-        MimeBodyPart attach = new MimeBodyPart();
+//        MimeBodyPart attach = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
         mp.addBodyPart(text);
         message.setContent(mp);
