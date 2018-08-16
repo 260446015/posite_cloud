@@ -73,10 +73,10 @@
     <div class="section">
         <div class="tittle">
             <p>个人网络行为分析报告</p>
-            <p>
-                <span style="margin-right: 10px;">任务时间：2018-08-10  11:00:00</span>
-                <span>生成时间：2018-08-10  11:35:00</span>
-            </p>
+            <!--<p>-->
+                <!--<span style="margin-right: 10px;">任务时间：2018-08-10  11:00:00</span>-->
+                <!--<span>生成时间：2018-08-10  11:35:00</span>-->
+            <!--</p>-->
         </div>
 
         <div class="sm_title">一、筛查注册情况</div>
@@ -88,39 +88,25 @@
             <div class="re_charrig">
                 <div id="huanxing" style="width: 90%;height: 90%;margin:10% 5% 0 5%;"></div>
             </div>
-            <div class="re_shuomin">  经筛查结果显示，此次任务，其中注册涉黄平台100人，赌博平台300人，网袋平台500人，游戏平台1000人，直播平台1000人。共注册危险网站2000个。</div>
+            <div class="re_shuomin re_shuomin1">  经筛查结果显示，此次任务，其中注册涉黄平台100人，赌博平台300人，网袋平台500人，游戏平台1000人，直播平台1000人。共注册危险网站2000个。</div>
         </div>
 
         <div class="sm_title">二、网站注册情况</div>
 
         <div class="rp_yjbox" style="margin-top: 30px;">
             <div class="sc_zdgray">
-                <span>手机号</span>
+                <span>类型</span>
                 <span>App</span>
             </div>
-            <div>
-                <span>17610988656</span>
-                <span>byplay,migu</span>
-            </div>
-            <div class="sc_zdgray">
-                <span>17610988656</span>
-                <span>byplay,migu</span>
-            </div>
-            <div>
-                <span>17610988656</span>
-                <span>byplay,migu</span>
-            </div>
-            <div class="sc_zdgray">
-                <span>17610988656</span>
-                <span>byplay,migu</span>
-            </div>
+            <p class="rplist" style="overflow: hidden;margin: 0;"></p>
         </div>
 
 
         <div class="sm_title">三、结果分析</div>
-        <div class="re_shuomin" style="margin: 20px 0;">通过数据分析，本次筛查任务人员网络异常行为较高，危险指数较高</div>
+        <div class="re_shuomin re_shuomin2" style="margin: 20px 0;">通过数据分析，本次筛查任务人员网络异常行为较高，危险指数较高</div>
 
         <div class="luokuan">中科金联（北京）科技有限公司</div>
+        <div class="luokuan riqi"></div>
 
     </div>
 </section>
@@ -250,6 +236,38 @@
             });
             // 设置加载等待隐藏
             myChart2.hideLoading();
+            
+            //app注册情况
+            $.each(res.data.data,function (i,item) {
+                if(i%2){
+                    list = '<div class="sc_zdgray">' +
+                        '<span>'+item.webtype+'</span>' +
+                        '<span>'+item.webname+'</span>' +
+                        '</div>';
+                }else{
+                    list = '<div>' +
+                        '<span>'+item.webtype+'</span>' +
+                        '<span>'+item.webname+'</span>' +
+                        '</div>';
+                }
+                $(".rplist").append(list);
+            });
+
+            $(".re_shuomin1").html("经筛查结果显示，此次任务，其中注册涉黄平台"+num.yellow+"个，赌博平台"+num.gamble+"个，网袋平台"+num.loans+"个，游戏平台"+num.game+"个，直播平台"+num.living+"个。共注册危险网站"+(num.yellow+num.gamble+num.loans+num.game+num.living)+"个。");
+
+            var zhuatai = '';
+            switch(num.warnLevel){
+                case "蓝色预警":
+                    zhuatai = "红色"
+                    break
+                case "橙色预警":
+                    zhuatai = "橙色"
+                    break
+                case "红色预警":
+                    zhuatai = "红色"
+                    break
+            }
+            $(".re_shuomin2").html("通过数据分析，该人员网络异常等级为"+zhuatai+"，危险指数"+num.totalSorce+";");
         }
     });
 

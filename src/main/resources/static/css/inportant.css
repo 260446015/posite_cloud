@@ -90,6 +90,9 @@ body .layui-form-select{
 .yj_red{
     background: red;
 }
+.zd_box p{
+    min-height: 250px;
+}
 
 /*按钮盒子*/
 .btnbox{

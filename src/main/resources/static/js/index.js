@@ -1,9 +1,24 @@
 
 
 $(function () {
+
     //舆情信息
     yuqinghuoqu(0,11);
     function yuqinghuoqu(pagenum,pagesize) {
+        //近7天时间
+        var time1 = new Date();
+        time1.setTime(time1.getTime());
+        var Y1 = time1.getFullYear();
+        var M1 = ((time1.getMonth() + 1) > 10 ? (time1.getMonth() + 1) : '0' + (time1.getMonth() + 1));
+        var D1 = (time1.getDate() > 10 ? time1.getDate() : '0' + time1.getDate());
+        var timer1 = Y1 +'-'+ M1 +'-'+ D1+' 00:00:00' ;// 当前时间
+        var time2 = new Date();
+        time2.setTime(time2.getTime() - (24 * 60 * 60 * 1000 * 7));
+        var Y2 = time2.getFullYear();
+        var M2 = ((time2.getMonth() + 1) > 9 ? (time2.getMonth() + 1) : '0' + (time2.getMonth() + 1));
+        var D2 = (time2.getDate() > 9 ? time2.getDate() : '0' + time2.getDate());
+        var timer2 = Y2+'-'+ M2+'-'+ D2+' 00:00:00'; // 之后的七天或者一个月
+
         $.ajax({
             url: "/api/sentiment",
             type: "post",
@@ -11,8 +26,8 @@ $(function () {
                 withCredentials: true
             },
             data: JSON.stringify({
-                "beginDate": "2018-08-00 00:00:00",
-                "endDate": "2018-08-15 00:00:00",
+                "beginDate": timer2,
+                "endDate": timer1,
                 "msg": [
                     "赌博","贷款","色情","黄色","主播","直播","游戏","承德"
                 ],
@@ -28,12 +43,14 @@ $(function () {
                 $.each(res.data.result,function (i,item) {
                     var list;
                     if(i%2){
-                        list = "<div data-href='"+item.content+"'>" +
+                        list = "<div>" +
+                            "<i class='none'>"+item.content+"</i>" +
                             "<a>"+item.cleanTitle+"</a>" +
                             "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
                             "</div>";
                     }else{
-                        list = "<div class='sc_zdgray'' data-href='"+item.content+"'>" +
+                        list = "<div class='sc_zdgray'>" +
+                            "<i class='none'>"+item.content+"</i>" +
                             "<a>"+item.cleanTitle+"</a>" +
                             "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
                             "</div>";
@@ -50,7 +67,7 @@ $(function () {
             shade: false,
             area: ["900px","600px"], //宽高
             title: false, //不显示标题
-            content: $(this).attr("data-href")
+            content: $(this).find("i").html()
         });
     });
 

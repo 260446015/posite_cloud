@@ -72,7 +72,7 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                         '<span>'+item.mobile+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
-                        '<span>'+zdrysc.timechange(item.registCount)+'</span>' +
+                        '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
                         '<span><div class="layui-btn layui-btn-normal baocunbtn" data-href="'+item.mobile+'">查看报告</div></span>' +
                         '</div>';
                 }else{
@@ -80,7 +80,7 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                         '<span>'+item.mobile+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
-                        '<span>'+zdrysc.timechange(item.registCount)+'</span>' +
+                        '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
                         '<span><div class="layui-btn layui-btn-normal baocunbtn" data-href="'+item.mobile+'">查看报告</div></span>' +
                         '</div>';
                 }

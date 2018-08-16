@@ -12,12 +12,15 @@ var list;
 var mydata, n, y, r, s, f, m, z, state;
 zdrysc.getTime = function () {
     mydata = new Date();
-    n = mydata.getFullYear();
-    y = mydata.getMonth() + 1;
-    r = mydata.getDate();
-    s = mydata.getHours();
-    f = mydata.getMinutes();
-    m = mydata.getSeconds();
+    var n = mydata.getFullYear();
+    var y = ((mydata.getMonth() + 1) > 9 ? (mydata.getMonth() + 1) : '0' + (mydata.getMonth() + 1));
+    var r =  (mydata.getDate() > 9 ? mydata.getDate() : '0' + mydata.getDate());
+    var s = (mydata.getHours() > 9 ? mydata.getHours() : '0' + mydata.getHours());
+    var f = (mydata.getMinutes() > 9 ? mydata.getMinutes() : '0' + mydata.getMinutes());
+    var m = (mydata.getSeconds() > 9 ? mydata.getSeconds() : '0' + mydata.getSeconds());
+
+    $(".riqi").html(n+"年"+y+"月"+r+"日");
+
     switch (mydata.getDay()) {
         case 0:
             z = "日";
@@ -71,10 +74,7 @@ zdrysc.getTime = function () {
     else {
         state = "夜里好"
     }
-    $(".times_f").html(s + ":" + f);
-    $(".timey_r").html(y + "月" + r + "日");
-    $(".time_z").html("星期" + z);
-    $(".time_statue").html(state);
+
 }
 
 zdrysc.getTime();

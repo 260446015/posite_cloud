@@ -225,6 +225,19 @@
                     var appname = '';
                     var appspsn = '';
                     var odata;
+                    var oclass = "yj_lanse";
+                    switch (item.warnInfo){
+                        case "红色预警":
+                            oclass = "yj_hongse";
+                            break
+                        case "橙色预警":
+                            oclass = "yj_chengse";
+                            break
+                        case "蓝色预警":
+                            oclass = "yj_lanse";
+                            break
+                    }
+                    console.log(oclass);
                     $.each(item.data,function (i,item) {
                         if(i==0){
                             appname+=item.webname
@@ -239,14 +252,14 @@
                         odata = appname;
                     }
                     if(i%2){
-                        list = '<div class="sc_zdgray yj_lanse">' +
+                        list = '<div class="sc_zdgray '+oclass+'">' +
                             '<span>'+item.mobile+'</span>' +
                             '<span>'+item.sorce+'</span>' +
                             '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
                             '<span><div class="layui-btn layui-btn-normal baocunbtn baocunbtn1">发送邮件</div></span>' +
                             '</div>';
                     }else{
-                        list = '<div class="yj_lanse">' +
+                        list = '<div class="'+oclass+'">' +
                             '<span>'+item.mobile+'</span>' +
                             '<span>'+item.sorce+'</span>' +
                             '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +

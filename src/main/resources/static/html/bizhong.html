@@ -29,6 +29,12 @@
         body{
             background: #edeef2;
         }
+        .baocunbtn{
+            width: 200px;
+            margin: 30px auto;
+            float: none;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -65,52 +71,115 @@
         <div class="bz_box">
             <div class="bz_li">
                 <label>网络赌博</label>
-                <input type="text" class="layui-input" value="10">
+                <input type="text" class="layui-input bz_db">
             </div>
             <div class="bz_li">
                 <label>网络贷款</label>
-                <input type="text" class="layui-input" value="7">
+                <input type="text" class="layui-input bz_dk">
             </div>
             <div class="bz_li">
                 <label>色情网站</label>
-                <input type="text" class="layui-input" value="5">
+                <input type="text" class="layui-input bz_sh">
             </div>
             <div class="bz_li">
                 <label>网络游戏</label>
-                <input type="text" class="layui-input" value="2">
+                <input type="text" class="layui-input bz_yx">
             </div>
             <div class="bz_li">
                 <label>网络直播</label>
-                <input type="text" class="layui-input" value="1">
+                <input type="text" class="layui-input bz_zb">
             </div>
-            <div class="layui-btn layui-btn-normal baocunbtn">保存</div>
         </div>
         <div class="sc_title">预警级别设置</div>
         <div class="bz_box">
             <div class="bz_li">
                 <label>蓝色预警</label>
-                <input type="text" class="layui-input" value="10">
+                <input type="text" class="layui-input bz_ls">
             </div>
             <div class="bz_li">
                 <label>橙色预警</label>
-                <input type="text" class="layui-input" value="10">
+                <input type="text" class="layui-input bz_cs">
             </div>
             <div class="bz_li">
                 <label>红色预警</label>
-                <input type="text" class="layui-input" value="10">
+                <input type="text" class="layui-input bz_hs">
             </div>
-            <div class="layui-btn layui-btn-normal baocunbtn">保存</div>
         </div>
+        <div class="layui-btn layui-btn-normal baocunbtn">保存</div>
     </div>
 </section>
 </body>
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
 <script>
-    layui.use(['laypage', 'layer','upload']);
-    var upload = layui.upload;
-    var laypage = layui.laypage;
+    //任务列表
+    $.ajax({
+        url: "/api/findCreditsConf",
+        type: "get",
+        xhrFields: {
+            withCredentials: true
+        },
+        data:{},
+        success: function (res) {
+            console.log(res)
+            if (res.code != 0) {
+                return layer.msg(res.message, {anim: 6});
+            }
+            var onum = res.data;
 
+            $(".bz_db").val(onum.gamble.sorce);
+            $(".bz_dk").val(onum.loans.sorce);
+            $(".bz_sh").val(onum.yellow.sorce);
+            $(".bz_yx").val(onum.game.sorce);
+            $(".bz_zb").val(onum.living.sorce);
+
+            $(".bz_ls").val(onum.blueSorce);
+            $(".bz_cs").val(onum.yellowSorce);
+            $(".bz_hs").val(onum.redSorce);
+
+            $(".baocunbtn").attr("data-href",onum.id);
+        }
+    });
+
+
+    $(".baocunbtn").click(function () {
+        $.ajax({
+            url: "/api/saveCreditsConf",
+            type: "post",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: JSON.stringify({
+                blueSorce: $(".bz_ls").val(),
+                gamble: {
+                    sorce: $(".bz_db").val(), name: "赌博"
+                },
+                game: {
+                    sorce: $(".bz_yx").val(), name: "游戏"
+                },
+                id:$(".baocunbtn").attr("data-href"),
+                living: {
+                    sorce: $(".bz_zb").val(), name: "直播"
+                },
+                loans: {
+                    sorce: $(".bz_dk").val(), name: "贷款"
+                },
+                redSorce: $(".bz_hs").val(),
+                yellow: {
+                    sorce: $(".bz_sh").val(), name: "涉黄"
+                },
+                yellowSorce: $(".bz_cs").val()
+            }),
+            contentType: "application/json",
+            success: function (res) {
+                //console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                layer.msg("保存成功");
+            }
+        });
+    });
 
 </script>
 </html>

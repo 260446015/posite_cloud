@@ -155,8 +155,8 @@ $(function () {
                         $(".jindushow").find(".layui-progress-text").html('100%');
                     },500);
                 }else{
+                    var jind =  Math.floor((suces/total)*100);
                     setTimeout(function () {
-                        var jind =  Math.floor((suces/total)*100);
                         element.progress('jindutiao',jind+'%');
                     },500);
                     $(".jindushow").find(".layui-progress-text").html(jind+'%');
@@ -170,5 +170,35 @@ $(function () {
     //生成任务报告
     $(".sc_renwu").on("click",".btntrue",function () {
         window.location = "repotr_renwu.html?"+$(this).attr("id");
+    });
+    //开启关闭任务
+    function renwustatus(statue) {
+        $.ajax({
+            url: "/api/updateJob",
+            type: "post",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: JSON.stringify({
+                status: statue,
+                taskid: $(".listpage").attr("data-href")
+            }),
+            contentType: "application/json",
+            success: function (res) {
+                console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                layer.msg("操作完成");
+            }
+        })
+    }
+    //任务暂停
+    $(".re_close").click(function () {
+        renwustatus("stop");
+    });
+    //任务开启
+    $(".re_begin").click(function () {
+        renwustatus("start");
     });
 })

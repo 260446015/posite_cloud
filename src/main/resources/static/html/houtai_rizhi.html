@@ -72,12 +72,12 @@
         <div class="bz_box">
             <div class="bz_li">
                 <label>操作人</label>
-                <input type="text" class="layui-input" placeholder="请输入要查询的操作人">
+                <input type="text" class="layui-input ba_user" placeholder="请输入要查询的操作人">
             </div>
             <div class="bz_li">
                 <label>操作时间</label>
-                <input type="text" class="layui-input" id="begin" placeholder="开始时间">
-                <input type="text" class="layui-input" id="last" placeholder="结束时间" style="margin-left: 10px;">
+                <input type="text" class="layui-input ba_time1" id="begin" placeholder="开始时间">
+                <input type="text" class="layui-input ba_time2" id="last" placeholder="结束时间" style="margin-left: 10px;">
             </div>
 
             <div class="layui-btn layui-btn-normal baocunbtn">查询</div>
@@ -92,99 +92,8 @@
                     <th>操作时间</th>
                     <th>操作</th>
                 </tr>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>姜先生</td>
-                    <td>采集</td>
-                    <td>2018-12-12 12:12:12</td>
-                    <td>
-                        <span class="iconfont icon-shanchu"></span>
-                    </td>
-                </tr>
-                <tr class="sc_zdgray">
-                    <td>1</td>
-                    <td>姜先生</td>
-                    <td>采集</td>
-                    <td>2018-12-12 12:12:12</td>
-                    <td>
-                        <span class="iconfont icon-shanchu"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>姜先生</td>
-                    <td>采集</td>
-                    <td>2018-12-12 12:12:12</td>
-                    <td>
-                        <span class="iconfont icon-shanchu"></span>
-                    </td>
-                </tr>
-                <tr class="sc_zdgray">
-                    <td>1</td>
-                    <td>姜先生</td>
-                    <td>采集</td>
-                    <td>2018-12-12 12:12:12</td>
-                    <td>
-                        <span class="iconfont icon-shanchu"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>姜先生</td>
-                    <td>采集</td>
-                    <td>2018-12-12 12:12:12</td>
-                    <td>
-                        <span class="iconfont icon-shanchu"></span>
-                    </td>
-                </tr>
-                <tr class="sc_zdgray">
-                    <td>1</td>
-                    <td>姜先生</td>
-                    <td>采集</td>
-                    <td>2018-12-12 12:12:12</td>
-                    <td>
-                        <span class="iconfont icon-shanchu"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>姜先生</td>
-                    <td>采集</td>
-                    <td>2018-12-12 12:12:12</td>
-                    <td>
-                        <span class="iconfont icon-shanchu"></span>
-                    </td>
-                </tr>
-                <tr class="sc_zdgray">
-                    <td>1</td>
-                    <td>姜先生</td>
-                    <td>采集</td>
-                    <td>2018-12-12 12:12:12</td>
-                    <td>
-                        <span class="iconfont icon-shanchu"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>姜先生</td>
-                    <td>采集</td>
-                    <td>2018-12-12 12:12:12</td>
-                    <td>
-                        <span class="iconfont icon-shanchu"></span>
-                    </td>
-                </tr>
-                <tr class="sc_zdgray">
-                    <td>1</td>
-                    <td>姜先生</td>
-                    <td>采集</td>
-                    <td>2018-12-12 12:12:12</td>
-                    <td>
-                        <span class="iconfont icon-shanchu"></span>
-                    </td>
-                </tr>
-            </table>
-            <div id="demo" class="listpage"></div>
+                <tbody class="ba_tbody"></table>
+            <div id='listpage' class='listpage' data-href='["","",""]'></div>
         </div>
     </div>
 </section>
@@ -194,7 +103,6 @@
 <script src="../js/common/common.js?versin=0"></script>
 <script>
     layui.use(['laypage', 'layer','upload','laydate']);
-    var upload = layui.upload;
     var laypage = layui.laypage;
     var laydate = layui.laydate;
     //常规用法
@@ -206,28 +114,117 @@
     });
 
     //分页
-    laypage.render({
-        elem: 'demo'
-        ,count: 100
-        ,layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
-        ,jump: function(obj){
-            console.log(obj)
-        }
-    });
-    zdrysc.setpagecss();
-    //删除
+    function setPageNo(count,limitnum) {
+        laypage.render({
+            elem: 'listpage'
+            ,count: count
+            ,limit:limitnum
+            ,layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+            ,jump: function(obj,first){
+                zdrysc.setpagecss();
+                if (!first) {
+                    var obdata = JSON.parse($(".listpage").attr("data-href"));
+                    getrizhi(obdata[0],obdata[1],(obj.curr - 1),obj.limit,obdata[2]);
+                }
+            }
+        });
+    }
+
+    //删除按钮
     $(".bz_tablebox").on("click",".icon-shanchu",function () {
+        var oid = $(this).attr("data-href");
         layer.confirm('确定要删除该用户吗？', {
             skin: 'layui-layer-lan', //样式类名
             btn: ['确定','取消'] //按钮
         }, function(){
-            layer.closeAll()
+            deleterizhi(oid);
         }, function(){
             layer.closeAll()
         });
     });
 
+    //删除函数
+    function deleterizhi(oid) {
+        $.ajax({
+            url: "/api/deleteLog",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                id: oid,
+            },
+            success: function (res) {
+                //console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                var obdata = JSON.parse($(".listpage").attr("data-href"));
+                getrizhi(obdata[0],obdata[1],0,10,obdata[2]);
+                layer.closeAll()
+            }
+        });
+    }
 
+    getrizhi("","",0,10,"");
+    function getrizhi(beginDate,endDate,pageNum,pageSize,username) {
+        $(".ba_tbody").empty();
+        $.ajax({
+            url: "/api/findLog",
+            type: "post",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: JSON.stringify({
+                beginDate: beginDate,
+                endDate: endDate,
+                pageNum: pageNum,
+                pageSize: pageSize,
+                username: username
+            }),
+            contentType: "application/json",
+            success: function (res) {
+                console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                if (0 === pageNum) {
+                    count = res.data.totalNumber;
+                    setPageNo(count,pageSize);
+                }
+                $.each(res.data.dataList,function (i,item) {
+                    if(i%2){
+                        list = '<tr class="sc_zdgray">' +
+                            '<td>'+(i+1)+'</td>' +
+                            '<td>'+item.username+'</td>' +
+                            '<td>'+item.content+'</td>' +
+                            '<td>'+item.cretionTime+'</td>' +
+                            '<td>' +
+                            '    <span class="iconfont icon-shanchu" data-href="'+item.id+'"></span>' +
+                            '</td>' +
+                            '</tr>';
+                    }else{
+                        list = '<tr>' +
+                            '<td>'+(i+1)+'</td>' +
+                            '<td>'+item.username+'</td>' +
+                            '<td>'+item.content+'</td>' +
+                            '<td>'+item.cretionTime+'</td>' +
+                            '<td>' +
+                            '    <span class="iconfont icon-shanchu" data-href="'+item.id+'"></span>' +
+                            '</td>' +
+                            '</tr>';
+                    }
+                    $(".ba_tbody").append(list);
+                });
+            }
+        })
+    }
 
+    //查询
+    $(".baocunbtn").click(function () {
+        var list = [$(".ba_time1").val(),$(".ba_time2").val(),$(".ba_user").val()];
+        $(".listpage").attr("data-href",JSON.stringify(list));
+        getrizhi($(".ba_time1").val(),$(".ba_time2").val(),0,10,$(".ba_user").val());
+    });
 </script>
 </html>

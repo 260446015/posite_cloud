@@ -30,6 +30,9 @@ body .fr{
 body .cr{
     cursor: pointer;
 }
+body .none{
+    display: none;
+}
 .layui-laypage a, .layui-laypage span {
     display: inline-block;
     vertical-align: middle;
