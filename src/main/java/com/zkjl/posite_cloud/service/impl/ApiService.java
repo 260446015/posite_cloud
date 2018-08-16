@@ -96,11 +96,17 @@ public class ApiService implements IApiService {
             }
             Integer level;
             List<JobInfo> byTaskid = jobInfoRepository.findByTaskid(taskId);
+            List<String> mobiles = byTaskid.stream().map(JobInfo::getMobile).collect(Collectors.toList());
             level = getLevel(byTaskid.size());
             jobDTO.setLevel(level);
             String _redisId = jobDTO.getUsername() + "_" + taskId + "_" + jobDTO.getLevel() + "_" + status;
             String redisId = jobDTO.getUsername() + "_" + taskId + "_" + jobDTO.getLevel() + "_" + jobDTO.getStatus();
-            redisTemplate.rename(_redisId, redisId);
+            try {
+                stringRedisTemplate.rename(_redisId, redisId);
+            } catch (Exception e) {
+                ListOperations<String, String> stringStringListOperations = stringRedisTemplate.opsForList();
+                mobiles.forEach(mobile -> stringStringListOperations.rightPush(redisId, mobile));
+            }
             flag = true;
         } catch (Exception e) {
             e.printStackTrace();
