@@ -18,12 +18,8 @@ import com.zkjl.posite_cloud.service.IApiService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -56,14 +52,6 @@ public class ApiService implements IApiService {
     @Override
     public JobDTO createJob(JobDTO jobDTO) {
         String taskId = getTaskId(jobDTO);
-        Query query = new Query();
-        query.addCriteria(Criteria.where("taskid").is(taskId)).with(Sort.by(Sort.Direction.DESC, "creationTime"));
-        JobInfo one = mongoTemplate.findOne(query, JobInfo.class, Constans.T_MOBILEDATAS);
-        if (one != null) {
-            BeanUtils.copyProperties(one, jobDTO);
-            jobDTO.setLevel(getLevel(jobDTO));
-            return jobDTO;
-        }
         List<JobInfo> preSaveDatas = new ArrayList<>();
         List<String> mobiles = Arrays.asList(jobDTO.getDatas().split(","));
         mobiles.forEach(mobile -> {
@@ -83,7 +71,7 @@ public class ApiService implements IApiService {
     }
 
     private String getTaskId(JobDTO jobBean) {
-        return MD5Util.encrypt(jobBean.getUsername() + StringUtils.join(jobBean.getDatas(), ","));
+        return MD5Util.encrypt(jobBean.getUsername() + jobBean.getDatas() + System.currentTimeMillis());
     }
 
     private void createRedisJob(JobDTO jobDTO) {
@@ -99,7 +87,7 @@ public class ApiService implements IApiService {
     public Boolean updateJob(JobDTO jobDTO) {
         Boolean flag = false;
         try {
-            String taskId = getTaskId(jobDTO);
+            String taskId = jobDTO.getTaskid();
             String status;
             if ("start".equalsIgnoreCase(jobDTO.getStatus())) {
                 status = "stop";
