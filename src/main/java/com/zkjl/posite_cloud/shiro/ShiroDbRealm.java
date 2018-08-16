@@ -52,6 +52,7 @@ public class ShiroDbRealm extends AuthorizingRealm {
         String[] split = role.getPermission().split(",");
         List<String> permissions = Arrays.asList(split);
         authorizationInfo.addStringPermissions(permissions);
+        authorizationInfo.addRole(user.getJobLevel());
         return authorizationInfo;
     }
 
