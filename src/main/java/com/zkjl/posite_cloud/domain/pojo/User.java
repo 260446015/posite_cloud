@@ -66,4 +66,8 @@ public class User {
      * 手机号
      */
     private String mobile;
+    /**
+     * 年龄
+     */
+    private Integer age;
 }
