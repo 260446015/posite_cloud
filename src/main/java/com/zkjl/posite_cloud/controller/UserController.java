@@ -91,7 +91,7 @@ public class UserController extends BaseController {
      * @param id
      * @return
      */
-    @PostMapping(value = "deleteLog")
+    @GetMapping(value = "deleteLog")
     public ApiResult deleteLog(String id) {
         boolean flag;
         try {
