@@ -9,10 +9,12 @@ import com.zkjl.posite_cloud.common.util.PageUtil;
 import com.zkjl.posite_cloud.common.util.RequestUtils;
 import com.zkjl.posite_cloud.dao.CreditsRepository;
 import com.zkjl.posite_cloud.dao.JobInfoRepository;
+import com.zkjl.posite_cloud.dao.RedistaskRepository;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
 import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
 import com.zkjl.posite_cloud.domain.pojo.JobInfo;
+import com.zkjl.posite_cloud.domain.pojo.Redistask;
 import com.zkjl.posite_cloud.domain.vo.JobinfoVO;
 import com.zkjl.posite_cloud.service.IApiService;
 import org.apache.commons.lang3.StringUtils;
@@ -43,6 +45,8 @@ public class ApiService implements IApiService {
     @Resource
     private JobInfoRepository jobInfoRepository;
     @Resource
+    private RedistaskRepository redistaskRepository;
+    @Resource
     private MongoTemplate mongoTemplate;
     @Resource
     private CreditsRepository creditsRepository;
@@ -63,6 +67,7 @@ public class ApiService implements IApiService {
             preSaveDatas.add(jobInfo);
         });
         jobInfoRepository.saveAll(preSaveDatas);
+        redistaskRepository.save(new Redistask(jobDTO.getUsername(),taskId,false));
         Integer level = getLevel(jobDTO);
         jobDTO.setLevel(level);
         jobDTO.setTaskid(taskId);
@@ -104,6 +109,10 @@ public class ApiService implements IApiService {
             try {
                 stringRedisTemplate.rename(_redisId, redisId);
             } catch (Exception e) {
+                byTaskid.forEach(action ->{
+                    action.setData(null);
+                });
+                jobInfoRepository.saveAll(byTaskid);
                 ListOperations<String, String> stringStringListOperations = stringRedisTemplate.opsForList();
                 mobiles.forEach(mobile -> stringStringListOperations.rightPush(redisId, mobile));
             }
@@ -263,11 +272,9 @@ public class ApiService implements IApiService {
     @Override
     public List<JobinfoVO> listJob(String username) {
         List<JobinfoVO> result = new ArrayList<>();
-        List<JobInfo> byUsername = jobInfoRepository.findByUsername(username);
-        Set<String> check = new HashSet<>();
-        List<JobInfo> collect = byUsername.stream().filter(action -> check.add(action.getTaskid())).collect(Collectors.toList());
+        List<Redistask> list = redistaskRepository.findByUsername(username);
         Set<String> keys = stringRedisTemplate.keys(username + "*");
-        collect.forEach(action -> {
+        list.forEach(action -> {
             JobinfoVO vo = new JobinfoVO();
             vo.setTaskId(action.getTaskid());
             vo.setCreationTime(action.getCreationTime());
