@@ -1,12 +1,9 @@
 package com.zkjl.posite_cloud.service.impl;
 
-import com.zkjl.posite_cloud.common.Constans;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
-import com.zkjl.posite_cloud.domain.pojo.User;
 import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IFileService;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,17 +28,7 @@ public class FileService implements IFileService {
         if (! checkFile(multipartFile)) {
             return null;
         }
-        User loginUser = (User) SecurityUtils.getSubject().getPrincipal();
-        int uploadCount = 0;
-        if(loginUser.getPermission().contains("upload1")){
-            uploadCount = Integer.MAX_VALUE;
-        }else if(loginUser.getPermission().contains("upload2")){
-            uploadCount = Constans.UPLOAD_COUNT;
-        }
         List<String> datas = readTxt(multipartFile);
-        if(datas.size() > uploadCount){
-            throw new CustomerException("您无权限上传超过规定数量的文件!");
-        }
         JobDTO param = createParam(username, datas);
         return apiService.createJob(param);
     }
