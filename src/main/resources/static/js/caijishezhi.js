@@ -27,6 +27,7 @@ $(function () {
         },
         data:{},
         success: function (res) {
+            //console.log(res)
             if (res.code != 0) {
                 return layer.msg(res.message, {anim: 6});
             }
@@ -35,7 +36,7 @@ $(function () {
                 if(item.ifFinish){
                     list = '<li><span id="'+item.taskId+'">'+zdrysc.timechange(item.creationTime)+'</span><a id="'+item.taskId+'" class="btntrue">生成报告</a></li>';
                 }else{
-                    list = '<li><span id="'+item.taskId+'">'+zdrysc.timechange(item.creationTime)+'</span><a id="'+item.taskId+'" class="btnfalse">生成报告</a></li>';
+                    list = '<li><span id="'+item.taskId+'">'+zdrysc.timechange(item.creationTime)+'</span><a id="'+item.taskId+'" class="btnfalse">正在采集</a></li>';
                 }
                 $(".sc_renwu").append(list);
             });
@@ -82,6 +83,7 @@ $(function () {
                 $.each(res.data.data.dataList,function (i,item) {
                     var appname = '';
                     var appspsn = '';
+                    var odata;
                     $.each(item.data,function (i,item) {
                         if(i==0){
                             appname+=item.webname
@@ -89,18 +91,23 @@ $(function () {
                             appname+="，"+item.webname
                         }
                         appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
-                    })
+                    });
+                    if(item.data==null){
+                        odata = "采集中..."
+                    }else{
+                        odata = appname;
+                    }
                     var list;
                     if(i%2){
                         list = '<div class="sc_zdgray">' +
                             '<span>'+item.mobile+'</span>' +
-                            '<span class="cr sc_zdspan" data-href="'+appspsn+'"> '+appname+'</span>' +
+                            '<span class="cr sc_zdspan" data-href="'+appspsn+'"> '+odata+'</span>' +
                             '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
                             '</div>';
                     }else{
                         list = '<div>' +
                             '<span>'+item.mobile+'</span>' +
-                            '<span class="cr sc_zdspan" data-href="'+appspsn+'">'+appname+'</span>' +
+                            '<span class="cr sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
                             '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
                             '</div>';
                     }
@@ -111,12 +118,14 @@ $(function () {
     }
     //点击详情
     $(".im_contenlist").on("click",".sc_zdspan",function () {
-        layer.open({
-            type: 1,
-            shade: false,
-            title: false, //不显示标题
-            content: $(this).attr("data-href")
-        });
+        if($(this).attr("data-href")){
+            layer.open({
+                type: 1,
+                shade: false,
+                title: false, //不显示标题
+                content: $(this).attr("data-href")
+            });
+        }
     });
     //查询点击
     $(".btnchaxun").click(function () {
@@ -134,20 +143,23 @@ $(function () {
                 taskId: taskid,
             },
             success: function (res) {
-                console.log(res);
+                //console.log(res);
                 if (res.code != 0) {
                     return layer.msg(res.message, {anim: 6});
                 }
-                var total = res.totalCount;
-                var suces = res.successCount;
+                var total = res.data.totalCount;
+                var suces = res.data.successCount;
                 if(total==suces){
                     setTimeout(function () {
                         element.progress('jindutiao', '100%');
+                        $(".jindushow").find(".layui-progress-text").html('100%');
                     },500);
                 }else{
-                    var jind =  Math.floor(suces/total);
-
-                    element.progress('jindutiao', jind+'%');
+                    setTimeout(function () {
+                        var jind =  Math.floor((suces/total)*100);
+                        element.progress('jindutiao',jind+'%');
+                    },500);
+                    $(".jindushow").find(".layui-progress-text").html(jind+'%');
                     setTimeout(function () {
                         jindu($(".listpage").attr("data-href"));
                     },3000);
@@ -155,4 +167,8 @@ $(function () {
             }
         });
     }
+    //生成任务报告
+    $(".sc_renwu").on("click",".btntrue",function () {
+        window.location = "repotr_renwu.html?"+$(this).attr("id");
+    });
 })

@@ -32,6 +32,11 @@
         .section{
             background: #fff;
         }
+        .layui-layer-content{
+            color: #fff;
+            background: #1e8cea;
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
@@ -63,166 +68,59 @@
         <p><a href="../index.html">HOME</a>   /   重点人员列表</p>
     </div>
     <div class="section">
-        <div class="bz_box layui-form" style="padding-top: 20px;">
+        <div class="bz_box layui-form" style="padding-top: 20px;overflow: unset;">
             <div class="bz_li">
                 <label>手机号码</label>
-                <input type="text" class="layui-input" placeholder="请输入要查询的手机号码">
+                <input type="text" class="layui-input ba_number" placeholder="请输入要查询的手机号码">
             </div>
             <div class="bz_li">
                 <label>平台名称</label>
-                <input type="text" class="layui-input" placeholder="请输入要查询的平台名称">
+                <input type="text" class="layui-input ba_pingtai"  placeholder="请输入要查询的平台名称">
             </div>
             <div class="bz_li">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">网站分类</label>
+                    <label class="layui-form-label ba_fenlei">网站分类</label>
                     <div class="layui-input-block" style="height: 30px;">
                         <select name="interest" lay-filter="aihao" style="height: 30px;">
                             <option value=""></option>
-                            <option value="网络赌博">网络赌博</option>
-                            <option value="网络贷款">网络贷款</option>
-                            <option value="色情网站">色情网站</option>
-                            <option value="网络直播">网络直播</option>
-                            <option value="网络游戏">网络游戏</option>
+                            <option value="赌博">网络赌博</option>
+                            <option value="贷款">网络贷款</option>
+                            <option value="涉黄">色情网站</option>
+                            <option value="直播">网络直播</option>
+                            <option value="游戏">网络游戏</option>
                         </select>
                     </div>
                 </div>
             </div>
             <div class="bz_li">
                 <label>最低分数</label>
-                <input type="text" class="layui-input" placeholder="请输入最低分数">
+                <input type="text" class="layui-input ba_minscore" placeholder="请输入最低分数">
             </div>
             <div class="bz_li">
                 <label>最高分数</label>
-                <input type="text" class="layui-input" placeholder="请输入最高分数">
+                <input type="text" class="layui-input ba_maxcore" placeholder="请输入最高分数">
             </div>
             <div class="layui-btn layui-btn-normal baocunbtn">查询</div>
         </div>
 
-        <div class="zd_box">
+        <div class="zd_box" style="overflow: hidden;">
             <div class="sc_zdgray">
-                <span>序号</span>
                 <span>手机号</span>
                 <span>分数</span>
+                <span>App</span>
                 <span>采集时间</span>
                 <span>报告</span>
             </div>
-            <div>
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
-            </div>
-            <div class="sc_zdgray">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
-            </div>
-            <div>
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
-            </div>
-            <div class="sc_zdgray">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
-            </div>
-            <div>
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
-            </div>
-            <div class="sc_zdgray">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
-            </div>
-            <div>
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
-            </div>
-            <div class="sc_zdgray">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
-            </div>
-            <div>
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
-            </div>
-            <div class="sc_zdgray">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
-            </div>
-            <div>
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
-            </div>
-            <div class="sc_zdgray">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
-            </div>
-            <div>
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
-            </div>
-            <div class="sc_zdgray">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-                <span><div class="layui-btn layui-btn-normal baocunbtn">查看报告</div></span>
-            </div>
+            <p class="zd_boxlist"></p>
         </div>
-
-        <div id="demo" class="listpage"></div>
+        <div id="listpage" class="listpage" data-href='{"maxSorce":"","minSorce":"","mobile":"","webname":""}'></div>
     </div>
 </section>
 </body>
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
+<script src="../js/import.js?versin=0"></script>
 <script>
-    layui.use(['laypage', 'layer']);
-    var laypage = layui.laypage;
-    laypage.render({
-        elem: 'demo'
-        ,count: 100
-        ,layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
-        ,jump: function(obj){
-            console.log(obj)
-        }
-    });
-    zdrysc.setpagecss();
+    getimportlist("","","",0,10,"","");
 </script>
 </html>

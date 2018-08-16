@@ -38,6 +38,18 @@
             width: 25%;
             text-align: center;
         }
+        .layui-layer-content{
+            color: #fff;
+            background: #1e8cea;
+            padding: 20px;
+        }
+        .baocunbtn1{
+            background: #fff;
+            color: #000;
+        }
+        .baocunbtn1:hover{
+            color: #000;
+        }
     </style>
 </head>
 <body>
@@ -103,99 +115,181 @@
 
         <!--按钮-->
         <div class="btnbox">
-            <div class="yj_btn">生成报告</div>
-            <div class="yj_btn">发送邮件</div>
             <a href="bizhong.html" class="yj_btn" style="background: red;">预警设置</a>
+        </div>
+
+        <div class="bz_box layui-form" style="padding-top: 20px;overflow: unset;">
+            <div class="bz_li">
+                <label>手机号码</label>
+                <input type="text" class="layui-input ba_number" placeholder="请输入要查询的手机号码">
+            </div>
+            <div class="bz_li">
+                <label>平台名称</label>
+                <input type="text" class="layui-input ba_pingtai"  placeholder="请输入要查询的平台名称">
+            </div>
+            <!--<div class="bz_li">-->
+                <!--<div class="layui-form-item">-->
+                    <!--<label class="layui-form-label ba_fenlei">网站分类</label>-->
+                    <!--<div class="layui-input-block" style="height: 30px;">-->
+                        <!--<select name="interest" lay-filter="aihao" style="height: 30px;">-->
+                            <!--<option value=""></option>-->
+                            <!--<option value="赌博">网络赌博</option>-->
+                            <!--<option value="贷款">网络贷款</option>-->
+                            <!--<option value="涉黄">色情网站</option>-->
+                            <!--<option value="直播">网络直播</option>-->
+                            <!--<option value="游戏">网络游戏</option>-->
+                        <!--</select>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="bz_li">-->
+                <!--<label>最低分数</label>-->
+                <!--<input type="text" class="layui-input ba_minscore" placeholder="请输入最低分数">-->
+            <!--</div>-->
+            <!--<div class="bz_li">-->
+                <!--<label>最高分数</label>-->
+                <!--<input type="text" class="layui-input ba_maxcore" placeholder="请输入最高分数">-->
+            <!--</div>-->
+            <div class="layui-btn layui-btn-normal baocunbtn">查询</div>
         </div>
 
         <div class="zd_box">
             <div class="sc_zdgray" style="background: #edeef2;">
-                <span>序号</span>
                 <span>手机号</span>
                 <span>分数</span>
-                <span>采集时间</span>
+                <span>App</span>
+                <span>操作</span>
             </div>
-            <div class="yj_lanse">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-            </div>
-            <div class="sc_zdgray yj_lanse">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-            </div>
-            <div class="yj_lanse">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-            </div>
-            <div class="yj_chengse">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-            </div>
-            <div class="sc_zdgray yj_chengse">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-            </div>
-            <div class="yj_chengse">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-            </div>
-            <div class="sc_zdgray yj_chengse">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-            </div>
-
-            <div class="yj_hongse">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-            </div>
-            <div class="sc_zdgray yj_hongse">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-            </div>
-            <div class="yj_hongse">
-                <span>1</span>
-                <span>17610988656</span>
-                <span>12</span>
-                <span>2018-12-12 12:!2:12</span>
-            </div>
+            <p class="zd_boxlist" style="overflow: hidden;"></p>
         </div>
 
-        <div id="demo" class="listpage"></div>
+        <div id="listpage" class="listpage" data-href='{"maxSorce":"","minSorce":"","mobile":"","webname":""}'></div>
     </div>
 </section>
 </body>
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
 <script>
-    layui.use(['laypage', 'layer']);
+
+    //分页设置
+    layui.use(['laypage','layer','element','form']);
     var laypage = layui.laypage;
-    laypage.render({
-        elem: 'demo'
-        ,count: 100
-        ,layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
-        ,jump: function(obj){
-            console.log(obj)
+    var element = layui.element;
+    var form = layui.form;
+
+    function setPageNo(count,limitnum) {
+        laypage.render({
+            elem: 'listpage'
+            ,count: count
+            ,limit:limitnum
+            ,layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+            ,jump: function(obj,first){
+                zdrysc.setpagecss();
+                if (!first) {
+                    var obdata = JSON.parse($(".listpage").attr("data-href"));
+                    getimportlist(obdata.maxSorce,obdata.minSorce,obdata.mobile,(obj.curr - 1),obj.limit,obdata.webname,obdata.webtype);
+                }
+            }
+        });
+    }
+
+    getimportlist("","","",0,10,"","");
+    function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype) {
+        $(".zd_boxlist").empty();
+        $.ajax({
+            url: "/api/warning",
+            type: "post",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: JSON.stringify({
+                maxSorce: maxSorce,
+                minSorce: minSorce,
+                mobile: mobile,
+                pageNum: pageNum,
+                pageSize: pageSize,
+                webname: webname,
+                webtype: webtype
+            }),
+            contentType: "application/json",
+            success: function (res) {
+                console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                if (0 === pageNum) {
+                    count = res.data.totalNumber;
+                    setPageNo(count,pageSize);
+                }
+                $.each(res.data.dataList,function (i,item) {
+                    var appname = '';
+                    var appspsn = '';
+                    var odata;
+                    $.each(item.data,function (i,item) {
+                        if(i==0){
+                            appname+=item.webname
+                        }else{
+                            appname+="，"+item.webname
+                        }
+                        appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
+                    });
+                    if(item.data==null){
+                        odata = "采集中..."
+                    }else{
+                        odata = appname;
+                    }
+                    if(i%2){
+                        list = '<div class="sc_zdgray yj_lanse">' +
+                            '<span>'+item.mobile+'</span>' +
+                            '<span>'+item.sorce+'</span>' +
+                            '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
+                            '<span><div class="layui-btn layui-btn-normal baocunbtn baocunbtn1">发送邮件</div></span>' +
+                            '</div>';
+                    }else{
+                        list = '<div class="yj_lanse">' +
+                            '<span>'+item.mobile+'</span>' +
+                            '<span>'+item.sorce+'</span>' +
+                            '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
+                            '<span><div class="layui-btn layui-btn-normal baocunbtn baocunbtn1">发送邮件</div></span>' +
+                            '</div>';
+                    }
+                    $(".zd_boxlist").append(list);
+                });
+            }
+        });
+    }
+
+    //点击详情
+    $(".zd_boxlist").on("click",".sc_zdspan",function () {
+        if($(this).attr("data-href")){
+            layer.open({
+                type: 1,
+                shade: false,
+                title: false, //不显示标题
+                content: $(this).attr("data-href")
+            });
         }
     });
-    zdrysc.setpagecss();
 
+    //生成报告
+    $(".zd_boxlist").on("click",".baocunbtn",function () {
+        window.location = "report.html"
+    });
+
+    //点击查询
+    form.on('select(aihao)', function(data){
+        $(".ba_fenlei").attr("data-href",data.value);
+    });
+    $(".baocunbtn").click(function () {
+        var data = JSON.stringify({
+            maxSorce: $(".ba_maxcore").val(),
+            minSorce: $(".ba_minscore").val(),
+            mobile: $(".ba_number").val(),
+            webname: $(".ba_pingtai").val(),
+            webtype: $(".ba_fenlei").attr("data-href")
+        });
+        $(".listpage").attr("data-href",data);
+        getimportlist($(".ba_maxcore").val(),$(".ba_minscore").val(),$(".ba_number").val(),0,10,$(".ba_pingtai").val(),$(".ba_fenlei").attr("data-href"));
+    });
 </script>
 </html>

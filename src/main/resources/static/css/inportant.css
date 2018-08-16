@@ -20,13 +20,25 @@ body .layui-form-select{
 .zd_box div{
     height: 30px;
     line-height: 30px;
+    overflow: hidden;
+    margin-top: -1px;
 }
 .zd_box div span{
     float: left;
     width: 20%;
     text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
-
+.sc_zdspan{
+    cursor: pointer;
+}
+.sc_zdgrayspan{
+    display: block;
+    padding: 0 30px;
+    text-align: center;
+}
 
 
 

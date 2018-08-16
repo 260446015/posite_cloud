@@ -1,0 +1,81 @@
+
+
+.section{
+    background: #fff;
+    width: 900px;
+    margin: 0 auto;
+    padding: 0 50px;
+}
+
+.tittle{
+    text-align: center;
+}
+.tittle p{
+    margin-top: 10px;
+}
+.tittle p:nth-child(1){
+    font-size: 20px;
+    color: #000;
+    margin-top: 100px;
+}
+.tittle p:nth-child(2){
+    font-size: 12px;
+    color: #666;
+}
+
+.sm_title{
+    margin-top: 50px;
+}
+
+/*图表部分*/
+.re_chartbox{
+    overflow: hidden;
+}
+.re_charlef{
+    width: 450px;
+    float: left;
+    height: 350px;
+}
+.re_charrig{
+    width: 450px;
+    float: left;
+    height: 350px;
+}
+.re_shuomin{
+    text-indent:2em;
+    line-height: 2;
+}
+
+/*预警*/
+.rp_yjbox{
+
+}
+.rp_yjbox div{
+    height: 30px;
+    line-height: 30px;
+}
+.rp_yjbox span{
+    float: left;
+    width: 33%;
+    text-align: center;
+    min-height: 10px;
+}
+.rp_yjbox p{
+    text-align: center;
+    margin: 30px 0 10px 0;
+}
+
+.luokuan{
+    margin: 120px;
+    text-align: right;
+}
+.xiazai{
+    overflow: hidden;
+    margin: 0 auto;
+    width: 1000px;
+}
+.xiazaibtn{
+    float: right;
+    margin: 20px 0;
+    padding: 0 30px;
+}

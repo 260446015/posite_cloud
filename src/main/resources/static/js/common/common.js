@@ -7,6 +7,7 @@ var zdrysc = {
     user: 'jianghaife',
     qq: '1465089870'
 };
+var list;
 //时间
 var mydata, n, y, r, s, f, m, z, state;
 zdrysc.getTime = function () {
