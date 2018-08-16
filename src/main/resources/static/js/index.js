@@ -14,7 +14,7 @@ $(function () {
                 "beginDate": "2018-08-00 00:00:00",
                 "endDate": "2018-08-15 00:00:00",
                 "msg": [
-                    "赌博","贷款","色情","黄色","主播","直播","游戏"
+                    "赌博","贷款","色情","黄色","主播","直播","游戏","承德"
                 ],
                 "pageNum": pagenum,
                 "pageSize": pagesize
@@ -162,5 +162,67 @@ $(function () {
         }
     });
 
-
+    //重点人员危险系数排名
+    getimportlist(100,0,"",0,10,"","","");
+    function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,username,webname,webtype) {
+        $(".sc_zdbox").empty();
+        $.ajax({
+            url: "/api/warning",
+            type: "post",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: JSON.stringify({
+                maxSorce: maxSorce,
+                minSorce: minSorce,
+                mobile: mobile,
+                pageNum: pageNum,
+                pageSize: pageSize,
+                username: username,
+                webname: webname,
+                webtype: webtype
+            }),
+            contentType: "application/json",
+            success: function (res) {
+                console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                $.each(res.data.dataList,function (i,item) {
+                    var appname = '';
+                    var appspsn = '';
+                    var odata;
+                    $.each(item.data,function (i,item) {
+                        if(i==0){
+                            appname+=item.webname
+                        }else{
+                            appname+="，"+item.webname
+                        }
+                        appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
+                    });
+                    if(item.data==null){
+                        odata = "采集中..."
+                    }else{
+                        odata = appname;
+                    }
+                    if(i%2){
+                        list = '<div class="sc_zdgray">' +
+                            '<span>'+(i+1)+'</span>' +
+                            '<span>'+item.mobile+'</span>' +
+                            '<span>'+item.registCount+'</span>' +
+                            '<span>'+item.sorce+'</span>' +
+                            '</div>';
+                    }else{
+                        list = '<div>' +
+                            '<span>'+(i+1)+'</span>' +
+                            '<span>'+item.mobile+'</span>' +
+                            '<span>'+item.registCount+'</span>' +
+                            '<span>'+item.sorce+'</span>' +
+                            '</div>';
+                    }
+                    $(".sc_zdbox").append(list);
+                });
+            }
+        });
+    }
 });
