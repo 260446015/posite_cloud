@@ -2,6 +2,7 @@ package com.zkjl.posite_cloud.service;
 
 
 import com.zkjl.posite_cloud.domain.dto.LogDTO;
+import com.zkjl.posite_cloud.domain.dto.UserDTO;
 import com.zkjl.posite_cloud.domain.pojo.Log;
 import com.zkjl.posite_cloud.domain.pojo.User;
 import org.springframework.data.domain.PageImpl;
@@ -15,4 +16,6 @@ public interface IUserService {
     Boolean delete(String id);
 
     PageImpl<Log> findLog(LogDTO log);
+
+    PageImpl<User> findUser(UserDTO userDTO, User login);
 }

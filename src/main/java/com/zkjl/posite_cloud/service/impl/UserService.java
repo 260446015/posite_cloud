@@ -1,9 +1,11 @@
 package com.zkjl.posite_cloud.service.impl;
 
+import com.zkjl.posite_cloud.common.util.DateUtils;
 import com.zkjl.posite_cloud.common.util.PageUtil;
 import com.zkjl.posite_cloud.dao.LogRepository;
 import com.zkjl.posite_cloud.dao.UserRepository;
 import com.zkjl.posite_cloud.domain.dto.LogDTO;
+import com.zkjl.posite_cloud.domain.dto.UserDTO;
 import com.zkjl.posite_cloud.domain.pojo.Log;
 import com.zkjl.posite_cloud.domain.pojo.User;
 import com.zkjl.posite_cloud.service.IUserService;
@@ -38,7 +40,7 @@ public class UserService implements IUserService {
         } else if (loginUser.getPermission().contains("create2")) {
             user.setJobLevel("normal");
         }
-        user.setCreationTime(Calendar.getInstance().getTime());
+        user.setCreationTime(DateUtils.getFormatString(Calendar.getInstance().getTime()));
         return userRepository.save(user);
     }
 
@@ -89,5 +91,54 @@ public class UserService implements IUserService {
             return flag;
         }).collect(Collectors.toList());
         return (PageImpl<Log>) PageUtil.pageBeagin(collect.size(), log.getPageNum(), log.getPageSize(), collect);
+    }
+
+    @Override
+    public PageImpl<User> findUser(UserDTO userDTO, User login) {
+        String domain = login.getDomain();
+        List<User> users = userRepository.findByDomain(domain);
+        users.remove(login);
+        List<User> collect = users.stream().filter(action -> {
+            boolean flag = false;
+            if (!StringUtils.isBlank(userDTO.getUsername())) {
+                if (action.getUsername().equals(userDTO.getUsername())) {
+                    flag = true;
+                }
+            } else {
+                flag = true;
+            }
+            return flag;
+        }).filter(action -> {
+            boolean flag = false;
+            if (!StringUtils.isBlank(userDTO.getName())) {
+                if (action.getName().equals(userDTO.getName())) {
+                    flag = true;
+                }
+            } else {
+                flag = true;
+            }
+            return flag;
+        }).filter(action -> {
+            boolean flag = false;
+            if (!StringUtils.isBlank(userDTO.getBeginDate())) {
+                if (action.getCreationTime().compareTo(userDTO.getBeginDate()) >= 0) {
+                    flag = true;
+                }
+            } else {
+                flag = true;
+            }
+            return flag;
+        }).filter(action -> {
+            boolean flag = false;
+            if (!StringUtils.isBlank(userDTO.getEndDate())) {
+                if (action.getCreationTime().compareTo(userDTO.getEndDate()) < 0) {
+                    flag = true;
+                }
+            } else {
+                flag = true;
+            }
+            return flag;
+        }).collect(Collectors.toList());
+        return (PageImpl<User>) PageUtil.pageBeagin(collect.size(), userDTO.getPageNum(), userDTO.getPageSize(), collect);
     }
 }

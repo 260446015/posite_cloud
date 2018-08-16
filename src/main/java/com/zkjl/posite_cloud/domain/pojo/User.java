@@ -4,8 +4,6 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-
 @Data
 @Document(collection = "user")
 public class User {
@@ -27,7 +25,7 @@ public class User {
     /**
      * 创建日期
      */
-    private Date creationTime;
+    private String creationTime;
     /**
      * 职位
      */
@@ -60,4 +58,8 @@ public class User {
      * 岗位
      */
     private String job;
+    /**
+     * 所属领域
+     */
+    private String domain;
 }
