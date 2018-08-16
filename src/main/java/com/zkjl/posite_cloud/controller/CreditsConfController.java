@@ -6,10 +6,7 @@ import com.zkjl.posite_cloud.service.ICreditsConfService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -34,11 +31,33 @@ public class CreditsConfController extends BaseController{
     @ApiOperation(value = "保存修改配置的积分规则")
     public ApiResult save(@RequestBody CreditsWarn creditsWarn){
         CreditsWarn result;
+        String username;
         try {
+            username = this.getCurrentUser().getUsername();
+            creditsWarn.setUsername(username);
             result = creditsConfService.save(creditsWarn);
         } catch (Exception e) {
             logger.error("保存积分配置出错！",e.getMessage());
             return error("保存积分配置出错！");
+        }
+        return success(result);
+    }
+
+    /**
+     * 查询配置的积分规则
+     * @return
+     */
+    @GetMapping(value = "findCreditsConf")
+    @ApiOperation(value = "查询配置的积分规则")
+    public ApiResult find(){
+        CreditsWarn result;
+        String username;
+        try {
+            username = this.getCurrentUser().getUsername();
+            result = creditsConfService.find(username);
+        } catch (Exception e) {
+            logger.error("查询配置的积分规则！",e.getMessage());
+            return error("查询配置的积分规则！");
         }
         return success(result);
     }

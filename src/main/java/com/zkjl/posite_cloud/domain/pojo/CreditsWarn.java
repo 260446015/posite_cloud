@@ -50,4 +50,8 @@ public class CreditsWarn implements Serializable {
      * 蓝色警戒界限
      */
     private Integer blueSorce;
+    /**
+     * 用户
+     */
+    private String username;
 }

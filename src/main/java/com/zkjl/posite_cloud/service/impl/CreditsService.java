@@ -41,9 +41,9 @@ public class CreditsService implements ICreditsService {
     public PageImpl<JSONObject> creditsWarining(CreditsDTO creditsDTO) throws Exception {
 //        List<JobInfo> list = jobInfoRepository.findByUsername(creditsDTO.getUsername());
         Query query = new Query();
-        query.addCriteria(Criteria.where("username").is(creditsDTO.getUsername())).with(Sort.by(Sort.Direction.DESC,"creationTime"));
+        query.addCriteria(Criteria.where("username").is(creditsDTO.getUsername())).with(Sort.by(Sort.Direction.DESC, "creationTime"));
         List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
-        List<JSONObject> result = generatorList(list);
+        List<JSONObject> result = generatorList(list, creditsDTO.getUsername());
         System.out.println(result);
         List<JSONObject> collect = result.stream().filter(action -> {
             boolean flag = false;
@@ -101,26 +101,26 @@ public class CreditsService implements ICreditsService {
                 flag = true;
             }
             return flag;
-        }).sorted((a,b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
+        }).sorted((a, b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
 
         return (PageImpl<JSONObject>) PageUtil.pageBeagin(collect.size(), creditsDTO.getPageNum(), creditsDTO.getPageSize(), collect);
     }
 
-    private String getWarnLevel(int sorce,CreditsWarn conf) {
+    private String getWarnLevel(int sorce, CreditsWarn conf) {
         if (sorce <= conf.getBlueSorce()) {
             return "蓝色预警";
         } else if (sorce <= conf.getYellowSorce()) {
             return "橙色预警";
-        }  else {
+        } else {
             return "红色预警";
         }
     }
 
-    protected List<JSONObject> generatorList(List<JobInfo> list) {
+    protected List<JSONObject> generatorList(List<JobInfo> list, String username) {
         Set<String> check = new HashSet<>();
         List<JSONObject> result = new ArrayList<>();
         List<JobInfo> collect = list.stream().filter(action -> check.add(action.getMobile()) && action.getData() != null).collect(Collectors.toList());
-        List<CreditsWarn> all = creditsRepository.findAll();
+        List<CreditsWarn> all = creditsRepository.findByUsername(username);
         CreditsWarn conf = all.get(0);
         collect.forEach(action -> {
             JSONObject data = new JSONObject();
@@ -144,8 +144,8 @@ public class CreditsService implements ICreditsService {
             data.put("registCount", action.getData().size());
             data.put("sorce", totalSorce);
             data.put("data", action.getData());
-            data.put("creationTime",action.getCreationTime());
-            data.put("warnInfo",getWarnLevel(totalSorce,conf));
+            data.put("creationTime", action.getCreationTime());
+            data.put("warnInfo", getWarnLevel(totalSorce, conf));
             result.add(data);
         });
         System.out.println(result);

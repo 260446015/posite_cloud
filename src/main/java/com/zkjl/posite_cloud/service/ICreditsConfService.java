@@ -10,4 +10,5 @@ public interface ICreditsConfService {
 
     CreditsWarn save(CreditsWarn creditsWarn);
 
+    CreditsWarn find(String username);
 }

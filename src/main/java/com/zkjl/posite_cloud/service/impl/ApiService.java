@@ -141,7 +141,7 @@ public class ApiService implements IApiService {
         int yellow = 0;
         int living = 0;
         int game = 0;
-        List<CreditsWarn> all = creditsRepository.findAll();
+        List<CreditsWarn> all = creditsRepository.findByUsername(username);
         CreditsWarn conf = all.get(0);
         for (Map.Entry<String, Set<JSONObject>> entry : check.entrySet()) {
             Set<JSONObject> value = entry.getValue();

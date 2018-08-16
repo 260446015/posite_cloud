@@ -15,9 +15,14 @@ import javax.annotation.Resource;
 public class CreditsConfService implements ICreditsConfService {
     @Resource
     private CreditsRepository creditsRepository;
+
     @Override
     public CreditsWarn save(CreditsWarn creditsWarn) {
         return creditsRepository.save(creditsWarn);
     }
 
+    @Override
+    public CreditsWarn find(String username) {
+        return creditsRepository.findByUsername(username).get(0);
+    }
 }
