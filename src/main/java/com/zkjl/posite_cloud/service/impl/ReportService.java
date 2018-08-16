@@ -63,7 +63,38 @@ public class ReportService extends CreditsService implements IReportService {
         result.put("blue", blue);
         result.put("yellow", yellow);
         result.put("red", red);
+        getTotalKindCount(list, conf, result);
         return result;
+    }
+
+    private void getTotalKindCount(List<JobInfo> list, CreditsWarn conf, JSONObject result) {
+        int gambleCount = 0;
+        int loansCount = 0;
+        int yellowCount = 0;
+        int livingCount = 0;
+        int gameCount = 0;
+        for (JobInfo jobinfo : list) {
+            JSONArray data = jobinfo.getData();
+            for (Object obj : data) {
+                JSONObject jsonObject = new JSONObject((Map<String, Object>) obj);
+                if (jsonObject.getString("webtype").equals(conf.getLiving().getString("name"))) {
+                    livingCount += 1;
+                } else if (jsonObject.getString("webtype").equals(conf.getYellow().getString("name"))) {
+                    yellowCount += 1;
+                } else if (jsonObject.getString("webtype").equals(conf.getLoans().getString("name"))) {
+                    loansCount += 1;
+                } else if (jsonObject.getString("webtype").equals(conf.getGamble().getString("name"))) {
+                    gambleCount += 1;
+                } else {
+                    yellowCount += 1;
+                }
+            }
+        }
+        result.put("gambleCount",gambleCount);
+        result.put("loansCount",loansCount);
+        result.put("yellowCount",yellowCount);
+        result.put("livingCount",livingCount);
+        result.put("gameCount",gameCount);
     }
 
     private JSONObject generatorByMobile(String mobile, CreditsWarn conf) {
@@ -92,6 +123,9 @@ public class ReportService extends CreditsService implements IReportService {
         int game = 0;
         int totalSorce = 0;
         JSONArray data = jobInfo.getData();
+        if(data == null){
+            return null;
+        }
         for (Object action : data) {
             JSONObject jsonObject = new JSONObject((Map<String, Object>) action);
             if (jsonObject.getString("webtype").equals(conf.getGamble().getString("name"))) {
@@ -117,6 +151,7 @@ public class ReportService extends CreditsService implements IReportService {
         result.put("living", living);
         result.put("game", game);
         result.put("totalSorce", totalSorce);
+        result.put("data",jobInfo.getData());
         return result;
     }
 }
