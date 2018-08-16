@@ -40,6 +40,7 @@ public class UserService implements IUserService {
         } else if (loginUser.getPermission().contains("create2")) {
             user.setJobLevel("normal");
         }
+        user.setIfEnable(false);
         user.setCreationTime(DateUtils.getFormatString(Calendar.getInstance().getTime()));
         return userRepository.save(user);
     }
