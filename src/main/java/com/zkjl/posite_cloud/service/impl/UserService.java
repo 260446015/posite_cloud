@@ -141,6 +141,9 @@ public class UserService implements IUserService {
             }
             return flag;
         }).collect(Collectors.toList());
+        if(collect.size() == 0){
+            return null;
+        }
         return (PageImpl<User>) PageUtil.pageBeagin(collect.size(), userDTO.getPageNum(), userDTO.getPageSize(), collect);
     }
 

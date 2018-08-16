@@ -118,8 +118,8 @@ public class UserController extends BaseController {
             login = this.getCurrentUser();
             result = userService.findUser(userDTO, login);
         } catch (Exception e) {
-            logger.error("查询日志失败!", e.getMessage());
-            return error("查询日志失败!");
+            logger.error("查询用户失败!", e.getMessage());
+            return error("查询用户失败!");
         }
         return successPages(result);
     }
