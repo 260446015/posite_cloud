@@ -304,7 +304,7 @@ public class ApiService implements IApiService {
         JSONObject result = new JSONObject();
         List<JobInfo> byTaskId = jobInfoRepository.findByTaskid(taskId);
         if (!StringUtils.isBlank(msg)) {
-            byTaskId = byTaskId.stream().filter(action -> action.getMobile().equals(msg)).collect(Collectors.toList());
+            byTaskId = byTaskId.stream().filter(action -> action.getMobile().equals(msg) && action.getData() != null).collect(Collectors.toList());
         }
         PageImpl<JobInfo> page = (PageImpl<JobInfo>) PageUtil.pageBeagin(byTaskId.size(), pageNum, pageSize, byTaskId);
 
