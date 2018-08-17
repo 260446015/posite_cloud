@@ -2,7 +2,7 @@
 
 
 .import_left{
-    width: 16%;
+    width: 18%;
     min-height: 600px;
     background: #fff;
     float: left;
@@ -59,7 +59,7 @@
 
 /*右侧*/
 .import_righ{
-    width: 82.5%;
+    width: 80.5%;
     min-height: 600px;
     float: right;
 }

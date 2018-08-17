@@ -72,7 +72,7 @@
     <div class="section">
         <div class="htbtnbox">
             <a href="houtai_user.html" class="ht_btn ht_active">用户管理</a>
-            <a href="houtai_quanxian.html" class="ht_btn">权限管理</a>
+            <!--<a href="houtai_quanxian.html" class="ht_btn">权限管理</a>-->
             <a style="border-right: 1px solid #ccc;" href="houtai_rizhi.html" class="ht_btn">日志管理</a>
         </div>
 
@@ -81,19 +81,23 @@
         <div class="bz_box">
             <div class="bz_li">
                 <label>用户名</label>
-                <input type="text" class="layui-input" placeholder="请输入要查询的用户名">
+                <input type="text" class="layui-input bo_username" placeholder="请输入要查询的用户名">
             </div>
             <div class="bz_li">
                 <label>姓名</label>
-                <input type="text" class="layui-input" placeholder="请输入要查询的姓名">
+                <input type="text" class="layui-input bo_name" placeholder="请输入要查询的姓名">
             </div>
             <div class="bz_li">
-                <label>注册时间</label>
-                <input type="text" class="layui-input" id="begin" placeholder="开始时间">
-                <input type="text" class="layui-input" id="last" placeholder="结束时间" style="margin-left: 10px;">
+                <label>手机号</label>
+                <input type="text" class="layui-input bo_mobile" placeholder="请输入要查询的手机号码">
             </div>
+            <!--<div class="bz_li">-->
+                <!--<label>注册时间</label>-->
+                <!--<input type="text" class="layui-input" id="begin" placeholder="开始时间">-->
+                <!--<input type="text" class="layui-input" id="last" placeholder="结束时间" style="margin-left: 10px;">-->
+            <!--</div>-->
 
-            <div class="layui-btn layui-btn-normal baocunbtn">查询</div>
+            <div class="layui-btn layui-btn-normal baocunbtn bc_chaxun">查询</div>
             <div class="layui-btn layui-btn-normal baocunbtn bc_btnadd">添加用户</div>
         </div>
 
@@ -113,7 +117,7 @@
                 </tr>
                 <tbody class="user_list"></tbody>
             </table>
-            <div id='listpage' class='listpage' data-href='["","","",""]'></div>
+            <div id='listpage' class='listpage' data-href='["","",""]'></div>
         </div>
     </div>
 </section>
@@ -198,15 +202,15 @@
                 zdrysc.setpagecss();
                 if (!first) {
                     var obdata = JSON.parse($(".listpage").attr("data-href"));
-                    getimportlist(obdata.maxSorce,obdata.minSorce,obdata.mobile,(obj.curr - 1),obj.limit,obdata.webname,obdata.webtype);
+                    getuserlist(obdata[1],(obj.curr - 1),obj.limit,obdata[0],obdata[2]);
                 }
             }
         });
     }
 
-    getuserlist("","","",0,10,"");
-    function getuserlist(beginDate,endDate,name,pageNum,pageSize,username) {
-        $(".ba_tbody").empty();
+    getuserlist("",0,10,"","");
+    function getuserlist(name,pageNum,pageSize,username,mobile) {
+        $(".user_list").empty();
         $.ajax({
             url: "/api/findUser",
             type: "post",
@@ -214,12 +218,11 @@
                 withCredentials: true
             },
             data: JSON.stringify({
-                beginDate: beginDate,
-                endDate: endDate,
                 name: name,
                 pageNum: pageNum,
                 pageSize: pageSize,
-                username: username
+                username: username,
+                mobile:mobile
             }),
             contentType: "application/json",
             success: function (res) {
@@ -232,6 +235,12 @@
                     setPageNo(count, pageSize);
                 }
                 $.each(res.data.dataList,function (i,item) {
+                    var aaa
+                    if(item.ifEnable){
+                        aaa = "已启用"
+                    }else{
+                        aaa = "已禁用"
+                    }
                     if(i%2){
                         list = '<tr class="sc_zdgray">' +
                             '<td>'+(i+1)+'</td>' +
@@ -242,7 +251,7 @@
                             '<td>'+item.email+'</td>' +
                             '<td>'+item.department+'</td>' +
                             '<td>'+item.job+'</td>' +
-                            '<td><span data-href="'+item.id+'" class="layui-btn layui-btn-normal baocunbtn">启用</span></td>' +
+                            '<td><span data-href="'+item.id+'" class="layui-btn layui-btn-normal baocunbtn">'+aaa+'</span></td>' +
                             '<td>' +
                             '    <span data-href="'+item.id+'" class="iconfont icon-bianji"></span>' +
                             '    <span data-href="'+item.id+'" class="iconfont icon-shanchu"></span>' +
@@ -258,7 +267,7 @@
                             '<td>'+item.email+'</td>' +
                             '<td>'+item.department+'</td>' +
                             '<td>'+item.job+'</td>' +
-                            '<td><span data-href="'+item.id+'" class="layui-btn layui-btn-normal baocunbtn">启用</span></td>' +
+                            '<td><span data-href="'+item.id+'" class="layui-btn layui-btn-normal baocunbtn">'+aaa+'</span></td>' +
                             '<td>' +
                             '    <span data-href="'+item.id+'" class="iconfont icon-bianji"></span>' +
                             '    <span data-href="'+item.id+'" class="iconfont icon-shanchu"></span>' +
@@ -271,35 +280,123 @@
         })
     }
 
-
-    //启用与禁用
+    //启用与禁用操作
     $(".bz_tablebox").on("click",".baocunbtn",function () {
+        var oid = $(this).attr("data-href");
+        var ohtml = $(this).html();
         layer.confirm('确定要进行该操作吗？', {
             skin: 'layui-layer-lan', //样式类名
             btn: ['确定','取消'] //按钮
         }, function(){
-            layer.closeAll()
+            setjinyong(oid,ohtml);
         }, function(){
             layer.closeAll()
         });
     });
+    //启用禁用方法
+    function setjinyong(id,statue) {
+        var bbb;
+        if(statue=="已启用"){
+            bbb = false;
+        }else{
+            bbb = true;
+        }
+        $.ajax({
+            url: "/api/enable",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                id:id,
+                ifEnable:bbb
+            },
+            success: function (res) {
+                //console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                layer.closeAll();
+                getuserlist("",0,10,"","");
+                layer.msg("设置成功");
+            }
+        });
+    }
     //删除
     $(".bz_tablebox").on("click",".icon-shanchu",function () {
+        var oid = $(this).attr("data-href");
         layer.confirm('确定要删除该用户吗？', {
             skin: 'layui-layer-lan', //样式类名
             btn: ['确定','取消'] //按钮
         }, function(){
-            layer.closeAll()
+            deletelist(oid);
         }, function(){
             layer.closeAll()
         });
     });
+    //删除方法
+    function deletelist(oid) {
+        $.ajax({
+            url: "/api/delete",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                id: oid,
+            },
+            success: function (res) {
+                console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                getuserlist("",0,10,"","");
+                layer.closeAll();
+                layer.msg("删除用户成功");
+                $("#propo_box").hide();
+            }
+        })
+    }
+
+    //编辑根据id后去信息
+    function getmessage(oid) {
+        $.ajax({
+            url: "/api/findUserById",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                id:oid,
+            },
+            success: function (res) {
+                console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                var ores = res.data;
+                $(".ba_bumen").val(ores.department);
+                $(".ba_email").val(ores.email);
+                $(".ba_guoqitime").val(ores.expireTime);
+                $(".ba_gangwei").val(ores.job);
+                $("input[name='sex21']:checked").val(ores.ifEnable);
+                $(".ba_name").val(ores.name);
+                $(".ba_passward").val(ores.password);
+                $(".ba_username").val(ores.username);
+                $(".ba_mobile").val(ores.mobile);
+                $(".ba_age").val(ores.age);
+                $(".pro_queding").attr("data-id",ores.id);
+            }
+        });
+    }
+
     //编辑
     $(".bz_tablebox").on("click",".icon-bianji",function () {
+        getmessage($(this).attr("data-href"));
         $(".pro_queding").attr("data-href","1");
         layer.open({
             title: '新增用户',
-            area: ['760px', '330px'],
+            area: ['760px', '390px'],
             type: 1,
             skin: 'layui-layer-lan', //样式类名
             closeBtn: 1, //不显示关闭按钮
@@ -313,6 +410,9 @@
 
     //添加用户事件
     $(".bc_btnadd").click(function () {
+        $(".propo_box").find(".layui-input").each(function (i,item) {
+            item.value = "";
+        });
         $(".pro_queding").attr("data-href","2");
         layer.open({
             title: '新增用户',
@@ -353,7 +453,44 @@
                 if (res.code != 0) {
                     return layer.msg(res.message, {anim: 6});
                 }
-
+                getuserlist("",0,10,"","");
+                layer.closeAll();
+                layer.msg("添加用户成功");
+                $("#propo_box").hide();
+            }
+        })
+    }
+    //编辑提交用户方法
+    function saveeditadduser() {
+        $.ajax({
+            url: "/api/create",
+            type: "post",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: JSON.stringify({
+                id:$(".pro_queding").attr("data-id"),
+                department: $(".ba_bumen").val(),
+                email: $(".ba_email").val(),
+                expireTime: $(".ba_guoqitime").val(),
+                job: $(".ba_gangwei").val(),
+                jobLevel: $("input[name='sex21']:checked").val(),
+                name: $(".ba_name").val(),
+                password: $(".ba_passward").val(),
+                username: $(".ba_username").val(),
+                mobile:$(".ba_mobile").val(),
+                age:$(".ba_age").val()
+            }),
+            contentType: "application/json",
+            success: function (res) {
+                console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                getuserlist("",0,10,"","");
+                layer.closeAll();
+                layer.msg("编辑用户成功");
+                $("#propo_box").hide();
             }
         })
     }
@@ -364,15 +501,31 @@
     });
 
     $(".pro_queding").click(function () {
+        var list = 0;
+        $(".propo_box").find(".layui-input").each(function (i,item) {
+            if(!item.value){
+                $(this).css("border-color","red");
+                list++;
+            }else{
+                $(this).css("border-color","#e6e6e6")
+            }
+        });
+        if(list>0){
+            return layer.msg("请补全信息", {anim: 6});
+        }
         var _index = $(this).attr("data-href");
         if(_index=="1"){//edit
-
+            saveeditadduser();
         }else if(_index=="2"){//add
             adduser();
         }
-        layer.closeAll();
-        $("#propo_box").hide();
     });
 
+    //查询
+    $(".bc_chaxun").click(function () {
+        var list = [$(".bo_username").val(),$(".bo_name").val(),$(".bo_mobile").val()];
+        $(".listpage").attr("data-href",JSON.stringify(list));
+        getuserlist($(".bo_name").val(),0,10,$(".bo_username").val(),$(".bo_mobile").val());
+    });
 </script>
 </html>

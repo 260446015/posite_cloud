@@ -1,5 +1,37 @@
 
 
+
+.sc_jindu{
+    width: 40%;
+    height: 65%;
+    background: #bce0ff;
+    margin: 5% auto;
+    position: relative;
+}
+.sc_jindu img{
+    width: 100%;
+    height: 100%;
+}
+.sc_jindu1{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+}
+.sc_jindu2{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 90;
+    height: 100px;
+    background: #3aa3fd;
+}
+
+
+
 .indexbox{
     padding: 5% 1.4% 0 1.4%;
     height: 90%;
