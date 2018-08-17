@@ -320,8 +320,9 @@ public class ApiService implements IApiService {
     public JSONObject searchByTaskid(String taskId, Integer pageNum, Integer pageSize, String msg) {
         JSONObject result = new JSONObject();
         List<JobInfo> byTaskId = jobInfoRepository.findByTaskid(taskId);
+        byTaskId = byTaskId.stream().filter(action -> action.getData() != null && action.getData().size() != 0).collect(Collectors.toList());
         if (!StringUtils.isBlank(msg)) {
-            byTaskId = byTaskId.stream().filter(action -> action.getMobile().equals(msg) && action.getData() != null).collect(Collectors.toList());
+            byTaskId = byTaskId.stream().filter(action -> action.getMobile().equals(msg)).collect(Collectors.toList());
         }
         PageImpl<JobInfo> page = (PageImpl<JobInfo>) PageUtil.pageBeagin(byTaskId.size(), pageNum, pageSize, byTaskId);
 
