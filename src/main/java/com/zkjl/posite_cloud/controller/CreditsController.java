@@ -43,6 +43,9 @@ public class CreditsController extends BaseController{
             log.error("分析积分预警失败！",e.getMessage());
             return error("分析积分预警失败！");
         }
+        if(result == null){
+            return successPagesNull(result);
+        }
         return successPages(result);
     }
 
