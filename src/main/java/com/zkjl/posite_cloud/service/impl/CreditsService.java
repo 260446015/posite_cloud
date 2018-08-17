@@ -157,7 +157,8 @@ public class CreditsService implements ICreditsService {
     }
 
     @Override
-    public void sendEmail() throws Exception {
-        EmailUtils.sendEamil();
+    public boolean sendEmail(JSONObject data) throws Exception {
+        EmailUtils.sendEamil(data);
+        return false;
     }
 }

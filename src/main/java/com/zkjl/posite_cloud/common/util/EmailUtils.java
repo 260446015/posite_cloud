@@ -1,5 +1,7 @@
 package com.zkjl.posite_cloud.common.util;
 
+import com.alibaba.fastjson.JSONObject;
+
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -15,9 +17,9 @@ import java.util.Properties;
  **/
 public class EmailUtils {
 
-    public static void sendEamil() throws Exception {
+    public static void sendEamil(JSONObject data) throws Exception {
         Properties prop = new Properties();
-        prop.setProperty("mail.host", "smtp.163.com");
+        prop.setProperty("mail.host", "smtp.dm.aliyun.com");
         prop.setProperty("mail.transport.protocol", "smtp");
         prop.setProperty("mail.smtp.auth", "true");
         //使用JavaMail发送邮件的5个步骤
@@ -28,7 +30,7 @@ public class EmailUtils {
         //2、通过session得到transport对象
         Transport ts = session.getTransport();
         //3、连上邮件服务器
-        ts.connect("smtp.163.com", "Yindawei_yxw@163.com", "ydw1993");
+        ts.connect("smtp.dm.aliyun.com", "zkjl@zkjldata.com", "ZHONGKEJINLIAN@2018");
         //4、创建邮件
         Message message = createAttachMail(session);
         //5、发送邮件

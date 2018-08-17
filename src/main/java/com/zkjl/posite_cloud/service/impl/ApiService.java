@@ -28,6 +28,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -131,8 +134,12 @@ public class ApiService implements IApiService {
         List<JobInfo> successData = total.stream().filter(action -> action.getData() != null).collect(Collectors.toList());
         result.put("successData", successData.size());
         result.put("totalCount", total.size());
-        String percent = (successData.size() / total.size()) * 100 + "%";
-        result.put("percent", percent);
+        BigDecimal successCount = new BigDecimal(successData.size());
+        BigDecimal totalCount = new BigDecimal(total.size());
+        NumberFormat percent = NumberFormat.getPercentInstance();
+        percent.setMaximumFractionDigits(2);
+        String format = percent.format(successCount.divide(totalCount, 2, RoundingMode.HALF_UP));
+        result.put("percent", format);
         return result;
     }
 
