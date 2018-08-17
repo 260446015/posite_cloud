@@ -27,18 +27,33 @@
     <link rel="stylesheet" href="css/common/index.css?version=0">
     <style>
         .layui-form{
-            width: 1000px;
-            margin: 200px auto 30px auto;
+            width: 400px;
+            margin: 20px auto 30px auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 5px;
         }
         .layui-btn{
-            width: 1000px;
+            width: 400px;
             margin: 0 auto;
             display: block;
+        }
+        body{
+            background: url("img/login.jpg") 0 0 no-repeat;
+            background-size: 100% 100%;
+            overflow: hidden;
+        }
+        .tittle{
+            color: #fff;
+            font-size: 26px;
+            text-align: center;
+            margin-top: 200px;
         }
     </style>
 </head>
 <body>
-<form class="layui-form" >
+<div class="tittle">重点人筛查系统</div>
+<div class="layui-form">
     <div class="layui-form-item">
         <label class="layui-form-label">用户名</label>
         <div class="layui-input-block">
@@ -48,13 +63,13 @@
     <div class="layui-form-item">
         <label class="layui-form-label">密码</label>
         <div class="layui-input-block">
-            <input type="text" name="username" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input passwor" value="123456">
+            <input type="password" name="username" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input passwor" value="123456">
         </div>
     </div>
 
+    <button class="layui-btn layui-btn-fluid" style="background: #3aa3fd;">确定</button>
+</div>
 
-</form>
-<button class="layui-btn layui-btn-fluid">确定</button>
 </body>
 <script src="res/layui/layui.all.js"></script>
 <script src="js/common/common.js?versin=0"></script>

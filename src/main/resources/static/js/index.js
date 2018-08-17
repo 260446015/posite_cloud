@@ -1,6 +1,32 @@
 
 
 $(function () {
+    //首页获取百分比
+    getzhanbi();
+    function getzhanbi() {
+        $.ajax({
+            url: "/api/retrieveData",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {},
+            success: function (res) {
+                console.log(res.data.percent);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                var h = ($(".sc_jindu").height())*parseInt(res.data.percent)/100
+                $(".sc_jindu2").css("height",h);
+                $(".jindunum").html(res.data.percent);
+                if(res.data.successData<res.data.totalCount){
+                    setTimeout(function () {
+                        getzhanbi();
+                    },3000);
+                }
+            }
+        });
+    }
 
     //舆情信息
     yuqinghuoqu(0,11);

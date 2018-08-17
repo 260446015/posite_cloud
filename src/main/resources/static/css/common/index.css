@@ -7,6 +7,7 @@
     background: #bce0ff;
     margin: 5% auto;
     position: relative;
+    overflow: hidden;
 }
 .sc_jindu img{
     width: 100%;
@@ -26,8 +27,27 @@
     bottom: 0;
     width: 100%;
     z-index: 90;
-    height: 100px;
-    background: #3aa3fd;
+    height:0;
+    background: #3aa3fd
+}
+.sc_jindu2 img{
+    width: 105%;
+    height: 20px;
+    display: block;
+    margin: 0 auto;
+    margin-top: -20px;
+}
+.sc_jindushuju{
+    width: 100%;
+    position: absolute;
+    height: 30px;
+    text-align: center;
+    color: #fff;
+    left: 0;
+    top: 10px;
+    z-index: 95;
+    font-weight: bold;
+    font-size: 16px;
 }
 
 
