@@ -11,6 +11,8 @@ import com.zkjl.posite_cloud.domain.pojo.User;
 import com.zkjl.posite_cloud.service.IUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,7 @@ public class UserService implements IUserService {
     private UserRepository userRepository;
     @Resource
     private LogRepository logRepository;
+    private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Override
     public User selectByUsernameAndPassword(String username, String password) {
@@ -142,7 +145,7 @@ public class UserService implements IUserService {
             }
             return flag;
         }).collect(Collectors.toList());
-        if(collect.size() == 0){
+        if (collect.size() == 0) {
             return null;
         }
         return (PageImpl<User>) PageUtil.pageBeagin(collect.size(), userDTO.getPageNum(), userDTO.getPageSize(), collect);
@@ -162,6 +165,23 @@ public class UserService implements IUserService {
             flag = true;
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return flag;
+    }
+
+    @Override
+    public boolean enable(String id, Boolean ifEnable) {
+        boolean flag = false;
+        User userById = findUserById(id);
+        if (userById == null) {
+            return false;
+        }
+        userById.setIfEnable(ifEnable);
+        try {
+            userRepository.save(userById);
+            flag = true;
+        } catch (Exception e) {
+            logger.error("更改用户状态失败",e.getMessage());
         }
         return flag;
     }

@@ -22,4 +22,6 @@ public interface IUserService {
     User findUserById(String id);
 
     boolean deleteLog(String id);
+
+    boolean enable(String id, Boolean ifEnable);
 }
