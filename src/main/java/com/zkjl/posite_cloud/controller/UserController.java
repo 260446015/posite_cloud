@@ -152,4 +152,20 @@ public class UserController extends BaseController {
         return new ApiResult().setData(result).setCode(0).setMessage("消息返回成功");
     }
 
+    /**
+     * 启用或禁用
+     */
+    @GetMapping(value = "enable")
+    @ApiOperation(value = "启用或禁用")
+    public ApiResult enable(String id,Boolean ifEnable){
+        boolean flag;
+        try {
+            flag = userService.enable(id,ifEnable);
+        } catch (Exception e) {
+            logger.error("启用或禁用失败!", e.getMessage());
+            return error("启用或禁用失败!");
+        }
+        return success(flag);
+    }
+
 }
