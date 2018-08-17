@@ -67,7 +67,7 @@ public class ApiService implements IApiService {
             preSaveDatas.add(jobInfo);
         });
         jobInfoRepository.saveAll(preSaveDatas);
-        redistaskRepository.save(new Redistask(jobDTO.getUsername(),taskId,false));
+        redistaskRepository.save(new Redistask(jobDTO.getUsername(), taskId, false));
         Integer level = getLevel(jobDTO);
         jobDTO.setLevel(level);
         jobDTO.setTaskid(taskId);
@@ -109,7 +109,7 @@ public class ApiService implements IApiService {
             try {
                 stringRedisTemplate.rename(_redisId, redisId);
             } catch (Exception e) {
-                byTaskid.forEach(action ->{
+                byTaskid.forEach(action -> {
                     action.setData(null);
                 });
                 jobInfoRepository.saveAll(byTaskid);
@@ -140,6 +140,9 @@ public class ApiService implements IApiService {
     public JSONObject developmentData(String username) throws Exception {
         List<JobInfo> total = jobInfoRepository.findByUsername(username);
         List<JobInfo> successData = total.stream().filter(action -> action.getData() != null).collect(Collectors.toList());
+        if (successData.size() == 0) {
+            return null;
+        }
         Map<String, Set<JSONObject>> check = new HashMap<>();
         successData.forEach(action -> {
             Set<JSONObject> values = check.get(action.getMobile());
@@ -220,6 +223,7 @@ public class ApiService implements IApiService {
         }
         return level;
     }
+
     private Integer getLevel(int level) {
         if (level == 1) {
             level = 1;
