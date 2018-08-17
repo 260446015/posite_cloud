@@ -1,6 +1,5 @@
 package com.zkjl.posite_cloud.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
 import com.zkjl.posite_cloud.domain.dto.LogDTO;
@@ -83,6 +82,9 @@ public class UserController extends BaseController {
             logger.error("查询日志失败!", e.getMessage());
             return error("查询日志失败!");
         }
+        if (result == null) {
+            return successPagesNull(result);
+        }
         return successPages(result);
     }
 
@@ -143,24 +145,15 @@ public class UserController extends BaseController {
         return success(result);
     }
 
-    private ApiResult successPagesNull(Object object){
-        JSONObject result = new JSONObject();
-        result.put("dataList", null);
-        result.put("totalNumber",0);
-        result.put("totalPage",0);
-        result.put("pageNumber",0);
-        return new ApiResult().setData(result).setCode(0).setMessage("消息返回成功");
-    }
-
     /**
      * 启用或禁用
      */
     @GetMapping(value = "enable")
     @ApiOperation(value = "启用或禁用")
-    public ApiResult enable(String id,Boolean ifEnable){
+    public ApiResult enable(String id, Boolean ifEnable) {
         boolean flag;
         try {
-            flag = userService.enable(id,ifEnable);
+            flag = userService.enable(id, ifEnable);
         } catch (Exception e) {
             logger.error("启用或禁用失败!", e.getMessage());
             return error("启用或禁用失败!");

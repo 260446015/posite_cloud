@@ -12,5 +12,5 @@ public interface ICreditsService {
 
     PageImpl<JSONObject> creditsWarining(CreditsDTO creditsDTO) throws Exception;
 
-    void sendEmail() throws Exception;
+    boolean sendEmail(JSONObject data) throws Exception;
 }

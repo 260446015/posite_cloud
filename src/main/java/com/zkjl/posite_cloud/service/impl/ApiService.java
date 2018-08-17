@@ -28,6 +28,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -67,7 +70,7 @@ public class ApiService implements IApiService {
             preSaveDatas.add(jobInfo);
         });
         jobInfoRepository.saveAll(preSaveDatas);
-        redistaskRepository.save(new Redistask(jobDTO.getUsername(),taskId,false));
+        redistaskRepository.save(new Redistask(jobDTO.getUsername(), taskId, false));
         Integer level = getLevel(jobDTO);
         jobDTO.setLevel(level);
         jobDTO.setTaskid(taskId);
@@ -109,7 +112,7 @@ public class ApiService implements IApiService {
             try {
                 stringRedisTemplate.rename(_redisId, redisId);
             } catch (Exception e) {
-                byTaskid.forEach(action ->{
+                byTaskid.forEach(action -> {
                     action.setData(null);
                 });
                 jobInfoRepository.saveAll(byTaskid);
@@ -131,8 +134,12 @@ public class ApiService implements IApiService {
         List<JobInfo> successData = total.stream().filter(action -> action.getData() != null).collect(Collectors.toList());
         result.put("successData", successData.size());
         result.put("totalCount", total.size());
-        String percent = (successData.size() / total.size()) * 100 + "%";
-        result.put("percent", percent);
+        BigDecimal successCount = new BigDecimal(successData.size());
+        BigDecimal totalCount = new BigDecimal(total.size());
+        NumberFormat percent = NumberFormat.getPercentInstance();
+        percent.setMaximumFractionDigits(2);
+        String format = percent.format(successCount.divide(totalCount, 2, RoundingMode.HALF_UP));
+        result.put("percent", format);
         return result;
     }
 
@@ -140,6 +147,9 @@ public class ApiService implements IApiService {
     public JSONObject developmentData(String username) throws Exception {
         List<JobInfo> total = jobInfoRepository.findByUsername(username);
         List<JobInfo> successData = total.stream().filter(action -> action.getData() != null).collect(Collectors.toList());
+        if (successData.size() == 0) {
+            return null;
+        }
         Map<String, Set<JSONObject>> check = new HashMap<>();
         successData.forEach(action -> {
             Set<JSONObject> values = check.get(action.getMobile());
@@ -220,6 +230,7 @@ public class ApiService implements IApiService {
         }
         return level;
     }
+
     private Integer getLevel(int level) {
         if (level == 1) {
             level = 1;
@@ -304,7 +315,7 @@ public class ApiService implements IApiService {
         JSONObject result = new JSONObject();
         List<JobInfo> byTaskId = jobInfoRepository.findByTaskid(taskId);
         if (!StringUtils.isBlank(msg)) {
-            byTaskId = byTaskId.stream().filter(action -> action.getMobile().equals(msg)).collect(Collectors.toList());
+            byTaskId = byTaskId.stream().filter(action -> action.getMobile().equals(msg) && action.getData() != null).collect(Collectors.toList());
         }
         PageImpl<JobInfo> page = (PageImpl<JobInfo>) PageUtil.pageBeagin(byTaskId.size(), pageNum, pageSize, byTaskId);
 

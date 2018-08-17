@@ -65,6 +65,9 @@ public class UserService implements IUserService {
     @Override
     public PageImpl<Log> findLog(LogDTO log) {
         List<Log> logs = logRepository.findByUsername(log.getUsername());
+        if (logs.size() == 0) {
+            return null;
+        }
         List<Log> collect = logs.stream().filter(action -> {
             boolean flag = false;
             if (!StringUtils.isBlank(log.getBeginDate())) {
@@ -104,6 +107,9 @@ public class UserService implements IUserService {
         String domain = login.getDomain();
         List<User> users = userRepository.findByDomain(domain);
         users.remove(login);
+        if(users.size() == 0){
+            return null;
+        }
         List<User> collect = users.stream().filter(action -> {
             boolean flag = false;
             if (!StringUtils.isBlank(userDTO.getUsername())) {
@@ -145,9 +151,6 @@ public class UserService implements IUserService {
             }
             return flag;
         }).collect(Collectors.toList());
-        if (collect.size() == 0) {
-            return null;
-        }
         return (PageImpl<User>) PageUtil.pageBeagin(collect.size(), userDTO.getPageNum(), userDTO.getPageSize(), collect);
     }
 
@@ -181,7 +184,7 @@ public class UserService implements IUserService {
             userRepository.save(userById);
             flag = true;
         } catch (Exception e) {
-            logger.error("更改用户状态失败",e.getMessage());
+            logger.error("更改用户状态失败", e.getMessage());
         }
         return flag;
     }

@@ -43,6 +43,9 @@ public class CreditsController extends BaseController{
             log.error("分析积分预警失败！",e.getMessage());
             return error("分析积分预警失败！");
         }
+        if(result == null){
+            return successPagesNull(result);
+        }
         return successPages(result);
     }
 
@@ -51,8 +54,16 @@ public class CreditsController extends BaseController{
      */
     @GetMapping(value = "sendEmail")
     @SystemControllerLog(description = "发送邮件")
-    public void sendEmail() throws Exception {
-        creditsService.sendEmail();
+    public ApiResult sendEmail(@RequestBody String inputData) throws Exception {
+        JSONObject data = JSONObject.parseObject(inputData);
+        boolean flag;
+        try {
+            flag = creditsService.sendEmail(data);
+        } catch (Exception e) {
+            log.error("发送邮件失败！",e.getMessage());
+            return error("发送邮件失败！");
+        }
+        return success(flag);
     }
 
 }

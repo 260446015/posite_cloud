@@ -42,6 +42,9 @@ public class CreditsService implements ICreditsService {
         Query query = new Query();
         query.addCriteria(Criteria.where("username").is(creditsDTO.getUsername())).with(Sort.by(Sort.Direction.DESC, "creationTime"));
         List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
+        if(list.size() == 0){
+            return null;
+        }
         List<JSONObject> result = generatorList(list, creditsDTO.getUsername());
         System.out.println(result);
         List<JSONObject> collect = result.stream().filter(action -> {
@@ -154,7 +157,8 @@ public class CreditsService implements ICreditsService {
     }
 
     @Override
-    public void sendEmail() throws Exception {
-        EmailUtils.sendEamil();
+    public boolean sendEmail(JSONObject data) throws Exception {
+        EmailUtils.sendEamil(data);
+        return false;
     }
 }
