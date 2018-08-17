@@ -31,11 +31,12 @@
     background: #3aa3fd
 }
 .sc_jindu2 img{
-    width: 105%;
+    width: 118%;
     height: 20px;
     display: block;
     margin: 0 auto;
     margin-top: -20px;
+    margin-left: -7%;
 }
 .sc_jindushuju{
     width: 100%;
