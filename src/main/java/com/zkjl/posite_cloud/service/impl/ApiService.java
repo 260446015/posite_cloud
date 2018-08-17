@@ -148,7 +148,13 @@ public class ApiService implements IApiService {
         List<JobInfo> total = jobInfoRepository.findByUsername(username);
         List<JobInfo> successData = total.stream().filter(action -> action.getData() != null).collect(Collectors.toList());
         if (successData.size() == 0) {
-            return null;
+            JSONObject result = new JSONObject();
+            result.put("gamble", 0);
+            result.put("loans", 0);
+            result.put("yellow", 0);
+            result.put("living", 0);
+            result.put("game", 0);
+            return result;
         }
         Map<String, Set<JSONObject>> check = new HashMap<>();
         successData.forEach(action -> {
