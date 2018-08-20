@@ -17,4 +17,5 @@ public class JobDTO implements Serializable {
     private String status;
     private String datas;
     private String taskid;
+    private String taskname;
 }

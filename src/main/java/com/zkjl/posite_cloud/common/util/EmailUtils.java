@@ -1,6 +1,9 @@
 package com.zkjl.posite_cloud.common.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zkjl.posite_cloud.domain.pojo.User;
+import com.zkjl.posite_cloud.exception.CustomerException;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.mail.Message;
 import javax.mail.Session;
@@ -9,6 +12,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 /**
@@ -17,9 +21,12 @@ import java.util.Properties;
  **/
 public class EmailUtils {
 
-    public static void sendEamil(JSONObject data) throws Exception {
+    public static void sendEamil(JSONObject data, User user) throws Exception {
+        if(StringUtils.isBlank(user.getEmail())){
+            throw new CustomerException("用户未填写邮箱");
+        }
         Properties prop = new Properties();
-        prop.setProperty("mail.host", "smtp.dm.aliyun.com");
+        prop.setProperty("mail.host", "smtp.mxhichina.com");
         prop.setProperty("mail.transport.protocol", "smtp");
         prop.setProperty("mail.smtp.auth", "true");
         //使用JavaMail发送邮件的5个步骤
@@ -30,9 +37,9 @@ public class EmailUtils {
         //2、通过session得到transport对象
         Transport ts = session.getTransport();
         //3、连上邮件服务器
-        ts.connect("smtp.dm.aliyun.com", "zkjl@zkjldata.com", "ZHONGKEJINLIAN@2018");
+        ts.connect("smtp.mxhichina.com", "zkjl@zkjldata.com", "ZHONGKEJINLIAN@2018");
         //4、创建邮件
-        Message message = createAttachMail(session);
+        Message message = createAttachMail(session, data, user);
         //5、发送邮件
         ts.sendMessage(message, message.getAllRecipients());
         ts.close();
@@ -45,20 +52,28 @@ public class EmailUtils {
      * * @return
      * * @throws Exception
      */
-    private static MimeMessage createAttachMail(Session session) throws Exception {
+    private static MimeMessage createAttachMail(Session session, JSONObject data, User user) throws Exception {
         MimeMessage message = new MimeMessage(session);
 
         //设置邮件的基本信息
+        String nick="";
+        try {
+            nick=javax.mail.internet.MimeUtility.encodeText("中科金联（北京）科技有限公司");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         //发件人
-        message.setFrom(new InternetAddress("Yindawei_yxw@163.com"));
+        message.setFrom(new InternetAddress(nick+" <zkjl@zkjldata.com>"));
         //收件人
-        message.setRecipient(Message.RecipientType.TO, new InternetAddress("260446015@qq.com"));
+        message.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
         //邮件标题
-        message.setSubject("JavaMail邮件发送测试");
+//        message.setSubject("JavaMail邮件发送测试");
+        message.setSubject(data.getString("title"));
 
         //创建邮件正文，为了避免邮件正文中文乱码问题，需要使用charset=UTF-8指明字符编码
         MimeBodyPart text = new MimeBodyPart();
-        text.setContent("使用JavaMail创建的带附件的邮件", "text/html;charset=UTF-8");
+//        text.setContent("使用JavaMail创建的带附件的邮件", "text/html;charset=UTF-8");
+        text.setContent(data.getString("content"), "text/html;charset=UTF-8");
 //        MimeBodyPart attach = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
         mp.addBodyPart(text);

@@ -10,6 +10,7 @@ import com.zkjl.posite_cloud.dao.JobInfoRepository;
 import com.zkjl.posite_cloud.domain.dto.CreditsDTO;
 import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
 import com.zkjl.posite_cloud.domain.pojo.JobInfo;
+import com.zkjl.posite_cloud.domain.pojo.User;
 import com.zkjl.posite_cloud.service.ICreditsService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageImpl;
@@ -42,7 +43,7 @@ public class CreditsService implements ICreditsService {
         Query query = new Query();
         query.addCriteria(Criteria.where("username").is(creditsDTO.getUsername())).with(Sort.by(Sort.Direction.DESC, "creationTime"));
         List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
-        if(list.size() == 0){
+        if (list.size() == 0) {
             return null;
         }
         List<JSONObject> result = generatorList(list, creditsDTO.getUsername());
@@ -156,15 +157,15 @@ public class CreditsService implements ICreditsService {
     }
 
     @Override
-    public boolean sendEmail(JSONObject data) throws Exception {
-        EmailUtils.sendEamil(data);
+    public boolean sendEmail(JSONObject data, User user) throws Exception {
+        EmailUtils.sendEamil(data, user);
         return false;
     }
 
     @Override
     public CreditsWarn findCreditsWarnConf(String username) {
         List<CreditsWarn> confs = creditsRepository.findByUsername(username);
-        if(confs.size() == 0){
+        if (confs.size() == 0) {
             confs = creditsRepository.findByUsername("base");
         }
         return confs.get(0);

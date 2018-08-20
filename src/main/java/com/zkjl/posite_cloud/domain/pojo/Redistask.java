@@ -24,12 +24,14 @@ public class Redistask implements Serializable {
     private String redisTaskid;
     private Boolean ifFinish;
     private Date creationTime;
+    private String taskname;
 
-    public Redistask(String username, String taskid, Boolean ifFinish) {
+    public Redistask(String username, String taskid, Boolean ifFinish, String taskname) {
         this.username = username;
         this.taskid = taskid;
         this.ifFinish = ifFinish;
         this.creationTime = Calendar.getInstance().getTime();
+        this.taskname = taskname;
     }
 
     public Redistask() {

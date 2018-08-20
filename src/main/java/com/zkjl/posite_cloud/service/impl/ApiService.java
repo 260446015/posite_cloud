@@ -72,7 +72,7 @@ public class ApiService implements IApiService {
             preSaveDatas.add(jobInfo);
         });
         jobInfoRepository.saveAll(preSaveDatas);
-        redistaskRepository.save(new Redistask(jobDTO.getUsername(), taskId, false));
+        redistaskRepository.save(new Redistask(jobDTO.getUsername(), taskId, false, jobDTO.getTaskname()));
         Integer level = getLevel(jobDTO);
         jobDTO.setLevel(level);
         jobDTO.setTaskid(taskId);
