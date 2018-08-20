@@ -20,45 +20,49 @@ $(function () {
         });
     }
     //任务列表
-    $.ajax({
-        url: "/api/listJob",
-        type: "get",
-        xhrFields: {
-            withCredentials: true
-        },
-        data:{},
-        success: function (res) {
-            console.log(res)
-            if (res.code != 0) {
-                return layer.msg(res.message, {anim: 6});
-            }
-            if(res.data.length==0){
-                $(".sc_renwu,.im_contenlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
-            }
-            $.each(res.data,function (i,item) {
-                var list;
-                if(item.ifFinish){
-                    list = '<li class=""><input type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'">'+zdrysc.timechange(item.creationTime)+'</span><a id="'+item.taskId+'" class="btntrue">生成报告</a></li>';
-                }else{
-                    list = '<li><input type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'">'+zdrysc.timechange(item.creationTime)+'</span><a id="'+item.taskId+'" class="btnfalse">正在采集</a></li>';
+    getrenwu();
+    function getrenwu() {
+        $(".sc_renwu").empty();
+        $.ajax({
+            url: "/api/listJob",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data:{},
+            success: function (res) {
+                console.log(res)
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
                 }
-                $(".sc_renwu").append(list);
-            });
-            form.render();
-            if(res.data.length>0){
-                var tafirst = res.data[res.data.length - 1];
-                getlist(0,10,tafirst.taskId);
-                $(".sc_renwu").find("li").eq(res.data.length - 1).addClass("re_active");
-                $(".listpage").attr("data-href",tafirst.taskId,"");
-                jindu(tafirst.taskId);
-                if(tafirst.ifFinish){
-                    $(".caiji_down").fadeIn();
-                }else{
-                    $(".caiji_up").fadeIn();
+                if(res.data.length==0){
+                    $(".sc_renwu,.im_contenlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
+                }
+                $.each(res.data,function (i,item) {
+                    var list;
+                    if(item.ifFinish){
+                        list = '<li class=""><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'">'+zdrysc.timechange(item.creationTime)+'</span><a id="'+item.taskId+'" class="btntrue">生成报告</a></li>';
+                    }else{
+                        list = '<li><input  id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'">'+zdrysc.timechange(item.creationTime)+'</span><a id="'+item.taskId+'" class="btnfalse">正在采集</a></li>';
+                    }
+                    $(".sc_renwu").append(list);
+                });
+                form.render();
+                if(res.data.length>0){
+                    var tafirst = res.data[res.data.length - 1];
+                    getlist(0,10,tafirst.taskId);
+                    $(".sc_renwu").find("li").eq(res.data.length - 1).addClass("re_active");
+                    $(".listpage").attr("data-href",tafirst.taskId,"");
+                    jindu(tafirst.taskId);
+                    if(tafirst.ifFinish){
+                        $(".caiji_down").fadeIn();
+                    }else{
+                        $(".caiji_up").fadeIn();
+                    }
                 }
             }
-        }
-    });
+        });
+    }
     //点击切换
     $(".sc_renwu").on("click","span",function () {
         $(".sc_renwu").find("li").removeClass("re_active");
@@ -67,7 +71,6 @@ $(function () {
         getlist(0,10,$(this).attr("id"),"");
         jindu($(this).attr("id"));
         $(".im_btnbox").find(".none").hide();
-        console.log($(this).parent("li").find("a").html())
         if($(this).parent("li").find("a").html()=="生成报告"){
             $(".caiji_down").fadeIn();
         }else{
@@ -227,9 +230,50 @@ $(function () {
             skin: 'layui-layer-lan', //样式类名
             btn: ['确定','取消'] //按钮
         }, function(){
-            layer.closeAll()
+            piliangshanchu();
         }, function(){
             layer.closeAll()
         });
     });
+    //是否全选
+    form.on('checkbox(quanxuan)', function(data){
+        if(data.elem.checked){
+            $("input[name='deleteli']").prop('checked',true);
+        }else{
+            $("input[name='deleteli']").prop('checked',false);
+        }
+        form.render();
+    });
+    //批量删除方法
+    function piliangshanchu() {
+        var olist = [];
+        $(".sc_renwu").find(".layui-form-checkbox").each(function (i,item) {
+            var oid = $(this).siblings("input").attr("id");
+            if(item.getAttribute("class")=="layui-unselect layui-form-checkbox layui-form-checked"){
+                olist.push(oid)
+            }
+        });
+        if(olist.length == 0){
+            return layer.msg("请标选您要删除的任务");
+        }
+        //console.log(olist)
+        $.ajax({
+            url: "/api/deleteBatch",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                ids:olist
+            },
+            success: function (res) {
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                getrenwu();
+                layer.closeAll();
+                layer.msg("删除成功");
+            }
+        });
+    }
 })
