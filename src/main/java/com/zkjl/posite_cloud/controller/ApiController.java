@@ -201,7 +201,7 @@ public class ApiController extends BaseController {
      * @return
      */
     @GetMapping(value = "deleteBatch")
-    public ApiResult deleteBatch(String[] ids){
+    public ApiResult deleteBatch(@RequestParam(value = "ids[]") String[] ids){
         boolean flag;
         try {
             flag = apiService.deleteBatch(ids);
