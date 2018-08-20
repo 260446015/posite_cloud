@@ -2,7 +2,7 @@
 
 
 .import_left{
-    width: 18%;
+    width: 20%;
     min-height: 600px;
     background: #fff;
     float: left;
@@ -22,6 +22,16 @@
 .sc_renwu li span{
     float: left;
     cursor: pointer;
+}
+body .sc_renwu li input{
+    float: left;
+    cursor: pointer;
+    display: block;
+}
+body .layui-form-checkbox[lay-skin=primary] {
+    float: left;
+    line-height: 30px!important;;
+    margin-right: 2%;
 }
 .sc_renwu li a{
     float: right;
@@ -55,11 +65,32 @@
     border-radius: 5px;
     margin-top: 3px;
 }
+.sc_pilaing{
+    padding: 0 10px;
+    overflow: hidden;
+    height: 30px;
+    line-height: 30px;
+}
+.layui-form-checkbox[lay-skin=primary] span {
+    margin-top: 3px;
+}
+.sc_pilaing i{
+    float: right;
+    width: 70px;
+    height: 24px;
+    background: #1e8cea;
+    line-height: 24px;
+    text-align: center;
+    cursor: pointer;
+    color: #fff;
+    border-radius: 5px;
+    margin-top: 3px;
+}
 
 
 /*右侧*/
 .import_righ{
-    width: 80.5%;
+    width: 78.5%;
     min-height: 600px;
     float: right;
 }
