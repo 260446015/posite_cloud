@@ -45,7 +45,9 @@ public class UserService implements IUserService {
             user.setJobLevel("normal");
         }
         user.setDomain(loginUser.getDomain());
-        user.setIfEnable(false);
+        if(user.getIfEnable() == null){
+            user.setIfEnable(false);
+        }
         user.setCreationTime(DateUtils.getFormatString(Calendar.getInstance().getTime()));
         return userRepository.save(user);
     }
