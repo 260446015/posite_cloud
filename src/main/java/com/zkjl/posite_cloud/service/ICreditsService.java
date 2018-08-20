@@ -2,6 +2,7 @@ package com.zkjl.posite_cloud.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.domain.dto.CreditsDTO;
+import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
 import org.springframework.data.domain.PageImpl;
 
 /**
@@ -13,4 +14,6 @@ public interface ICreditsService {
     PageImpl<JSONObject> creditsWarining(CreditsDTO creditsDTO) throws Exception;
 
     boolean sendEmail(JSONObject data) throws Exception;
+
+    CreditsWarn findCreditsWarnConf(String username);
 }

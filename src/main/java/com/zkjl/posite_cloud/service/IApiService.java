@@ -30,4 +30,6 @@ public interface IApiService {
     JSONObject searchByTaskid(String taskId, Integer pageNum, Integer pageSize,String msg);
 
     JSONObject searchByTaskidPlan(String taskId);
+
+    boolean deleteBatch(String[] ids);
 }

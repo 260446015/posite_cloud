@@ -35,8 +35,7 @@ public class ReportService extends CreditsService implements IReportService {
     public JSONObject report(String mobile, String username) {
         String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
         JSONObject result;
-        List<CreditsWarn> all = creditsRepository.findByUsername(username);
-        CreditsWarn conf = all.get(0);
+        CreditsWarn conf = findCreditsWarnConf(username);
         if (mobile.matches(regex)) {
             //生成单个报告文件
             result = generatorByMobile(mobile, conf);

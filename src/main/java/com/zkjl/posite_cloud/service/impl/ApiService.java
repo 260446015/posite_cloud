@@ -53,6 +53,8 @@ public class ApiService implements IApiService {
     private MongoTemplate mongoTemplate;
     @Resource
     private CreditsRepository creditsRepository;
+    @Resource
+    private CreditsService creditsService;
 
     private static final Logger log = LoggerFactory.getLogger(ApiService.class);
 
@@ -173,8 +175,7 @@ public class ApiService implements IApiService {
         int yellow = 0;
         int living = 0;
         int game = 0;
-        List<CreditsWarn> all = creditsRepository.findByUsername(username);
-        CreditsWarn conf = all.get(0);
+        CreditsWarn conf = creditsService.findCreditsWarnConf(username);
         for (Map.Entry<String, Set<JSONObject>> entry : check.entrySet()) {
             Set<JSONObject> value = entry.getValue();
             for (JSONObject jsonObject : value) {
@@ -334,12 +335,18 @@ public class ApiService implements IApiService {
     public JSONObject searchByTaskidPlan(String taskId) {
         JSONObject result = new JSONObject();
         List<JobInfo> byTaskId = jobInfoRepository.findByTaskid(taskId);
-        int successCount = 0;
+        int success = 0;
         for (JobInfo jobInfo : byTaskId) {
             if (jobInfo.getData() != null) {
-                successCount += 1;
+                success += 1;
             }
         }
+        BigDecimal successCount = new BigDecimal(success);
+        BigDecimal totalCount = new BigDecimal(byTaskId.size());
+        NumberFormat percent = NumberFormat.getPercentInstance();
+        percent.setMaximumFractionDigits(2);
+        String format = percent.format(successCount.divide(totalCount, 2, RoundingMode.HALF_UP));
+        result.put("percent", format);
         result.put("successCount", successCount);
         result.put("totalCount", byTaskId.size());
         return result;
@@ -352,5 +359,21 @@ public class ApiService implements IApiService {
         result.put("totalPage", data.getTotalPages());
         result.put("pageNumber", data.getNumber());
         return result;
+    }
+
+    @Override
+    public boolean deleteBatch(String[] ids) {
+        boolean flag = false;
+        try {
+            for (int i = 0; i < ids.length; i++) {
+                redistaskRepository.deleteById(ids[i]);
+                List<JobInfo> byTaskid = jobInfoRepository.findByTaskid(ids[i]);
+                jobInfoRepository.deleteAll(byTaskid);
+            }
+            flag = true;
+        } catch (Exception e) {
+            log.error("根据任务id删除任务出错!", e.getMessage());
+        }
+        return flag;
     }
 }
