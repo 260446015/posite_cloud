@@ -29,6 +29,10 @@
         body{
             background: #edeef2;
         }
+        .kongbai {
+            padding: 20px;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
@@ -317,6 +321,9 @@
             $(".re_shuomin1").html("  经筛查结果显示，此次任务，其中注册涉黄平台"+num.yellowCount+"人，赌博平台"+num.gambleCount+"人，网袋平台"+num.loansCount+"人，游戏平台"+num.gameCount+"人，直播平台"+num.livingCount+"人。共注册危险网站"+(num.yellowCount+num.gambleCount+num.loansCount+num.gameCount+num.livingCount)+"个。");
 
             //红色
+            if(res.data.red.length==0){
+                $(".rp_redlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
+            }
             $.each(res.data.red,function (i,item) {
                 if(i%2){
                     list = '<div class="sc_zdgray">' +
@@ -335,6 +342,9 @@
             });
 
             //橙色
+            if(res.data.yellow.length==0){
+                $(".rp_orangelist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
+            }
             $.each(res.data.yellow,function (i,item) {
                 if(i%2){
                     list = '<div class="sc_zdgray">' +
@@ -353,6 +363,9 @@
             });
 
             //蓝色
+            if(res.data.blue.length==0){
+                $(".rp_bluelist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
+            }
             $.each(res.data.blue,function (i,item) {
                 if(i%2){
                     list = '<div class="sc_zdgray">' +

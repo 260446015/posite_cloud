@@ -1,9 +1,10 @@
 
 $(function () {
     //分页设置
-    layui.use(['laypage','layer','element']);
+    layui.use(['laypage','layer','element','form']);
     var laypage = layui.laypage;
     var element = layui.element;
+    var form = layui.form;
     function setPageNo(count,limitnum) {
         laypage.render({
             elem: 'listpage'
@@ -37,18 +38,24 @@ $(function () {
             $.each(res.data,function (i,item) {
                 var list;
                 if(item.ifFinish){
-                    list = '<li><span id="'+item.taskId+'">'+zdrysc.timechange(item.creationTime)+'</span><a id="'+item.taskId+'" class="btntrue">生成报告</a></li>';
+                    list = '<li class=""><input type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'">'+zdrysc.timechange(item.creationTime)+'</span><a id="'+item.taskId+'" class="btntrue">生成报告</a></li>';
                 }else{
-                    list = '<li><span id="'+item.taskId+'">'+zdrysc.timechange(item.creationTime)+'</span><a id="'+item.taskId+'" class="btnfalse">正在采集</a></li>';
+                    list = '<li><input type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'">'+zdrysc.timechange(item.creationTime)+'</span><a id="'+item.taskId+'" class="btnfalse">正在采集</a></li>';
                 }
                 $(".sc_renwu").append(list);
             });
+            form.render();
             if(res.data.length>0){
                 var tafirst = res.data[res.data.length - 1];
                 getlist(0,10,tafirst.taskId);
                 $(".sc_renwu").find("li").eq(res.data.length - 1).addClass("re_active");
                 $(".listpage").attr("data-href",tafirst.taskId,"");
                 jindu(tafirst.taskId);
+                if(tafirst.ifFinish){
+                    $(".caiji_down").fadeIn();
+                }else{
+                    $(".caiji_up").fadeIn();
+                }
             }
         }
     });
@@ -59,6 +66,13 @@ $(function () {
         $(".listpage").attr("data-href",$(this).attr("id"));
         getlist(0,10,$(this).attr("id"),"");
         jindu($(this).attr("id"));
+        $(".im_btnbox").find(".none").hide();
+        console.log($(this).parent("li").find("a").html())
+        if($(this).parent("li").find("a").html()=="生成报告"){
+            $(".caiji_down").fadeIn();
+        }else{
+            $(".caiji_up").fadeIn();
+        }
     });
     //结果列表
     function getlist(pagenum,pagesize,taskid,msg) {
@@ -204,7 +218,18 @@ $(function () {
         renwustatus("stop");
     });
     //任务开启
-    $(".re_begin").click(function () {
+    $(".re_begin,.re_reload").click(function () {
         renwustatus("start");
+    });
+    //批量删除操作
+    $(".piliangdelete").click(function () {
+        layer.confirm('确定要删除选中的任务吗？', {
+            skin: 'layui-layer-lan', //样式类名
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            layer.closeAll()
+        }, function(){
+            layer.closeAll()
+        });
     });
 })
