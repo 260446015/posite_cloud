@@ -124,8 +124,7 @@ public class CreditsService implements ICreditsService {
         Set<String> check = new HashSet<>();
         List<JSONObject> result = new ArrayList<>();
         List<JobInfo> collect = list.stream().filter(action -> check.add(action.getMobile()) && action.getData() != null).collect(Collectors.toList());
-        List<CreditsWarn> all = creditsRepository.findByUsername(username);
-        CreditsWarn conf = all.get(0);
+        CreditsWarn conf = findCreditsWarnConf(username);
         collect.forEach(action -> {
             JSONObject data = new JSONObject();
             int totalSorce = 0;
@@ -160,5 +159,14 @@ public class CreditsService implements ICreditsService {
     public boolean sendEmail(JSONObject data) throws Exception {
         EmailUtils.sendEamil(data);
         return false;
+    }
+
+    @Override
+    public CreditsWarn findCreditsWarnConf(String username) {
+        List<CreditsWarn> confs = creditsRepository.findByUsername(username);
+        if(confs.size() == 0){
+            confs = creditsRepository.findByUsername("base");
+        }
+        return confs.get(0);
     }
 }

@@ -195,5 +195,21 @@ public class ApiController extends BaseController {
         return success(result);
     }
 
+    /**
+     * 批量删除任务
+     * @param ids
+     * @return
+     */
+    @GetMapping(value = "deleteBatch")
+    public ApiResult deleteBatch(String[] ids){
+        boolean flag;
+        try {
+            flag = apiService.deleteBatch(ids);
+        } catch (Exception e) {
+            log.error("批量删除任务出错!", e.getMessage());
+            return error("批量删除任务进度出错!");
+        }
+        return success(flag);
+    }
 
 }
