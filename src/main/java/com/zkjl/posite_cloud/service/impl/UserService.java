@@ -39,13 +39,16 @@ public class UserService implements IUserService {
     @Override
     public User create(User user) {
         User loginUser = (User) SecurityUtils.getSubject().getPrincipal();
-        if (loginUser.getPermission().contains("create1")) {
+        /*if (loginUser.getPermission().contains("create1")) {
             user.setJobLevel("group");
         } else if (loginUser.getPermission().contains("create2")) {
             user.setJobLevel("normal");
+        }*/
+        if (StringUtils.isBlank(user.getJobLevel())) {
+            return null;
         }
         user.setDomain(loginUser.getDomain());
-        if(user.getIfEnable() == null){
+        if (user.getIfEnable() == null) {
             user.setIfEnable(false);
         }
         user.setCreationTime(DateUtils.getFormatString(Calendar.getInstance().getTime()));
@@ -109,7 +112,7 @@ public class UserService implements IUserService {
         String domain = login.getDomain();
         List<User> users = userRepository.findByDomain(domain);
         users.remove(login);
-        if(users.size() == 0){
+        if (users.size() == 0) {
             return null;
         }
         List<User> collect = users.stream().filter(action -> {

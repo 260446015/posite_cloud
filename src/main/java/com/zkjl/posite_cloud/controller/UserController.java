@@ -8,8 +8,6 @@ import com.zkjl.posite_cloud.domain.pojo.Log;
 import com.zkjl.posite_cloud.domain.pojo.User;
 import com.zkjl.posite_cloud.service.IUserService;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.Logical;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +35,7 @@ public class UserController extends BaseController {
      * @return
      */
     @PostMapping(value = "create")
-    @RequiresPermissions(value = {"create1", "create2"}, logical = Logical.OR)
+    @RequiresRoles(value = "admin")
     @SystemControllerLog(description = "创建用户")
     @ApiOperation(value = "创建更改用户")
     public ApiResult create(@RequestBody User user) {
@@ -47,6 +45,9 @@ public class UserController extends BaseController {
         } catch (Exception e) {
             logger.error("创建用户失败!", e.getMessage());
             return error("创建用户失败!");
+        }
+        if (result == null) {
+            return error("创建用户需指定用户级别");
         }
         return success(result);
     }
