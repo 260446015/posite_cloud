@@ -134,4 +134,9 @@ var zdryscuserdata = JSON.parse(sessionStorage.getItem("zdryscuser"));
 if(zdryscuserdata){
     console.log(zdryscuserdata);
     $(".usernamecon").html(zdryscuserdata.name);
+    if(zdryscuserdata.jobLevel=="normal"){
+        $(".com_jifen,.com_gunli").hide();
+    }else if(zdryscuserdata.jobLevel=="group"){
+        $(".com_gunli").hide();
+    }
 }
