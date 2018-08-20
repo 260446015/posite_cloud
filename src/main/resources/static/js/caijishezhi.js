@@ -83,6 +83,9 @@ $(function () {
                     count = res.data.data.totalNumber;
                     setPageNo(count,pagesize);
                 }
+                if(res.data.data.dataList.length==0){
+                    $(".im_contenlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
+                }
                 $.each(res.data.data.dataList,function (i,item) {
                     var appname = '';
                     var appspsn = '';

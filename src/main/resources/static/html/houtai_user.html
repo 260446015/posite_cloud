@@ -50,7 +50,7 @@
     <div class="hd_nav">
         <a href="../index.html">首页</a>
         <a href="importan.html">重点人员</a>
-        <a href="jifenyj.html">积分预警</a>
+        <a class="com_jifen" href="jifenyj.html">积分预警</a>
         <!--<a href="report.html">生成报告</a>-->
         <a href="caijishezhi.html">采集设置</a>
         <!--<a>追踪人员</a>-->
@@ -374,7 +374,7 @@
                 id:oid,
             },
             success: function (res) {
-                //console.log(res);
+                console.log(res);
                 if (res.code != 0) {
                     return layer.msg(res.message, {anim: 6});
                 }
@@ -383,7 +383,7 @@
                 $(".ba_email").val(ores.email);
                 $(".ba_guoqitime").val(ores.expireTime);
                 $(".ba_gangwei").val(ores.job);
-                $("input[name='sex21']").attr('checked', true);
+                $("input[name='sex21']").attr('checked',ores.jobLevel);
                 $(".ba_name").val(ores.name);
                 $(".ba_passward").val(ores.password);
                 $(".ba_username").val(ores.username);
@@ -401,7 +401,7 @@
         getmessage($(this).attr("data-href"));
         $(".pro_queding").attr("data-href","1");
         layer.open({
-            title: '新增用户',
+            title: '编辑用户',
             area: ['760px', '390px'],
             type: 1,
             skin: 'layui-layer-lan', //样式类名
