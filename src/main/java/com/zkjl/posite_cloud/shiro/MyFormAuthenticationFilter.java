@@ -33,13 +33,13 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
         UsernamePasswordToken token = createToken(request, response);
         try {
             Subject subject = getSubject(request, response);
-            /*if (base.getIsSingle() == 0) {
+            /*if (true) {
                 DefaultWebSessionManager sessionManager = (DefaultWebSessionManager) securityManager.getSessionManager();
                 // 单点登录
                 Collection<Session> sessions = sessionManager.getSessionDAO().getActiveSessions();
                 for (Session session : sessions) {
                     if (token.getUsername()
-                            .equals(String.valueOf(session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY)))) {
+                            .equals(((User)session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY)).getUsername())) {
                         sessionManager.getSessionDAO().delete(session);
                     }
                 }
