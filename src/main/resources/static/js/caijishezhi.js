@@ -27,9 +27,12 @@ $(function () {
         },
         data:{},
         success: function (res) {
-            //console.log(res)
+            console.log(res)
             if (res.code != 0) {
                 return layer.msg(res.message, {anim: 6});
+            }
+            if(res.data.length==0){
+                $(".sc_renwu,.im_contenlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
             }
             $.each(res.data,function (i,item) {
                 var list;

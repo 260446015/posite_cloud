@@ -192,6 +192,9 @@
                     count = res.data.totalNumber;
                     setPageNo(count,pageSize);
                 }
+                if(!res.data.dataList){
+                    $(".ba_tbody").append('<tr class="kongbai"><td rowspan="5" colspan="5"><img src="../img/zanwushuju.png" alt="" style="margin-top: 50px;"></td></tr>');
+                }
                 $.each(res.data.dataList,function (i,item) {
                     if(i%2){
                         list = '<tr class="sc_zdgray">' +

@@ -30,6 +30,7 @@ body .layui-form-select{
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    min-height: 20px;
 }
 .sc_zdspan{
     cursor: pointer;

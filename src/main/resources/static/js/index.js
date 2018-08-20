@@ -12,7 +12,7 @@ $(function () {
             },
             data: {},
             success: function (res) {
-                console.log(res.data.percent);
+                //console.log(res.data.percent);
                 if (res.code != 0) {
                     return layer.msg(res.message, {anim: 6});
                 }
@@ -62,9 +62,12 @@ $(function () {
             }),
             contentType:"application/json",
             success: function (res) {
-                console.log(res);
+                //console.log(res);
                 if (res.code != 0) {
                     return layer.msg(res.message, {anim: 6});
+                }
+                if(res.data.result.length==0) {
+                    $(".list_box").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
                 }
                 $.each(res.data.result,function (i,item) {
                     var list;
@@ -112,6 +115,9 @@ $(function () {
                 //console.log(res);
                 if (res.code != 0) {
                     return layer.msg(res.message, {anim: 6});
+                }
+                if(res.data.length==0) {
+                    $(".list_box").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
                 }
                 $.each(res.data,function (i,item) {
                     if(i%2){
@@ -227,9 +233,12 @@ $(function () {
             }),
             contentType: "application/json",
             success: function (res) {
-                console.log(res);
+                //console.log(res);
                 if (res.code != 0) {
                     return layer.msg(res.message, {anim: 6});
+                }
+                if(!res.data.dataList){
+                    $(".sc_zdbox").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
                 }
                 $.each(res.data.dataList,function (i,item) {
                     var appname = '';

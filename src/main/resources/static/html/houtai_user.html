@@ -176,10 +176,11 @@
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
 <script>
-    layui.use(['laypage', 'layer','upload','laydate']);
+    layui.use(['laypage', 'form','upload','laydate']);
     var upload = layui.upload;
     var laypage = layui.laypage;
     var laydate = layui.laydate;
+    var form = layui.form;
     //常规用法
     laydate.render({
         elem: '#begin'
@@ -293,6 +294,7 @@
             layer.closeAll()
         });
     });
+
     //启用禁用方法
     function setjinyong(id,statue) {
         var bbb;
@@ -322,6 +324,7 @@
             }
         });
     }
+
     //删除
     $(".bz_tablebox").on("click",".icon-shanchu",function () {
         var oid = $(this).attr("data-href");
@@ -334,6 +337,7 @@
             layer.closeAll()
         });
     });
+
     //删除方法
     function deletelist(oid) {
         $.ajax({
@@ -370,7 +374,7 @@
                 id:oid,
             },
             success: function (res) {
-                console.log(res);
+                //console.log(res);
                 if (res.code != 0) {
                     return layer.msg(res.message, {anim: 6});
                 }
@@ -379,13 +383,15 @@
                 $(".ba_email").val(ores.email);
                 $(".ba_guoqitime").val(ores.expireTime);
                 $(".ba_gangwei").val(ores.job);
-                $("input[name='sex21']:checked").val(ores.ifEnable);
+                $("input[name='sex21']").attr('checked', true);
                 $(".ba_name").val(ores.name);
                 $(".ba_passward").val(ores.password);
                 $(".ba_username").val(ores.username);
                 $(".ba_mobile").val(ores.mobile);
                 $(".ba_age").val(ores.age);
                 $(".pro_queding").attr("data-id",ores.id);
+                $(".ba_age").attr("data-bollean",ores.ifEnable);
+                form.render();
             }
         });
     }
@@ -427,6 +433,7 @@
             }
         });
     });
+
     //添加用户方法
     function adduser() {
         $.ajax({
@@ -445,7 +452,8 @@
                 password: $(".ba_passward").val(),
                 username: $(".ba_username").val(),
                 mobile:$(".ba_mobile").val(),
-                age:$(".ba_age").val()
+                age:$(".ba_age").val(),
+                ifEnable:true
             }),
             contentType: "application/json",
             success: function (res) {
@@ -460,6 +468,7 @@
             }
         })
     }
+
     //编辑提交用户方法
     function saveeditadduser() {
         $.ajax({
@@ -479,7 +488,8 @@
                 password: $(".ba_passward").val(),
                 username: $(".ba_username").val(),
                 mobile:$(".ba_mobile").val(),
-                age:$(".ba_age").val()
+                age:$(".ba_age").val(),
+                ifEnable:$(".ba_age").attr("data-bollean")
             }),
             contentType: "application/json",
             success: function (res) {

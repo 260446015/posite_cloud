@@ -208,3 +208,13 @@ body .layui-layer-lan .layui-layer-title {
 .layui-form-radio>i:hover, .layui-form-radioed>i {
     color: #1e8cea;
 }
+
+.kongbai{
+    padding: 50px;
+    overflow: hidden;
+}
+.kongbai img{
+    display: block;
+    margin: 0 auto;
+    width: 150px;
+}

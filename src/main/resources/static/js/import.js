@@ -50,6 +50,9 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                 count = res.data.totalNumber;
                 setPageNo(count,pageSize);
             }
+            if(!res.data.dataList){
+                $(".zd_boxlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
+            }
             $.each(res.data.dataList,function (i,item) {
                 var appname = '';
                 var appspsn = '';
