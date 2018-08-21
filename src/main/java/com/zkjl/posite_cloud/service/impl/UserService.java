@@ -8,6 +8,7 @@ import com.zkjl.posite_cloud.domain.dto.LogDTO;
 import com.zkjl.posite_cloud.domain.dto.UserDTO;
 import com.zkjl.posite_cloud.domain.pojo.Log;
 import com.zkjl.posite_cloud.domain.pojo.User;
+import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -37,13 +38,17 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User create(User user) {
+    public User create(User user) throws CustomerException {
         User loginUser = (User) SecurityUtils.getSubject().getPrincipal();
         /*if (loginUser.getPermission().contains("create1")) {
             user.setJobLevel("group");
         } else if (loginUser.getPermission().contains("create2")) {
             user.setJobLevel("normal");
         }*/
+        User check = userRepository.findByUsername(user.getUsername());
+        if(null != check){
+            throw new CustomerException("用户名已存在");
+        }
         if (StringUtils.isBlank(user.getJobLevel())) {
             return null;
         }

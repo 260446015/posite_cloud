@@ -44,8 +44,9 @@ public class FileController extends BaseController {
         List multipartFiles = multipartRequest
                 .getFiles("file");// 得到所有的文件
         MultipartFile multipartFile = null;
-        for (int i = 0; i < multipartFiles.size(); i++) {
-            multipartFile = (MultipartFile) multipartFiles.get(i);
+        String taskname = req.getParameter("taskname");
+        for (Object multipartFile1 : multipartFiles) {
+            multipartFile = (MultipartFile) multipartFile1;
             if (multipartFile.getSize() <= 0L) {
                 return null;
             }
@@ -56,7 +57,7 @@ public class FileController extends BaseController {
         }
         JobDTO jobDTO;
         try {
-            jobDTO = fileService.uploadPhoneNum(multipartFile, username);
+            jobDTO = fileService.uploadPhoneNum(multipartFile, username,taskname);
         } catch (CustomerException e) {
             return error("批量上传失败!"+e.getMessage());
         }

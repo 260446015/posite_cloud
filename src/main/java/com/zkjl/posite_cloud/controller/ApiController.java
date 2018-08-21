@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -31,8 +32,9 @@ public class ApiController extends BaseController {
 
     @GetMapping(value = "createJob")
     @SystemControllerLog(description = "添加采集-手动录入")
-    public ApiResult createRedisJob(String datas) {
+    public ApiResult createRedisJob(String datas, HttpServletRequest request) {
         JobDTO jobInfo;
+        String taskname = request.getParameter("taskname");
         try {
             String username = getCurrentUser().getUsername();
             if (StringUtils.isEmpty(username)) {
@@ -40,6 +42,7 @@ public class ApiController extends BaseController {
             }
             JobDTO jobDTO = new JobDTO();
             jobDTO.setUsername(username);
+            jobDTO.setTaskname(taskname);
             jobDTO.setDatas(datas);
             jobDTO.setStatus("start");
             jobInfo = apiService.createJob(jobDTO);

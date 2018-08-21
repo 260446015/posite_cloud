@@ -23,13 +23,14 @@ import java.util.List;
 public class FileService implements IFileService {
     @Resource
     private ApiService apiService;
+
     @Override
-    public JobDTO uploadPhoneNum(MultipartFile multipartFile, String username) throws CustomerException {
-        if (! checkFile(multipartFile)) {
+    public JobDTO uploadPhoneNum(MultipartFile multipartFile, String username, String taskname) throws CustomerException {
+        if (!checkFile(multipartFile)) {
             return null;
         }
         List<String> datas = readTxt(multipartFile);
-        JobDTO param = createParam(username, datas);
+        JobDTO param = createParam(username, datas, taskname);
         return apiService.createJob(param);
     }
 
@@ -77,10 +78,11 @@ public class FileService implements IFileService {
     /**
      * 构造请求参数
      */
-    private JobDTO createParam(String username,List<String> datas){
+    private JobDTO createParam(String username, List<String> datas, String taskname) {
         JobDTO jobDTO = new JobDTO();
         jobDTO.setUsername(username);
-        jobDTO.setDatas(StringUtils.join(datas,","));
+        jobDTO.setTaskname(taskname);
+        jobDTO.setDatas(StringUtils.join(datas, ","));
         jobDTO.setStatus("start");
         return jobDTO;
     }

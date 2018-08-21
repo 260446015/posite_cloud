@@ -10,5 +10,5 @@ import org.springframework.web.multipart.MultipartFile;
  **/
 public interface IFileService {
 
-    JobDTO uploadPhoneNum(MultipartFile multipartFile, String username) throws CustomerException;
+    JobDTO uploadPhoneNum(MultipartFile multipartFile, String username, String taskname) throws CustomerException;
 }
