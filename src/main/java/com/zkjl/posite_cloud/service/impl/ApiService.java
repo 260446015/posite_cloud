@@ -354,6 +354,12 @@ public class ApiService implements IApiService {
     public JSONObject searchByTaskidPlan(String taskId) {
         JSONObject result = new JSONObject();
         List<JobInfo> byTaskId = jobInfoRepository.findByTaskid(taskId);
+        if(byTaskId.size() == 0){
+            result.put("percent", 0);
+            result.put("successCount", 0);
+            result.put("totalCount", 0);
+            return result;
+        }
         int success = 0;
         for (JobInfo jobInfo : byTaskId) {
             if (jobInfo.getData() != null) {

@@ -6,7 +6,6 @@ import com.zkjl.posite_cloud.common.Constans;
 import com.zkjl.posite_cloud.common.util.EmailUtils;
 import com.zkjl.posite_cloud.common.util.PageUtil;
 import com.zkjl.posite_cloud.dao.CreditsRepository;
-import com.zkjl.posite_cloud.dao.JobInfoRepository;
 import com.zkjl.posite_cloud.domain.dto.CreditsDTO;
 import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
 import com.zkjl.posite_cloud.domain.pojo.JobInfo;
@@ -31,8 +30,6 @@ import java.util.stream.Collectors;
 @Service
 public class CreditsService implements ICreditsService {
 
-    @Resource
-    private JobInfoRepository jobInfoRepository;
     @Resource
     private CreditsRepository creditsRepository;
     @Resource
@@ -112,12 +109,14 @@ public class CreditsService implements ICreditsService {
     }
 
     protected String getWarnLevel(int sorce, CreditsWarn conf) {
-        if (sorce <= conf.getBlueSorce()) {
+        if (sorce >= conf.getBlueSorce() && sorce < conf.getYellowSorce()) {
             return "蓝色预警";
-        } else if (sorce <= conf.getYellowSorce()) {
+        } else if (sorce >= conf.getYellowSorce() && sorce < conf.getRedSorce()) {
             return "橙色预警";
-        } else {
+        } else if (sorce >= conf.getRedSorce()) {
             return "红色预警";
+        } else {
+            return "正常";
         }
     }
 
