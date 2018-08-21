@@ -70,4 +70,8 @@ public class User {
      * 年龄
      */
     private Integer age;
+    /**
+     * 创建人
+     */
+    private String creator;
 }

@@ -60,6 +60,7 @@ public class ApiService implements IApiService {
 
     @Override
     public JobDTO createJob(JobDTO jobDTO) {
+        checkMobile(jobDTO);
         String taskId = getTaskId(jobDTO);
         List<JobInfo> preSaveDatas = new ArrayList<>();
         List<String> mobiles = Arrays.asList(jobDTO.getDatas().split(","));
@@ -78,6 +79,17 @@ public class ApiService implements IApiService {
         jobDTO.setTaskid(taskId);
         createRedisJob(jobDTO);
         return jobDTO;
+    }
+
+    private void checkMobile(JobDTO jobDTO) {
+        String datas = jobDTO.getDatas();
+        String[] split = datas.split(",");
+        log.info("校验数据之前的数量:" + split.length);
+        Set<String> check = new HashSet<>(Arrays.asList(split));
+        String join = StringUtils.join(check, ",");
+        String[] split1 = join.split(",");
+        log.info("校验数据之后的数量:" + split1.length);
+        jobDTO.setDatas(join);
     }
 
     private String getTaskId(JobDTO jobBean) {
@@ -133,14 +145,20 @@ public class ApiService implements IApiService {
     public JSONObject realTimeData(String username) throws Exception {
         JSONObject result = new JSONObject();
         List<JobInfo> total = jobInfoRepository.findByUsername(username);
+        if (total.size() == 0) {
+            result.put("successData", 0);
+            result.put("totalCount", 0);
+            result.put("percent", "0%");
+            return result;
+        }
         List<JobInfo> successData = total.stream().filter(action -> action.getData() != null).collect(Collectors.toList());
         result.put("successData", successData.size());
         result.put("totalCount", total.size());
         BigDecimal successCount = new BigDecimal(successData.size());
         BigDecimal totalCount = new BigDecimal(total.size());
         NumberFormat percent = NumberFormat.getPercentInstance();
-        percent.setMaximumFractionDigits(2);
-        String format = percent.format(successCount.divide(totalCount, 2, RoundingMode.HALF_UP));
+        percent.setMaximumFractionDigits(4);
+        String format = percent.format(successCount.divide(totalCount, 4, RoundingMode.HALF_UP));
         result.put("percent", format);
         return result;
     }
@@ -344,8 +362,8 @@ public class ApiService implements IApiService {
         BigDecimal successCount = new BigDecimal(success);
         BigDecimal totalCount = new BigDecimal(byTaskId.size());
         NumberFormat percent = NumberFormat.getPercentInstance();
-        percent.setMaximumFractionDigits(2);
-        String format = percent.format(successCount.divide(totalCount, 2, RoundingMode.HALF_UP));
+        percent.setMaximumFractionDigits(4);
+        String format = percent.format(successCount.divide(totalCount, 4, RoundingMode.HALF_UP));
         result.put("percent", format);
         result.put("successCount", successCount);
         result.put("totalCount", byTaskId.size());

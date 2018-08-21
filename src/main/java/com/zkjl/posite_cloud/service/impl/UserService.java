@@ -48,6 +48,7 @@ public class UserService implements IUserService {
             return null;
         }
         user.setDomain(loginUser.getDomain());
+        user.setCreator(loginUser.getUsername());
         if (user.getIfEnable() == null) {
             user.setIfEnable(false);
         }

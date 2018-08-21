@@ -50,8 +50,7 @@ public class FileController extends BaseController {
                 return null;
             }
         }
-//        String username = this.getCurrentUser().getUsername();
-        String username = "yindawei";
+        String username = this.getCurrentUser().getUsername();
         if (StringUtils.isBlank(username)) {
             return error("用户名为空");
         }
