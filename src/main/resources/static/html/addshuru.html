@@ -65,6 +65,12 @@
             <a href="addcaiji.html" class="cjad_btn">数据上传</a>
             <a href="addshuru.html" class="cjad_btn cjad_active">数据添加</a>
         </div>
+        <div class="layui-form-item titleopen">
+            <label class="layui-form-label">任务名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入任务名称" class="layui-input renwuname">
+            </div>
+        </div>
         <textarea class="caijibox" placeholder="188****8888,188****8888"></textarea>
         <p class="shuoming">注意事项：
             <br/>
@@ -92,6 +98,10 @@
         // $.each(caijiboxval.split(","),function (i,item) {
         //     list.push(item)
         // })
+        if($(".renwuname").val()==""){
+            $(".renwuname").css("border","1px solid red;")
+            return layer.msg("请填写任务名称", {anim: 6});
+        }
         console.log(caijiboxval);
         $.ajax({
             url: "/api/createJob",
@@ -101,7 +111,8 @@
             },
             data:{
                 datas: caijiboxval,
-                status: "start"
+                status: "start",
+                tasktname:$(".renwuname").val()
             },
             success: function (res) {
                 console.log(res);

@@ -207,7 +207,7 @@ body .layui-progress{
     width: 1000px;
     height: 300px;
     border: 1px dashed #ccc;
-    margin: 80px auto 5px auto;
+    margin: 30px auto 5px auto;
     clear: both;
 }
 .uploadbox img{
@@ -235,11 +235,16 @@ body .layui-progress{
     width: 940px;
     padding: 30px;
     height: 240px;
-    margin: 80px auto 5px auto;
+    margin: 30px auto 5px auto;
     clear: both;
 }
 .sc_zdgrayspan{
     display: block;
     padding: 0 30px;
     text-align: center;
+}
+.titleopen{
+    width: 1000px;
+    margin: 100px auto 30px auto;
+    clear: both;
 }

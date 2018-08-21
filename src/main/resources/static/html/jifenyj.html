@@ -128,29 +128,6 @@
                 <label>平台名称</label>
                 <input type="text" class="layui-input ba_pingtai"  placeholder="请输入要查询的平台名称">
             </div>
-            <!--<div class="bz_li">-->
-                <!--<div class="layui-form-item">-->
-                    <!--<label class="layui-form-label ba_fenlei">网站分类</label>-->
-                    <!--<div class="layui-input-block" style="height: 30px;">-->
-                        <!--<select name="interest" lay-filter="aihao" style="height: 30px;">-->
-                            <!--<option value=""></option>-->
-                            <!--<option value="赌博">网络赌博</option>-->
-                            <!--<option value="贷款">网络贷款</option>-->
-                            <!--<option value="涉黄">色情网站</option>-->
-                            <!--<option value="直播">网络直播</option>-->
-                            <!--<option value="游戏">网络游戏</option>-->
-                        <!--</select>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="bz_li">-->
-                <!--<label>最低分数</label>-->
-                <!--<input type="text" class="layui-input ba_minscore" placeholder="请输入最低分数">-->
-            <!--</div>-->
-            <!--<div class="bz_li">-->
-                <!--<label>最高分数</label>-->
-                <!--<input type="text" class="layui-input ba_maxcore" placeholder="请输入最高分数">-->
-            <!--</div>-->
             <div class="layui-btn layui-btn-normal baocunbtn">查询</div>
         </div>
 
@@ -288,15 +265,11 @@
         }
     });
 
-    //生成报告
-    $(".zd_boxlist").on("click",".baocunbtn",function () {
-        window.location = "report.html"
-    });
-
     //点击查询
     form.on('select(aihao)', function(data){
         $(".ba_fenlei").attr("data-href",data.value);
     });
+
     $(".baocunbtn").click(function () {
         var data = JSON.stringify({
             maxSorce: $(".ba_maxcore").val(),
@@ -307,6 +280,28 @@
         });
         $(".listpage").attr("data-href",data);
         getimportlist($(".ba_maxcore").val(),$(".ba_minscore").val(),$(".ba_number").val(),0,10,$(".ba_pingtai").val(),$(".ba_fenlei").attr("data-href"));
+    });
+
+    $(".zd_boxlist").on("click",".baocunbtn",function () {
+        $.ajax({
+            url: "/api/sendEmail",
+            type: "post",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: JSON.stringify({
+                title:"123",
+                content:"123"
+            }),
+            contentType: "application/json",
+            success: function (res) {
+                console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                layer.msg("邮件已发送,请注意查收");
+            }
+        });
     });
 </script>
 </html>

@@ -65,6 +65,12 @@
            <a href="addcaiji.html" class="cjad_btn cjad_active">数据上传</a>
            <a href="addshuru.html" class="cjad_btn">数据添加</a>
        </div>
+       <div class="layui-form-item titleopen">
+           <label class="layui-form-label">任务名称</label>
+           <div class="layui-input-block">
+               <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入任务名称" class="layui-input renwuname">
+           </div>
+       </div>
        <div class="uploadbox" id="test10">
            <img src="../img/iploadimg.png" alt="">
            <p>点击上传，或将文件拖拽到此处</p>
@@ -83,13 +89,14 @@
     uploadonemore()
     //文件上传
     function uploadonemore() {
-        var uploadkey = true;
         upload.render({
             elem: '#test10'
             , url: '/api/file/upload'
             , accept: 'file' //普通文件
             , data: {
-
+                tasktname:function () {
+                    return $(".renwuname").val()
+                }
             },
             xhrFields: {
                 withCredentials: true
@@ -110,6 +117,10 @@
             }
             , done: function (res) {
                 console.log(res);
+                if($(".renwuname").val()==""){
+                    $(".renwuname").css("border","1px solid red;")
+                    return layer.msg("请填写任务名称", {anim: 6});
+                }
                 if (res.code != 0) {
                     return layer.msg(res.message, {anim: 6});
                 }
