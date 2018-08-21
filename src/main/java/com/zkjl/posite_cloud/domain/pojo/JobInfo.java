@@ -25,4 +25,5 @@ public class JobInfo implements Serializable {
     private JSONArray data;
     private Date creationTime;
     private Date updateTime;
+    private Boolean ifSendEmail;
 }

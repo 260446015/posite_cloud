@@ -15,4 +15,5 @@ public class JobinfoVO implements Serializable {
     private String taskId;
     private Date creationTime;
     private Boolean ifFinish;
+    private String taskname;
 }

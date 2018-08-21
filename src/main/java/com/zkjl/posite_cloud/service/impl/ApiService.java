@@ -315,6 +315,7 @@ public class ApiService implements IApiService {
             vo.setTaskId(action.getTaskid());
             vo.setCreationTime(action.getCreationTime());
             vo.setIfFinish(true);
+            vo.setTaskname(action.getTaskname());
             for (String redisId : keys) {
                 if (redisId.contains(action.getTaskid())) {
                     vo.setIfFinish(false);
