@@ -40,10 +40,16 @@ $(function () {
                 }
                 $.each(res.data,function (i,item) {
                     var list;
-                    if(item.ifFinish){
-                        list = '<li class=""><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'">'+zdrysc.timechange(item.creationTime)+'</span><a id="'+item.taskId+'" class="btntrue">生成报告</a></li>';
+                    var otext = "";
+                    if(item.taskname){
+                        otext = item.taskname;
                     }else{
-                        list = '<li><input  id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'">'+zdrysc.timechange(item.creationTime)+'</span><a id="'+item.taskId+'" class="btnfalse">正在采集</a></li>';
+                        otext = zdrysc.timechange(item.creationTime);
+                    }
+                    if(item.ifFinish){
+                        list = '<li class=""><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'">'+otext+'</span><a id="'+item.taskId+'" class="btntrue">生成报告</a></li>';
+                    }else{
+                        list = '<li><input  id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'">'+otext+'</span><a id="'+item.taskId+'" class="btnfalse">正在采集</a></li>';
                     }
                     $(".sc_renwu").append(list);
                 });

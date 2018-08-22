@@ -17,11 +17,14 @@
     line-height: 30px;
     padding: 0 10px;
     text-align: center;
-
 }
 .sc_renwu li span{
     float: left;
     cursor: pointer;
+    width: 58%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 body .sc_renwu li input{
     float: left;
