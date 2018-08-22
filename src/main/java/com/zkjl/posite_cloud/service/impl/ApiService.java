@@ -354,7 +354,7 @@ public class ApiService implements IApiService {
     public JSONObject searchByTaskidPlan(String taskId) {
         JSONObject result = new JSONObject();
         List<JobInfo> byTaskId = jobInfoRepository.findByTaskid(taskId);
-        if(byTaskId.size() == 0){
+        if (byTaskId.size() == 0) {
             result.put("percent", 0);
             result.put("successCount", 0);
             result.put("totalCount", 0);
@@ -387,13 +387,19 @@ public class ApiService implements IApiService {
     }
 
     @Override
-    public boolean deleteBatch(String[] ids) {
+    public boolean deleteBatch(String[] ids, String username) {
         boolean flag = false;
         try {
             for (int i = 0; i < ids.length; i++) {
                 redistaskRepository.deleteById(ids[i]);
                 List<JobInfo> byTaskid = jobInfoRepository.findByTaskid(ids[i]);
                 jobInfoRepository.deleteAll(byTaskid);
+                try {
+                    Set keys = redisTemplate.keys(username + "_" + ids[i] + "_*");
+                    redisTemplate.delete(keys);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             flag = true;
         } catch (Exception e) {

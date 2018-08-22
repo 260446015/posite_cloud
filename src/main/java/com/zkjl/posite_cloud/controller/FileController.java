@@ -45,6 +45,9 @@ public class FileController extends BaseController {
                 .getFiles("file");// 得到所有的文件
         MultipartFile multipartFile = null;
         String taskname = req.getParameter("taskname");
+        if(StringUtils.isBlank(taskname)){
+            return error("请务必填写上传任务名称");
+        }
         for (Object multipartFile1 : multipartFiles) {
             multipartFile = (MultipartFile) multipartFile1;
             if (multipartFile.getSize() <= 0L) {
