@@ -16,7 +16,10 @@ $(function () {
                 if (res.code != 0) {
                     return layer.msg(res.message, {anim: 6});
                 }
-                var h = ($(".sc_jindu").height())*parseInt(res.data.percent)/100
+                var s = (res.data.successData)/(res.data.totalCount);
+                var H = $(".sc_jindu").height();
+                var d = $(".sc_jindu").width();
+                var h = Math.sqrt(2*s*H*d);
                 $(".sc_jindu2").css("height",h);
                 $(".jindunum").html(res.data.percent);
                 if(res.data.successData<res.data.totalCount){
@@ -72,17 +75,15 @@ $(function () {
                 $.each(res.data.result,function (i,item) {
                     var list;
                     if(i%2){
-                        list = "<div>" +
-                            "<i class='none'>"+item.content+"</i>" +
-                            "<a>"+item.cleanTitle+"</a>" +
+                        list = "<a target='_blank' href='"+item.url+"'>" +
+                            "<i>"+item.cleanTitle+"</i>" +
                             "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
-                            "</div>";
+                            "</a>";
                     }else{
-                        list = "<div class='sc_zdgray'>" +
-                            "<i class='none'>"+item.content+"</i>" +
-                            "<a>"+item.cleanTitle+"</a>" +
+                        list = "<a target='_blank' href='"+item.url+"' class='sc_zdgray'>" +
+                            "<i>"+item.cleanTitle+"</i>" +
                             "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
-                            "</div>";
+                            "</a>";
                     }
                     $(".sc_yuqing").append(list);
                 });
@@ -90,15 +91,15 @@ $(function () {
         });
     }
     //点击详情
-    $(".sc_yuqing").on("click","div",function () {
-        layer.open({
-            type: 1,
-            shade: false,
-            area: ["900px","600px"], //宽高
-            title: false, //不显示标题
-            content: $(this).find("i").html()
-        });
-    });
+    // $(".sc_yuqing").on("click","div",function () {
+    //     layer.open({
+    //         type: 1,
+    //         shade: false,
+    //         area: ["900px","600px"], //宽高
+    //         title: false, //不显示标题
+    //         content: $(this).find("i").html()
+    //     });
+    // });
 
     //获取实时注册情况
     var keynum = 0;
@@ -259,14 +260,14 @@ $(function () {
                     }
                     if(i%2){
                         list = '<div class="sc_zdgray">' +
-                            '<span>'+(i+1)+'</span>' +
+                            '<span>Top '+(i+1)+'</span>' +
                             '<span>'+item.mobile+'</span>' +
                             '<span>'+item.registCount+'</span>' +
                             '<span>'+item.sorce+'</span>' +
                             '</div>';
                     }else{
                         list = '<div>' +
-                            '<span>'+(i+1)+'</span>' +
+                            '<span>Top '+(i+1)+'</span>' +
                             '<span>'+item.mobile+'</span>' +
                             '<span>'+item.registCount+'</span>' +
                             '<span>'+item.sorce+'</span>' +

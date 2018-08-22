@@ -2,8 +2,8 @@
 
 
 .sc_jindu{
-    width: 40%;
-    height: 55%;
+    width: 45%;
+    height: 50%;
     background: #bce0ff;
     margin: 12% auto;
     position: relative;
@@ -160,14 +160,15 @@
     padding:0 3%;
     height: 83%;
 }
-.sc_yuqing div{
+.sc_yuqing a{
     width: 96%;
     overflow: hidden;
     height: 9%;
     line-height: 2.2;
     padding: 0 2%;
+    display: block;
 }
-.sc_yuqing div a{
+.sc_yuqing a i{
    float: left;
     width: 50%;
     white-space: nowrap;
@@ -175,7 +176,7 @@
     overflow: hidden;
     text-align: left;
 }
-.sc_yuqing div span{
+.sc_yuqing a span{
     float: right;
     width: 50%;
     text-align: right;
