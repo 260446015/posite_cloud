@@ -3,7 +3,10 @@ package com.zkjl.posite_cloud.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.Constans;
-import com.zkjl.posite_cloud.common.util.*;
+import com.zkjl.posite_cloud.common.util.MD5Util;
+import com.zkjl.posite_cloud.common.util.MD5Utils;
+import com.zkjl.posite_cloud.common.util.PageUtil;
+import com.zkjl.posite_cloud.common.util.RequestUtils;
 import com.zkjl.posite_cloud.dao.CreditsRepository;
 import com.zkjl.posite_cloud.dao.JobInfoRepository;
 import com.zkjl.posite_cloud.dao.RedistaskRepository;
@@ -26,7 +29,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
@@ -288,14 +290,14 @@ public class ApiService implements IApiService {
         check.add("主播");
         check.add("直播");
         check.add("游戏");
-        String area = "";
+        /*String area = "";
         try {
             String myIP = IpUtil.getMyIP();
             area = IpUtil.baiduGetCityCode(myIP);
             check.add(area);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         if (!StringUtils.isBlank(userSentiment)) {
             String[] split = userSentiment.split(",");
             Collections.addAll(check, split);
