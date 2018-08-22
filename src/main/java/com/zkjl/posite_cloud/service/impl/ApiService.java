@@ -3,10 +3,7 @@ package com.zkjl.posite_cloud.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.Constans;
-import com.zkjl.posite_cloud.common.util.MD5Util;
-import com.zkjl.posite_cloud.common.util.MD5Utils;
-import com.zkjl.posite_cloud.common.util.PageUtil;
-import com.zkjl.posite_cloud.common.util.RequestUtils;
+import com.zkjl.posite_cloud.common.util.*;
 import com.zkjl.posite_cloud.dao.CreditsRepository;
 import com.zkjl.posite_cloud.dao.JobInfoRepository;
 import com.zkjl.posite_cloud.dao.RedistaskRepository;
@@ -29,6 +26,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
@@ -269,7 +267,7 @@ public class ApiService implements IApiService {
     }
 
     @Override
-    public JSONObject getSentiment(SentimentDTO sentimentDTO) {
+    public JSONObject getSentiment(SentimentDTO sentimentDTO, String userSentiment) {
         long c = System.currentTimeMillis() / 1000;
         String token = MD5Utils.generateToken(c);
         Map<String, Object> params = new HashMap<>();
@@ -282,10 +280,27 @@ public class ApiService implements IApiService {
         JSONObject json = new JSONObject();
         //相关词
         JSONArray array = new JSONArray();
-        String[] msg = sentimentDTO.getMsg();
-        for (int i = 0; i < msg.length; i++) {
-            array.add(msg[i]);
+        Set<String> check = new HashSet<>();
+        check.add("赌博");
+        check.add("贷款");
+        check.add("色情");
+        check.add("黄色");
+        check.add("主播");
+        check.add("直播");
+        check.add("游戏");
+        String area = "";
+        try {
+            String myIP = IpUtil.getMyIP();
+            area = IpUtil.baiduGetCityCode(myIP);
+            check.add(area);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        if (!StringUtils.isBlank(userSentiment)) {
+            String[] split = userSentiment.split(",");
+            Collections.addAll(check, split);
+        }
+        array.addAll(check);
         json.put("industry", 1000);
         //排序字段
         json.put("sortField", "publishTime");

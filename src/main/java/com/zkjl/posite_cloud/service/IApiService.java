@@ -23,7 +23,7 @@ public interface IApiService {
 
     List<JSONObject> realTimeRegist(String username);
 
-    JSONObject getSentiment(SentimentDTO sentimentDTO);
+    JSONObject getSentiment(SentimentDTO sentimentDTO, String userSentiment);
 
     List<JobinfoVO> listJob(String username);
 

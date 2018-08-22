@@ -157,8 +157,10 @@ public class ApiController extends BaseController {
     @ApiOperation(value = "获取舆情信息接口")
     public ApiResult sentiment(@RequestBody SentimentDTO sentimentDTO) {
         JSONObject result;
+        String userSentiment;
         try {
-            result = apiService.getSentiment(sentimentDTO);
+            userSentiment = this.getCurrentUser().getSentiment();
+            result = apiService.getSentiment(sentimentDTO, userSentiment);
         } catch (Exception e) {
             log.error("获取舆情信息接口出错!", e.getMessage());
             return error("获取舆情信息接口出错!");
@@ -200,16 +202,17 @@ public class ApiController extends BaseController {
 
     /**
      * 批量删除任务
+     *
      * @param ids
      * @return
      */
     @GetMapping(value = "deleteBatch")
-    public ApiResult deleteBatch(@RequestParam(value = "ids[]") String[] ids){
+    public ApiResult deleteBatch(@RequestParam(value = "ids[]") String[] ids) {
         boolean flag;
         String username;
         try {
             username = this.getCurrentUser().getUsername();
-            flag = apiService.deleteBatch(ids,username);
+            flag = apiService.deleteBatch(ids, username);
         } catch (Exception e) {
             log.error("批量删除任务出错!", e.getMessage());
             return error("批量删除任务进度出错!");
