@@ -188,8 +188,7 @@ public class UserController extends BaseController {
         try {
             result = this.getCurrentUser().getSentiment().split(",");
         } catch (Exception e) {
-            logger.error("查询用户舆情设置失败!", e.getMessage());
-            return error("查询用户舆情设置失败!");
+            return success(null);
         }
         return success(result);
     }

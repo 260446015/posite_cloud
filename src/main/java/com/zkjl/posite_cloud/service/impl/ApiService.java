@@ -129,9 +129,7 @@ public class ApiService implements IApiService {
             try {
                 stringRedisTemplate.rename(_redisId, redisId);
             } catch (Exception e) {
-                byTaskid.forEach(action -> {
-                    action.setData(null);
-                });
+                byTaskid.forEach(action -> action.setData(null));
                 jobInfoRepository.saveAll(byTaskid);
                 ListOperations<String, String> stringStringListOperations = stringRedisTemplate.opsForList();
                 mobiles.forEach(mobile -> stringStringListOperations.rightPush(redisId, mobile));
