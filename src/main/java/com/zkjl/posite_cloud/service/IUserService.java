@@ -25,4 +25,6 @@ public interface IUserService {
     boolean deleteLog(String id);
 
     boolean enable(String id, Boolean ifEnable);
+
+    boolean updateSentiment(String[] msg);
 }

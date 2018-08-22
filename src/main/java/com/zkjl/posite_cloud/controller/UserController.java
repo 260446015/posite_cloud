@@ -162,4 +162,36 @@ public class UserController extends BaseController {
         return success(flag);
     }
 
+    /**
+     * 更新用户舆情设置
+     */
+    @GetMapping(value = "updateSentiment")
+    @ApiOperation(value = "更新用户舆情设置")
+    public ApiResult updateSentiment(@RequestParam(value = "msg[]") String[] msg) {
+        boolean flag;
+        try {
+            flag = userService.updateSentiment(msg);
+        } catch (Exception e) {
+            logger.error("更新用户舆情设置失败!", e.getMessage());
+            return error("更新用户舆情设置失败!");
+        }
+        return success(flag);
+    }
+
+    /**
+     * 查询用户舆情设置
+     */
+    @GetMapping(value = "findSentiment")
+    @ApiOperation(value = "查询用户舆情设置")
+    public ApiResult findSentiment() {
+        String[] result;
+        try {
+            result = this.getCurrentUser().getSentiment().split(",");
+        } catch (Exception e) {
+            logger.error("查询用户舆情设置失败!", e.getMessage());
+            return error("查询用户舆情设置失败!");
+        }
+        return success(result);
+    }
+
 }

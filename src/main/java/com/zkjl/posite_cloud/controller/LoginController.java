@@ -2,7 +2,9 @@ package com.zkjl.posite_cloud.controller;
 
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.MsgConstant;
+import com.zkjl.posite_cloud.common.util.IpUtil;
 import com.zkjl.posite_cloud.domain.pojo.User;
+import com.zkjl.posite_cloud.domain.vo.UserVo;
 import com.zkjl.posite_cloud.exception.AccountStartException;
 import com.zkjl.posite_cloud.service.IUserService;
 import com.zkjl.posite_cloud.shiro.ShiroUtil;
@@ -16,6 +18,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -42,7 +45,17 @@ public class LoginController extends BaseController{
         if (request.getAttribute("success") != null && (boolean) request.getAttribute("success")) {
 //            userLogoServiceImpl.addLoginLogo(getUserId());
             User login = userService.selectByUsernameAndPassword(username, password);
-            return success(login);
+            UserVo vo = new UserVo();
+            BeanUtils.copyProperties(login,vo);
+            vo.setArea("");
+            try {
+                String ip = IpUtil.getMyIP();
+                String area = IpUtil.baiduGetCityCode(ip);
+                vo.setArea(area);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return success(vo);
         }
         // 登录失败从request中获取shiro处理的异常信息。
         String message = MsgConstant.LOGIN_ERRROR;

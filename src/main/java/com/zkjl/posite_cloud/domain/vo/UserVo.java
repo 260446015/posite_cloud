@@ -1,14 +1,14 @@
-package com.zkjl.posite_cloud.domain.pojo;
+package com.zkjl.posite_cloud.domain.vo;
 
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * @author yindawei
+ * @date 2018/8/22 10:35
+ **/
 @Data
-@Document(collection = "user")
-public class User {
-
-    @Id
+public class UserVo {
+    private String area;
     private String id;
     /**
      * 用户名

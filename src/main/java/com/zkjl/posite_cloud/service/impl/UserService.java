@@ -199,4 +199,17 @@ public class UserService implements IUserService {
         }
         return flag;
     }
+
+    @Override
+    public boolean updateSentiment(String[] msg) {
+        try {
+            String join = StringUtils.join(msg, ",");
+            User user = (User) SecurityUtils.getSubject().getPrincipal();
+            user.setSentiment(join);
+            userRepository.save(user);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 }

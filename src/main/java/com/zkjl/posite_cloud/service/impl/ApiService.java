@@ -10,6 +10,7 @@ import com.zkjl.posite_cloud.common.util.RequestUtils;
 import com.zkjl.posite_cloud.dao.CreditsRepository;
 import com.zkjl.posite_cloud.dao.JobInfoRepository;
 import com.zkjl.posite_cloud.dao.RedistaskRepository;
+import com.zkjl.posite_cloud.dao.UserRepository;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
 import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
@@ -55,6 +56,8 @@ public class ApiService implements IApiService {
     private CreditsRepository creditsRepository;
     @Resource
     private CreditsService creditsService;
+    @Resource
+    private UserRepository userRepository;
 
     private static final Logger log = LoggerFactory.getLogger(ApiService.class);
 
@@ -285,13 +288,12 @@ public class ApiService implements IApiService {
         for (int i = 0; i < msg.length; i++) {
             array.add(msg[i]);
         }
-        json.put("related", array);
-        //行业
         json.put("industry", 1000);
         //排序字段
         json.put("sortField", "publishTime");
         //排序方式
         json.put("sortType", "desc");
+        //行业
         json.put("related", array);
         //查询时间范围
         json.put("start_time", sentimentDTO.getBeginDate());
