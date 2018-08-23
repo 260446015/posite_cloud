@@ -104,8 +104,8 @@ public class ApiController extends BaseController {
             username = this.getCurrentUser().getUsername();
             result = apiService.developmentData(username);
         } catch (Exception e) {
-            log.error("获取发展阶段分析出错!", e.getMessage());
-            return error("获取发展阶段分析出错!");
+            log.error("获取占比分析出错!", e.getMessage());
+            return error("获取占比分析出错!");
         }
         return success(result);
     }

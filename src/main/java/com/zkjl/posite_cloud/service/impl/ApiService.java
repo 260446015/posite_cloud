@@ -3,10 +3,7 @@ package com.zkjl.posite_cloud.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.Constans;
-import com.zkjl.posite_cloud.common.util.MD5Util;
-import com.zkjl.posite_cloud.common.util.MD5Utils;
-import com.zkjl.posite_cloud.common.util.PageUtil;
-import com.zkjl.posite_cloud.common.util.RequestUtils;
+import com.zkjl.posite_cloud.common.util.*;
 import com.zkjl.posite_cloud.dao.CreditsRepository;
 import com.zkjl.posite_cloud.dao.JobInfoRepository;
 import com.zkjl.posite_cloud.dao.RedistaskRepository;
@@ -70,14 +67,16 @@ public class ApiService implements IApiService {
         String taskId = getTaskId(jobDTO);
         List<JobInfo> preSaveDatas = new ArrayList<>();
         List<String> mobiles = Arrays.asList(jobDTO.getDatas().split(","));
-        mobiles.forEach(mobile -> {
+        Set<String> check = new HashSet<>();
+        for (String mobile : mobiles) {
+            check.add(mobile);
             JobInfo jobInfo = new JobInfo();
             jobInfo.setTaskid(taskId);
             jobInfo.setUsername(jobDTO.getUsername());
             jobInfo.setCreationTime(Calendar.getInstance().getTime());
             jobInfo.setMobile(mobile);
             preSaveDatas.add(jobInfo);
-        });
+        }
         jobInfoRepository.saveAll(preSaveDatas);
         redistaskRepository.save(new Redistask(jobDTO.getUsername(), taskId, false, jobDTO.getTaskname()));
         Integer level = getLevel(jobDTO);
@@ -91,7 +90,12 @@ public class ApiService implements IApiService {
         String datas = jobDTO.getDatas();
         String[] split = datas.split(",");
         log.info("校验数据之前的数量:" + split.length);
-        Set<String> check = new HashSet<>(Arrays.asList(split));
+        Set<String> check = new HashSet<>();
+        for (String aSplit : split) {
+            if(RegUtil.checkMobile(aSplit)){
+                check.add(aSplit);
+            }
+        }
         String join = StringUtils.join(check, ",");
         String[] split1 = join.split(",");
         log.info("校验数据之后的数量:" + split1.length);
@@ -152,7 +156,7 @@ public class ApiService implements IApiService {
         if (total.size() == 0) {
             result.put("successData", 0);
             result.put("totalCount", 0);
-            result.put("percent", "0%");
+            result.put("percent", "100%");
             return result;
         }
         List<JobInfo> successData = total.stream().filter(action -> action.getData() != null).collect(Collectors.toList());
@@ -170,7 +174,7 @@ public class ApiService implements IApiService {
     @Override
     public JSONObject developmentData(String username) throws Exception {
         List<JobInfo> total = jobInfoRepository.findByUsername(username);
-        List<JobInfo> successData = total.stream().filter(action -> action.getData() != null).collect(Collectors.toList());
+        List<JobInfo> successData = total.stream().filter(action -> action.getData() != null && action.getData().size() != 0).collect(Collectors.toList());
         if (successData.size() == 0) {
             JSONObject result = new JSONObject();
             result.put("gamble", 0);
@@ -198,19 +202,31 @@ public class ApiService implements IApiService {
         int living = 0;
         int game = 0;
         CreditsWarn conf = creditsService.findCreditsWarnConf(username);
+        Set<String> checkPerson = new HashSet<>();
         for (Map.Entry<String, Set<JSONObject>> entry : check.entrySet()) {
             Set<JSONObject> value = entry.getValue();
+            checkPerson.clear();
             for (JSONObject jsonObject : value) {
                 if (jsonObject.getString("webtype").equals(conf.getGamble().getString("name"))) {
-                    gamble += 1;
+                    if(checkPerson.add("gamble")){
+                        gamble += 1;
+                    }
                 } else if (jsonObject.getString("webtype").equals(conf.getLoans().getString("name"))) {
-                    loans += 1;
+                    if(checkPerson.add("loans")){
+                        loans += 1;
+                    }
                 } else if (jsonObject.getString("webtype").equals(conf.getYellow().getString("name"))) {
-                    yellow += 1;
+                    if(checkPerson.add("yellow")){
+                        yellow += 1;
+                    }
                 } else if (jsonObject.getString("webtype").equals(conf.getLiving().getString("name"))) {
-                    living += 1;
+                    if(checkPerson.add("living")){
+                        living += 1;
+                    }
                 } else {
-                    game += 1;
+                    if(checkPerson.add("game")){
+                        game += 1;
+                    }
                 }
             }
         }
@@ -360,7 +376,9 @@ public class ApiService implements IApiService {
     @Override
     public JSONObject searchByTaskid(String taskId, Integer pageNum, Integer pageSize, String msg) {
         JSONObject result = new JSONObject();
-        List<JobInfo> byTaskId = jobInfoRepository.findByTaskid(taskId);
+        Query query = new Query();
+        query.addCriteria(Criteria.where("taskid").is(taskId).and("data").exists(true));
+        List<JobInfo> byTaskId = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
         byTaskId = byTaskId.stream().filter(action -> action.getData() != null && action.getData().size() != 0).collect(Collectors.toList());
         if (!StringUtils.isBlank(msg)) {
             byTaskId = byTaskId.stream().filter(action -> action.getMobile().equals(msg)).collect(Collectors.toList());
@@ -376,7 +394,7 @@ public class ApiService implements IApiService {
         JSONObject result = new JSONObject();
         List<JobInfo> byTaskId = jobInfoRepository.findByTaskid(taskId);
         if (byTaskId.size() == 0) {
-            result.put("percent", 0);
+            result.put("percent", "100%");
             result.put("successCount", 0);
             result.put("totalCount", 0);
             return result;
