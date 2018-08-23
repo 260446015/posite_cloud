@@ -70,7 +70,7 @@ public class CreditsController extends BaseController {
             jobInfo.setMobile(data.getString("mobile"));
             jobInfo.setData(data.getJSONArray("data"));
             jobInfo.setCreationTime(data.getDate("creationTime"));
-            JSONObject jsonObject = EmailUtils.preSendEmail(jobInfo, data.getInteger("totalSorce"));
+            JSONObject jsonObject = EmailUtils.preSendEmail(jobInfo, data.getInteger("sorce"));
             flag = creditsService.sendEmail(jsonObject, user);
         } catch (Exception e) {
             log.error("发送邮件失败！", e.getMessage());
