@@ -3,14 +3,13 @@ package com.zkjl.posite_cloud.schedule;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.Constans;
-import com.zkjl.posite_cloud.common.util.DateUtils;
+import com.zkjl.posite_cloud.common.util.EmailUtils;
 import com.zkjl.posite_cloud.dao.JobInfoRepository;
 import com.zkjl.posite_cloud.dao.UserRepository;
 import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
 import com.zkjl.posite_cloud.domain.pojo.JobInfo;
 import com.zkjl.posite_cloud.domain.pojo.User;
 import com.zkjl.posite_cloud.service.ICreditsService;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -24,7 +23,6 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author yindawei
@@ -81,7 +79,8 @@ public class ScheduleTask {
             }
             boolean warnLevel = getWarnLevel(totalSorce, conf);
             if (warnLevel) {
-                JSONObject param = preSendEmail(data, totalSorce);
+
+                JSONObject param = EmailUtils.preSendEmail(data, totalSorce);
                 User user = getTargetUser(data.getUsername());
                 try {
                     creditsService.sendEmail(param, user);
@@ -95,19 +94,6 @@ public class ScheduleTask {
 
     private User getTargetUser(String username) {
         return userRepository.findByUsername(username);
-    }
-
-    private JSONObject preSendEmail(JobInfo data, int totalSorce) {
-        List<String> webname = data.getData().stream().map(action -> {
-            JSONObject target = new JSONObject((Map<String, Object>) action);
-            return target.getString("webname");
-        }).collect(Collectors.toList());
-        String plat = StringUtils.join(webname, ",");
-        String date = DateUtils.getFormatString(data.getCreationTime());
-        JSONObject param = new JSONObject();
-        param.put("title", "重点人网络筛查平台积分预警");
-        param.put("content", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;尊敬的用户您好，手机号码" + data.getMobile() + "积分达到" + totalSorce + "分，系统研判为红色预警。注册违法平台有" + plat + "。采集时间为" + date + "。");
-        return param;
     }
 
     private boolean getWarnLevel(int sorce, CreditsWarn conf) {

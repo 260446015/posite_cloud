@@ -22,7 +22,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -222,11 +225,12 @@ public class ApiService implements IApiService {
 
     @Override
     public List<JSONObject> realTimeRegist(String username) {
-        List<JobInfo> total = jobInfoRepository.findByUsername(username);
-        List<JobInfo> successData = total.stream().filter(action -> action.getData() != null).sorted((a, b) -> b.getId().compareTo(a.getId())).collect(Collectors.toList());
         List<JSONObject> result = new ArrayList<>();
+        Query query = new Query();
+        query.addCriteria(Criteria.where("username").is(username).and("data").exists(true)).limit(1000).with(Sort.by(Sort.Direction.DESC,"creationTime"));
+        List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
         A:
-        for (JobInfo action : successData) {
+        for (JobInfo action : list) {
             JSONArray data = action.getData();
             B:
             for (Object obj : data) {

@@ -1,6 +1,7 @@
 package com.zkjl.posite_cloud.common.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zkjl.posite_cloud.domain.pojo.JobInfo;
 import com.zkjl.posite_cloud.domain.pojo.User;
 import com.zkjl.posite_cloud.exception.CustomerException;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +14,10 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * @author yindawei
@@ -96,5 +100,18 @@ public class EmailUtils {
         message.writeTo(new FileOutputStream("E:\\attachMail.eml"));*/
         //返回生成的邮件
         return message;
+    }
+
+    public static JSONObject preSendEmail(JobInfo data, int totalSorce) {
+        List<String> webname = data.getData().stream().map(action -> {
+            JSONObject target = new JSONObject((Map<String, Object>) action);
+            return target.getString("webname");
+        }).collect(Collectors.toList());
+        String plat = StringUtils.join(webname, ",");
+        String date = DateUtils.getFormatString(data.getCreationTime());
+        JSONObject param = new JSONObject();
+        param.put("title", "重点人网络筛查平台积分预警");
+        param.put("content", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;尊敬的用户您好，手机号码" + data.getMobile() + "积分达到" + totalSorce + "分，系统研判为红色预警。注册违法平台有" + plat + "。采集时间为" + date + "。");
+        return param;
     }
 }

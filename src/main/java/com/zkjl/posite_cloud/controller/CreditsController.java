@@ -3,14 +3,19 @@ package com.zkjl.posite_cloud.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
+import com.zkjl.posite_cloud.common.util.EmailUtils;
 import com.zkjl.posite_cloud.domain.dto.CreditsDTO;
+import com.zkjl.posite_cloud.domain.pojo.JobInfo;
 import com.zkjl.posite_cloud.domain.pojo.User;
 import com.zkjl.posite_cloud.service.ICreditsService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
@@ -61,7 +66,12 @@ public class CreditsController extends BaseController {
         User user;
         try {
             user = this.getCurrentUser();
-            flag = creditsService.sendEmail(data, user);
+            JobInfo jobInfo = new JobInfo();
+            jobInfo.setMobile(data.getString("mobile"));
+            jobInfo.setData(data.getJSONArray("data"));
+            jobInfo.setCreationTime(data.getDate("creationTime"));
+            JSONObject jsonObject = EmailUtils.preSendEmail(jobInfo, data.getInteger("totalSorce"));
+            flag = creditsService.sendEmail(jsonObject, user);
         } catch (Exception e) {
             log.error("发送邮件失败！", e.getMessage());
             return error("发送邮件失败！");

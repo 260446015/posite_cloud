@@ -13,7 +13,6 @@ import com.zkjl.posite_cloud.domain.pojo.User;
 import com.zkjl.posite_cloud.service.ICreditsService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -38,7 +37,11 @@ public class CreditsService implements ICreditsService {
     @Override
     public PageImpl<JSONObject> creditsWarining(CreditsDTO creditsDTO) throws Exception {
         Query query = new Query();
-        query.addCriteria(Criteria.where("username").is(creditsDTO.getUsername())).with(Sort.by(Sort.Direction.DESC, "creationTime"));
+        Criteria criteria = Criteria.where("username").is(creditsDTO.getUsername()).and("data").exists(true);
+        if(!StringUtils.isBlank(creditsDTO.getMobile())){
+            criteria.and("mobile").is(creditsDTO.getMobile());
+        }
+        query.addCriteria(criteria);
         List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
         if (list.size() == 0) {
             return null;
