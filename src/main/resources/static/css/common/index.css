@@ -160,7 +160,7 @@
     padding:0 3%;
     height: 83%;
 }
-.sc_yuqing a{
+.sc_yuqing .yqa_li{
     width: 96%;
     overflow: hidden;
     height: 9%;
@@ -168,7 +168,10 @@
     padding: 0 2%;
     display: block;
 }
-.sc_yuqing a i{
+.yqa_li{
+    cursor: pointer;
+}
+.sc_yuqing .yqa_li i{
    float: left;
     width: 50%;
     white-space: nowrap;
@@ -176,7 +179,7 @@
     overflow: hidden;
     text-align: left;
 }
-.sc_yuqing a span{
+.sc_yuqing .yqa_li span{
     float: right;
     width: 50%;
     text-align: right;

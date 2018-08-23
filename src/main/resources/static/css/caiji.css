@@ -19,6 +19,7 @@
     text-align: center;
 }
 .sc_renwu li span{
+    text-align: left;
     float: left;
     cursor: pointer;
     width: 58%;

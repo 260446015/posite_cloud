@@ -20,7 +20,8 @@ $(function () {
                 var H = $(".sc_jindu").height();
                 var d = $(".sc_jindu").width();
                 var h = Math.sqrt(2*s*H*d);
-                $(".sc_jindu2").css("height",h);
+
+                $(".sc_jindu2").css("height",s*H);
                 $(".jindunum").html(res.data.percent);
                 if(res.data.successData<res.data.totalCount){
                     setTimeout(function () {
@@ -73,16 +74,24 @@ $(function () {
                     $(".list_box").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
                 }
                 $.each(res.data.result,function (i,item) {
+                    var objectitem = JSON.stringify({
+                        cleanTitle:item.cleanTitle,
+                        columnName:item.columnName,
+                        createTime:item.createTime,
+                        url:item.url,
+                    })
                     var list;
                     if(i%2){
-                        list = "<a target='_blank' href='"+item.url+"'>" +
+                        list = "<a class='yqa_li' data-href='"+objectitem+"'>" +
                             "<i>"+item.cleanTitle+"</i>" +
                             "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
+                            "<div class='none'>"+item.content+"</div>" +
                             "</a>";
                     }else{
-                        list = "<a target='_blank' href='"+item.url+"' class='sc_zdgray'>" +
+                        list = "<a data-href='"+objectitem+"' class='sc_zdgray yqa_li'>" +
                             "<i>"+item.cleanTitle+"</i>" +
                             "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
+                            "<div class='none'>"+item.content+"</div>" +
                             "</a>";
                     }
                     $(".sc_yuqing").append(list);
@@ -91,15 +100,11 @@ $(function () {
         });
     }
     //点击详情
-    // $(".sc_yuqing").on("click","div",function () {
-    //     layer.open({
-    //         type: 1,
-    //         shade: false,
-    //         area: ["900px","600px"], //宽高
-    //         title: false, //不显示标题
-    //         content: $(this).find("i").html()
-    //     });
-    // });
+    $(".sc_yuqing").on("click","a",function () {
+        sessionStorage.setItem("yuqingdetial",$(this).find(".none").html());
+        sessionStorage.setItem("yuqingval",$(this).attr("data-href"));
+        window.location = "html/yuqingdetial.html";
+    });
 
     //获取实时注册情况
     var keynum = 0;

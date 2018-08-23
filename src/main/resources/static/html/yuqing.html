@@ -36,6 +36,9 @@
             display: none;
             padding: 30px 45px;
         }
+        .zd_boxlist div{
+            cursor: pointer;
+        }
         .yq_boxtest{
             margin: 10px auto;
             text-indent: 2em;
@@ -206,16 +209,24 @@
                     zdrysc.setpagecss();
                 }
                 $.each(res.data.result,function (i,item) {
+                    var objectitem = JSON.stringify({
+                        cleanTitle:item.cleanTitle,
+                        columnName:item.columnName,
+                        createTime:item.createTime,
+                        url:item.url,
+                    })
                     var list;
                     if(i%2){
                         list = "<div class='sc_zdgray'>" +
                             "<span>"+item.cleanTitle+"</span>" +
                             "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
+                            "<span class='none' data-href='"+objectitem+"'>"+item.content+"</span>" +
                             "</div>";
                     }else{
                         list = "<div>" +
                             "<span>"+item.cleanTitle+"</span>" +
                             "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
+                            "<span class='none' data-href='"+objectitem+"'>"+item.content+"</span>" +
                             "</div>";
                     }
                     $(".zd_boxlist").append(list);
@@ -309,6 +320,13 @@
     //舆情查询
     $(".yq_chaxun").click(function () {
         yuqinghuoqu(0,10);
+    });
+
+    //舆情详情
+    $(".zd_boxlist").on("click","div",function () {
+        sessionStorage.setItem("yuqingdetial",$(this).find(".none").html());
+        sessionStorage.setItem("yuqingval",$(this).find(".none").attr("data-href"));
+        window.location = "yuqingdetial.html";
     });
 </script>
 </html>

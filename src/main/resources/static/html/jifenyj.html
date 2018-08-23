@@ -29,13 +29,9 @@
         body{
             background: #edeef2;
         }
-        .sc_zdgray {
-            margin-top: -1px;
-            background: #b0b1b4;
-        }
         .zd_box div span{
             float: left;
-            width: 25%;
+            width: 20%;
             text-align: center;
             min-height: 30px;
         }
@@ -84,7 +80,7 @@
 
     <div class="section" style="padding-bottom: 30px;">
         <!--预警-->
-        <ul class="yj_top">
+        <ul style="overflow: hidden;" class="yj_top">
             <li></li>
             <li class="yj_li1"></li>
             <li class="yj_li2">
@@ -114,6 +110,8 @@
             <li></li>
         </ul>
 
+        <div class="messhuo">当预警级别达到红色，系统会自动发送邮件至您的邮箱，请注意查收，同时您也可以手动点击发送。预警级别根据系统默认预警分数设定，您可以通过预警设置功能，根据自身需要设定预警级别分数，以更好的满足您的需求；</div>
+
         <!--按钮-->
         <div class="btnbox">
             <a href="bizhong.html" class="yj_btn" style="background: red;">预警设置</a>
@@ -136,6 +134,7 @@
                 <span>手机号</span>
                 <span>分数</span>
                 <span>App</span>
+                <span>预警级别</span>
                 <span>操作</span>
             </div>
             <p class="zd_boxlist" style="overflow: hidden;"></p>
@@ -191,7 +190,7 @@
             }),
             contentType: "application/json",
             success: function (res) {
-                //console.log(res);
+                console.log(res);
                 if (res.code != 0) {
                     return layer.msg(res.message, {anim: 6});
                 }
@@ -207,15 +206,20 @@
                     var appspsn = '';
                     var odata;
                     var oclass = "yj_lanse";
+                    var aclass = "yj_blue";
+                    var oitem = JSON.stringify(item)
                     switch (item.warnInfo){
                         case "红色预警":
-                            oclass = "yj_hongse";
+                            oclass = "yjfont_red";
+                            aclass = "yj_red";
                             break
                         case "橙色预警":
-                            oclass = "yj_chengse";
+                            oclass = "yjfont_orange";
+                            aclass = "yj_orange";
                             break
                         case "蓝色预警":
-                            oclass = "yj_lanse";
+                            oclass = "yjfont_biue";
+                            aclass = "yj_blue";
                             break
                     }
                     //console.log(oclass);
@@ -223,9 +227,9 @@
                         if(i==0){
                             appname+=item.webname
                         }else{
-                            appname+="，"+item.webname
+                            appname+='，'+item.webname
                         }
-                        appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
+                        appspsn+='<span class="sc_zdgrayspan">'+item.webtype+'：'+item.webname+'</span>';
                     });
                     if(item.data==null){
                         odata = "采集中..."
@@ -233,19 +237,21 @@
                         odata = appname;
                     }
                     if(i%2){
-                        list = '<div class="sc_zdgray '+oclass+'">' +
-                            '<span>'+item.mobile+'</span>' +
-                            '<span>'+item.sorce+'</span>' +
-                            '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
-                            '<span><div class="layui-btn layui-btn-normal baocunbtn baocunbtn1">发送邮件</div></span>' +
-                            '</div>';
+                        list = "<div class='sc_zdgray'>" +
+                            "<span>"+item.mobile+"</span>" +
+                            "<span>"+item.sorce+"</span>" +
+                            "<span class='sc_zdspan' data-href='"+appspsn+"'>"+odata+"</span>" +
+                            "<span class='"+oclass+"'>"+item.warnInfo+"</span>" +
+                            "<span><div data-href='"+oitem+"' class='layui-btn layui-btn-normal baocunbtn baocunbtn1 "+aclass+"'>发送邮件</div></span>" +
+                            "</div>";
                     }else{
-                        list = '<div class="'+oclass+'">' +
-                            '<span>'+item.mobile+'</span>' +
-                            '<span>'+item.sorce+'</span>' +
-                            '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
-                            '<span><div class="layui-btn layui-btn-normal baocunbtn baocunbtn1">发送邮件</div></span>' +
-                            '</div>';
+                        list = "<div>" +
+                            "<span>"+item.mobile+"</span>" +
+                            "<span>"+item.sorce+"</span>" +
+                            "<span class='sc_zdspan' data-href='"+appspsn+"'>"+odata+"</span>" +
+                            "<span class='"+oclass+"'>"+item.warnInfo+"</span>" +
+                            "<span><div data-href='"+oitem+"' class='layui-btn layui-btn-normal baocunbtn baocunbtn1 "+aclass+"'>发送邮件</div></span>" +
+                            "</div>";
                     }
                     $(".zd_boxlist").append(list);
                 });
@@ -282,17 +288,15 @@
         getimportlist($(".ba_maxcore").val(),$(".ba_minscore").val(),$(".ba_number").val(),0,10,$(".ba_pingtai").val(),$(".ba_fenlei").attr("data-href"));
     });
 
-    $(".zd_boxlist").on("click",".baocunbtn",function () {
+    $(".zd_boxlist").on("click",".baocunbtn1",function () {
+        var aitem = $(this).attr("data-href");
         $.ajax({
             url: "/api/sendEmail",
             type: "post",
             xhrFields: {
                 withCredentials: true
             },
-            data: JSON.stringify({
-                title:"123",
-                content:"123"
-            }),
+            data: aitem,
             contentType: "application/json",
             success: function (res) {
                 console.log(res);

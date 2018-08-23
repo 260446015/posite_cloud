@@ -71,6 +71,7 @@ $(function () {
     }
     //点击切换
     $(".sc_renwu").on("click","span",function () {
+        $(".im_contenlist").empty();
         $(".sc_renwu").find("li").removeClass("re_active");
         $(this).parent("li").addClass("re_active");
         $(".listpage").attr("data-href",$(this).attr("id"));

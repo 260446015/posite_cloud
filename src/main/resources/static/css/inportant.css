@@ -82,17 +82,34 @@ body .layui-form-select{
     font-size: 12px;
 }
 
-.yj_blue{
-    background: #0aa4ea;
+section .yj_blue{
+    background: #1E9FFF;
 }
-.yj_orange{
+section .yj_orange{
     background: #ff9416;
 }
-.yj_red{
+section .yj_red{
     background: red;
 }
 .zd_box p{
     min-height: 250px;
+}
+.messhuo{
+    clear: both;
+    padding: 20px 3%;
+}
+.zd_boxlist .baocunbtn1{
+    color: #fff;
+}
+
+.yjfont_biue{
+    color: #0aa4ea;
+}
+.yjfont_orange{
+    color: #ff9416;
+}
+.yjfont_red{
+    color: red;
 }
 
 /*按钮盒子*/
