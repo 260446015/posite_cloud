@@ -222,6 +222,21 @@ public class UserController extends BaseController {
     }
 
     /**
+     * 个人中心修改密码
+     */
+    @GetMapping(value = "updatePassword")
+    public ApiResult updatePassword(String oldPassword, String newPassword, String id) {
+        boolean flag;
+        try {
+            flag = userService.updatePassword(oldPassword, newPassword, id);
+        } catch (Exception e) {
+            logger.error("修改密码失败!" + e.getMessage());
+            return error("修改密码失败!" + e.getMessage());
+        }
+        return success(flag);
+    }
+
+    /**
      * 图片上传
      *
      * @param req

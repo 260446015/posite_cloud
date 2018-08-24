@@ -2,6 +2,7 @@ package com.zkjl.posite_cloud.service.impl;
 
 import com.zkjl.posite_cloud.common.util.DateUtils;
 import com.zkjl.posite_cloud.common.util.PageUtil;
+import com.zkjl.posite_cloud.common.util.RegUtil;
 import com.zkjl.posite_cloud.dao.LogRepository;
 import com.zkjl.posite_cloud.dao.UserRepository;
 import com.zkjl.posite_cloud.domain.dto.LogDTO;
@@ -46,8 +47,11 @@ public class UserService implements IUserService {
             user.setJobLevel("normal");
         }*/
         User check = userRepository.findByUsername(user.getUsername());
-        if(null != check){
+        if (null != check) {
             throw new CustomerException("用户名已存在");
+        }
+        if (!RegUtil.checkPass(user.getPassword())) {
+            throw new CustomerException("密码格式不对");
         }
         if (StringUtils.isBlank(user.getJobLevel())) {
             return null;
@@ -217,31 +221,25 @@ public class UserService implements IUserService {
     public boolean updateUser(User user) throws CustomerException {
         Optional<User> byId = userRepository.findById(user.getId());
         User check = byId.orElse(null);
-        if(check == null){
+        if (check == null) {
             throw new CustomerException("用户不存在");
         }
-        if(!check.getPassword().equals(user.getPassword())){
-            throw new CustomerException("密码错误");
-        }
-        if(!StringUtils.isBlank(user.getName())){
+        if (!StringUtils.isBlank(user.getName())) {
             check.setName(user.getName());
         }
-        if(!StringUtils.isBlank(user.getPassword())){
-            check.setPassword(user.getPassword());
-        }
-        if(null != user.getAge()){
+        if (null != user.getAge()) {
             check.setAge(user.getAge());
         }
-        if(!StringUtils.isBlank(user.getMobile())){
+        if (!StringUtils.isBlank(user.getMobile())) {
             check.setMobile(user.getMobile());
         }
-        if(!StringUtils.isBlank(user.getEmail())){
+        if (!StringUtils.isBlank(user.getEmail())) {
             check.setEmail(user.getEmail());
         }
-        if(!StringUtils.isBlank(user.getDepartment())){
+        if (!StringUtils.isBlank(user.getDepartment())) {
             check.setDepartment(user.getDepartment());
         }
-        if(!StringUtils.isBlank(user.getJob())){
+        if (!StringUtils.isBlank(user.getJob())) {
             check.setJob(user.getJob());
         }
         try {
@@ -250,5 +248,29 @@ public class UserService implements IUserService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean updatePassword(String oldPassword, String newPassword, String id) throws CustomerException {
+        Optional<User> byId = userRepository.findById(id);
+        User check = byId.orElse(null);
+        if (null == check) {
+            throw new CustomerException("用户不存在");
+        }
+        if (!check.getPassword().equals(oldPassword)) {
+            throw new CustomerException("密码错误");
+        } else {
+            if (RegUtil.checkPass(newPassword)) {
+                check.setPassword(newPassword);
+            } else {
+                throw new CustomerException("密码格式不对");
+            }
+        }
+        try {
+            userRepository.save(check);
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
     }
 }

@@ -29,4 +29,6 @@ public interface IUserService {
     boolean updateSentiment(String[] msg);
 
     boolean updateUser(User user) throws CustomerException;
+
+    boolean updatePassword(String oldPassword, String newPassword, String id) throws CustomerException;
 }

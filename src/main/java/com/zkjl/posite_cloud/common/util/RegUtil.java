@@ -12,4 +12,12 @@ public class RegUtil {
         }
         return false;
     }
+
+    public static boolean checkPass(String str){
+        String regex = "^[a-zA-Z0-9]{6,16}$";
+        if(str.matches(regex)){
+            return true;
+        }
+        return false;
+    }
 }
