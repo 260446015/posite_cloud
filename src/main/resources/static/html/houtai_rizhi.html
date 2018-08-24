@@ -157,7 +157,7 @@
             success: function (res) {
                 //console.log(res);
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 var obdata = JSON.parse($(".listpage").attr("data-href"));
                 getrizhi(obdata[0],obdata[1],0,10,obdata[2]);
@@ -186,7 +186,7 @@
             success: function (res) {
                 console.log(res);
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 if (0 === pageNum) {
                     count = res.data.totalNumber;

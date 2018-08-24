@@ -200,7 +200,7 @@
             success: function (res) {
                 console.log(res);
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 if(res.data.result.length==0) {
                     $(".list_box").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
@@ -267,7 +267,7 @@
             data: {},
             success: function (res) {
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 var list = "";
                 $.each(res.data,function (i,item) {
@@ -304,7 +304,7 @@
             },
             success: function (res) {
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 layer.closeAll();
                 $("#propo_box").hide();

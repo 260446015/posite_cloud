@@ -33,7 +33,7 @@ $(function () {
             success: function (res) {
                 console.log(res)
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 if(res.data.length==0){
                     $(".sc_renwu,.im_contenlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
@@ -60,6 +60,7 @@ $(function () {
                     $(".sc_renwu").find("li").eq(res.data.length - 1).addClass("re_active");
                     $(".listpage").attr("data-href",tafirst.taskId,"");
                     jindu(tafirst.taskId);
+                    $(".re_history").attr("data-href",tafirst.taskId);
                     if(tafirst.ifFinish){
                         $(".caiji_down").fadeIn();
                     }else{
@@ -76,6 +77,7 @@ $(function () {
         $(this).parent("li").addClass("re_active");
         $(".listpage").attr("data-href",$(this).attr("id"));
         getlist(0,10,$(this).attr("id"),"");
+        $(".re_history").attr("data-href",$(this).attr("id"));
         jindu($(this).attr("id"));
         $(".im_btnbox").find(".none").hide();
         if($(this).parent("li").find("a").html()=="生成报告"){
@@ -101,7 +103,7 @@ $(function () {
             },
             success: function (res) {
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 if (0 === pagenum) {
                     count = res.data.data.totalNumber;
@@ -175,7 +177,7 @@ $(function () {
             success: function (res) {
                 //console.log(res);
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 var total = res.data.totalCount;
                 var suces = res.data.successCount;
@@ -217,7 +219,7 @@ $(function () {
             success: function (res) {
                 console.log(res);
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 layer.msg("操作完成");
             }
@@ -275,7 +277,7 @@ $(function () {
             },
             success: function (res) {
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 getrenwu();
                 layer.closeAll();
@@ -283,4 +285,9 @@ $(function () {
             }
         });
     }
+
+    //历史报告跳转
+    $(".re_history").click(function () {
+        window.location = "historyreport.html?"+$(this).attr("data-href");
+    });
 })

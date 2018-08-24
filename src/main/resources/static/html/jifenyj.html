@@ -192,7 +192,7 @@
             success: function (res) {
                 console.log(res);
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 if (0 === pageNum) {
                     count = res.data.totalNumber;
@@ -301,7 +301,7 @@
             success: function (res) {
                 console.log(res);
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 layer.msg("邮件已发送,请注意查收");
             }

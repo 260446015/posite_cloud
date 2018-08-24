@@ -14,7 +14,7 @@ $(function () {
             success: function (res) {
                 //console.log(res.data.percent);
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 var s = (res.data.successData)/(res.data.totalCount);
                 var H = $(".sc_jindu").height();
@@ -68,7 +68,7 @@ $(function () {
             success: function (res) {
                 //console.log(res);
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 if(res.data.result.length==0) {
                     $(".list_box").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
@@ -120,7 +120,7 @@ $(function () {
             success: function (res) {
                 //console.log(res);
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 if(res.data.length==0) {
                     $(".list_box").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
@@ -196,7 +196,7 @@ $(function () {
         success: function (res) {
             //console.log(res);
             if (res.code != 0) {
-                return layer.msg(res.message, {anim: 6});
+                //return layer.msg(res.message, {anim: 6});
             }
             var num = res.data;
             myChart.setOption({
@@ -241,7 +241,7 @@ $(function () {
             success: function (res) {
                 //console.log(res);
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 if(!res.data.dataList){
                     $(".sc_zdbox").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');

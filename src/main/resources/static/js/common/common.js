@@ -147,7 +147,7 @@ if(zdryscuserdata){
         $(".com_gunli").hide();
     }
     if(zdryscuserdata.image){
-        $(".headerimg").html('<img src="'+zdryscuserdata.image+'" alt="">');
-        $("#demo1").html('<img src="'+zdryscuserdata.image+'" alt="">');
+        $(".headerimg").html('<img src="/'+zdryscuserdata.image+'" alt="">');
+        $("#demo1").html('<img src="/'+zdryscuserdata.image+'" alt="">');
     }
 }
