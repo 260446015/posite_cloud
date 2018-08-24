@@ -242,6 +242,9 @@ public class UserService implements IUserService {
         if (!StringUtils.isBlank(user.getJob())) {
             check.setJob(user.getJob());
         }
+        if (!StringUtils.isBlank(user.getImage())) {
+            check.setImage(user.getImage());
+        }
         try {
             userRepository.save(check);
         } catch (Exception e) {
