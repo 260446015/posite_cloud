@@ -58,6 +58,7 @@
             width: 50px;
             height: 50px;
             overflow: hidden;
+            background: #ccc;
         }
         .layui-upload-list img{
             width: 50px;
@@ -127,16 +128,8 @@
                 </div>
             </div>
             <div class="bz_li">
-                <label>用户名</label>
-                <input type="text" class="layui-input ba_username" placeholder="请输入用户名">
-            </div>
-            <div class="bz_li">
                 <label>姓名</label>
                 <input type="text" class="layui-input ba_name" placeholder="请输入姓名">
-            </div>
-            <div class="bz_li">
-                <label>密码</label>
-                <input type="text" class="layui-input ba_passward" placeholder="请输入密码">
             </div>
             <div class="bz_li">
                 <label>年龄</label>
@@ -179,7 +172,7 @@
             <input type="password" class="layui-input cp_passord cp_password3" placeholder="请输入密码">
         </div>
         <div class="" style="text-align: center;clear: both;">
-            <span class="layui-btn layui-btn-normal baocunbtn pro_passwqueing" data-href="false">保存</span>
+            <span class="layui-btn layui-btn-normal baocunbtn pro_passwqueing" data-href="true">保存</span>
         </div>
     </div>
 </section>
@@ -190,11 +183,14 @@
 <script>
     var zdryscuserdata = JSON.parse(sessionStorage.getItem("zdryscuser"));
     $(".pro_queding").click(function () {
+        var list = 0;
         $("#propo_box").find(".layui-input").each(function (i,item) {
             if(item.value==""){
                 $(this).css("border-color","red");
             }
-        })
+        });
+        setusermsg();
+
     });
     
     layui.use('upload');
@@ -222,9 +218,31 @@
 
         }
     });
-    
+
+    //获取用户信息
+    getusermsg()
     function getusermsg() {
-        
+        $.ajax({
+            url: "/api/getLoginUser",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {},
+            success: function (res) {
+                console.log(res)
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                var ores = res.data;
+                $(".ba_bumen").val(ores.department);
+                $(".ba_email").val(ores.email);
+                $(".ba_gangwei").val(ores.job);
+                $(".ba_name").val(ores.name);
+                $(".ba_mobile").val(ores.mobile);
+                $(".ba_age").val(ores.age);
+            }
+        });
     }
     
     function setusermsg() {
@@ -237,15 +255,11 @@
             data: JSON.stringify({
                 department: $(".ba_bumen").val(),
                 email: $(".ba_email").val(),
-                expireTime: $(".ba_guoqitime").val(),
                 job: $(".ba_gangwei").val(),
-                jobLevel: $("input[name='sex21']:checked").val(),
                 name: $(".ba_name").val(),
-                password: $(".ba_passward").val(),
-                username: $(".ba_username").val(),
                 mobile:$(".ba_mobile").val(),
                 age:$(".ba_age").val(),
-                ifEnable:true
+                image:$('#demo1').attr("data-href")
             }),
             contentType: "application/json",
             success: function (res) {
@@ -253,7 +267,7 @@
                 if (res.code != 0) {
                     return layer.msg(res.message, {anim: 6});
                 }
-
+                layer.msg("修改用户信息成功");
             }
         })
     }
@@ -313,18 +327,18 @@
         });
     }
 
-    //本地验证—密码
-    var password = $('.cp_passord');
-    password.on('blur', function () {
-        if (password.val() != '') {
-            var reg = /^(?![a-zA-z]+$)(?!\d+$)(?![!@#$%^&*]+$)[a-zA-Z\d!@#$%^&*]+$/;
-            if (!reg.test(password.val())) {
-                $(".pro_passwqueing").attr("data-href",false);
-                return layer.msg("请输入6到18位字母数字下划线组成的密码", {anim: 6});
-            } else {
-                $(".pro_passwqueing").attr("data-href",true);
-            }
-        }
-    });
+    // //本地验证—密码
+    // var password = $('.cp_passord');
+    // password.on('blur', function () {
+    //     if (password.val() != '') {
+    //         var reg = /^(?![a-zA-z]+$)(?!\d+$)(?![!@#$%^&*]+$)[a-zA-Z\d!@#$%^&*]+$/;
+    //         if (!reg.test(password.val())) {
+    //             $(".pro_passwqueing").attr("data-href",false);
+    //             return layer.msg("请输入6到18位字母数字下划线组成的密码", {anim: 6});
+    //         } else {
+    //             $(".pro_passwqueing").attr("data-href",true);
+    //         }
+    //     }
+    // });
 </script>
 </html>
