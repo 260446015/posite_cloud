@@ -167,7 +167,7 @@
     <div class="propo_box layui-form" id="propoboxpassword">
         <div class="bz_li">
             <label>原密码</label>
-            <input type="text" class="layui-input cp_passord cp_password1" placeholder="请输入密码">
+            <input type="text" class="layui-input cp_password1" placeholder="请输入密码">
         </div>
         <div class="bz_li">
             <label>新密码</label>
@@ -261,7 +261,7 @@
     $(".changepassword").click(function () {
         layer.open({
             title: '修改密码',
-            area: ['760px', '390px'],
+            area: ['760px', '300px'],
             type: 1,
             skin: 'layui-layer-lan', //样式类名
             closeBtn: 1, //不显示关闭按钮
@@ -276,7 +276,12 @@
     //修改密码
     $(".pro_passwqueing").click(function () {
         var key = $(this).attr("data-href");
-        if(key){
+        $("#propoboxpassword").find(".layui-input").each(function (i,item) {
+            if(item.value==""){
+                $(this).css("border-color","red");
+            }
+        })
+        if(key=="true"){
             if($(".cp_password3").val()!=$(".cp_password2").val()){
                 return layer.msg("两次密码不一致", {anim: 6});
             }
