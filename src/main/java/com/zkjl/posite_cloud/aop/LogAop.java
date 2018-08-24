@@ -3,8 +3,12 @@ package com.zkjl.posite_cloud.aop;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
 import com.zkjl.posite_cloud.common.util.DateUtils;
 import com.zkjl.posite_cloud.dao.LogRepository;
+import com.zkjl.posite_cloud.dao.RedistaskRepository;
+import com.zkjl.posite_cloud.dao.UpdateTaskRepository;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.pojo.Log;
+import com.zkjl.posite_cloud.domain.pojo.Redistask;
+import com.zkjl.posite_cloud.domain.pojo.UpdateTask;
 import com.zkjl.posite_cloud.domain.pojo.User;
 import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.JoinPoint;
@@ -13,6 +17,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -22,6 +28,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Calendar;
+import java.util.Optional;
 
 /**
  * @author ydw
@@ -42,6 +49,10 @@ public class LogAop {
 
     @Resource
     private LogRepository logRepository;
+    @Resource
+    private RedistaskRepository redistaskRepository;
+    @Resource
+    private UpdateTaskRepository updateTaskRepository;
 
     @Before(value = "logPoint()")
     public void saveUserOperation(JoinPoint joinPoint) {
@@ -70,9 +81,20 @@ public class LogAop {
 
     @Before(value = "updateTask()")
     public void saveUpdateTask(JoinPoint joinPoint){
-
-        Object[] args = joinPoint.getArgs();
-        JobDTO jobDTO = (JobDTO) args[0];
-//        jobDTO.set
+        try {
+            Object[] args = joinPoint.getArgs();
+            JobDTO jobDTO = (JobDTO) args[0];
+            UpdateTask updateTask = new UpdateTask();
+            Optional<Redistask> byId = redistaskRepository.findById(jobDTO.getTaskid());
+            Redistask redistask = byId.orElse(null);
+            if(redistask == null){
+                return;
+            }
+            BeanUtils.copyProperties(redistask,updateTask);
+            updateTask.setUpdateTime(Calendar.getInstance().getTime());
+            updateTaskRepository.save(updateTask);
+        } catch (BeansException e) {
+            e.printStackTrace();
+        }
     }
 }
