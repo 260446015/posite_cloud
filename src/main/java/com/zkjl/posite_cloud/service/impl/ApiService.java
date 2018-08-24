@@ -92,7 +92,7 @@ public class ApiService implements IApiService {
         log.info("校验数据之前的数量:" + split.length);
         Set<String> check = new HashSet<>();
         for (String aSplit : split) {
-            if(RegUtil.checkMobile(aSplit)){
+            if (RegUtil.checkMobile(aSplit)) {
                 check.add(aSplit);
             }
         }
@@ -139,6 +139,7 @@ public class ApiService implements IApiService {
                 byTaskid.forEach(action -> action.setData(null));
                 jobInfoRepository.saveAll(byTaskid);
                 ListOperations<String, String> stringStringListOperations = stringRedisTemplate.opsForList();
+                stringStringListOperations.trim(redisId, 1, 0);
                 mobiles.forEach(mobile -> stringStringListOperations.rightPush(redisId, mobile));
             }
             flag = true;
@@ -208,23 +209,23 @@ public class ApiService implements IApiService {
             checkPerson.clear();
             for (JSONObject jsonObject : value) {
                 if (jsonObject.getString("webtype").equals(conf.getGamble().getString("name"))) {
-                    if(checkPerson.add("gamble")){
+                    if (checkPerson.add("gamble")) {
                         gamble += 1;
                     }
                 } else if (jsonObject.getString("webtype").equals(conf.getLoans().getString("name"))) {
-                    if(checkPerson.add("loans")){
+                    if (checkPerson.add("loans")) {
                         loans += 1;
                     }
                 } else if (jsonObject.getString("webtype").equals(conf.getYellow().getString("name"))) {
-                    if(checkPerson.add("yellow")){
+                    if (checkPerson.add("yellow")) {
                         yellow += 1;
                     }
                 } else if (jsonObject.getString("webtype").equals(conf.getLiving().getString("name"))) {
-                    if(checkPerson.add("living")){
+                    if (checkPerson.add("living")) {
                         living += 1;
                     }
                 } else {
-                    if(checkPerson.add("game")){
+                    if (checkPerson.add("game")) {
                         game += 1;
                     }
                 }
@@ -243,7 +244,7 @@ public class ApiService implements IApiService {
     public List<JSONObject> realTimeRegist(String username) {
         List<JSONObject> result = new ArrayList<>();
         Query query = new Query();
-        query.addCriteria(Criteria.where("username").is(username).and("data").exists(true)).limit(1000).with(Sort.by(Sort.Direction.DESC,"creationTime"));
+        query.addCriteria(Criteria.where("username").is(username).and("data").exists(true)).limit(1000).with(Sort.by(Sort.Direction.DESC, "creationTime"));
         List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
         A:
         for (JobInfo action : list) {
