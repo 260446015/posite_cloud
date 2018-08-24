@@ -20,9 +20,4 @@ public class CreditsConfService implements ICreditsConfService {
     public CreditsWarn save(CreditsWarn creditsWarn) {
         return creditsRepository.save(creditsWarn);
     }
-
-    @Override
-    public CreditsWarn find(String username) {
-        return creditsRepository.findByUsername(username).get(0);
-    }
 }

@@ -4,6 +4,7 @@ import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
 import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
 import com.zkjl.posite_cloud.service.ICreditsConfService;
+import com.zkjl.posite_cloud.service.ICreditsService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,8 @@ public class CreditsConfController extends BaseController{
     private static Logger logger = LoggerFactory.getLogger(CreditsConfController.class);
     @Resource
     private ICreditsConfService creditsConfService;
+    @Resource
+    private ICreditsService creditsService;
 
     /**
      * 保存修改配置的积分规则
@@ -56,7 +59,7 @@ public class CreditsConfController extends BaseController{
         String username;
         try {
             username = this.getCurrentUser().getUsername();
-            result = creditsConfService.find(username);
+            result = creditsService.findCreditsWarnConf(username);
         } catch (Exception e) {
             logger.error("查询配置的积分规则！",e.getMessage());
             return error("查询配置的积分规则！");

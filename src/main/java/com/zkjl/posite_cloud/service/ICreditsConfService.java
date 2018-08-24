@@ -9,6 +9,4 @@ import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
 public interface ICreditsConfService {
 
     CreditsWarn save(CreditsWarn creditsWarn);
-
-    CreditsWarn find(String username);
 }

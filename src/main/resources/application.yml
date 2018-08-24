@@ -30,4 +30,4 @@ config:
 
 logging:
   level:
-    org: debug
+    org: info
