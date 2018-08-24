@@ -34,6 +34,11 @@ public class LogAop {
     public void logPoint() {
     }
 
+    @Pointcut(value = "execution(public * com.zkjl.posite_cloud.controller.ApiController.updateJob(..))")
+    public void updateTask(){
+
+    }
+
     @Resource
     private LogRepository logRepository;
 
@@ -59,6 +64,11 @@ public class LogAop {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Before(value = "updateTask()")
+    public void saveUpdateTask(JoinPoint joinPoint){
 
     }
 }

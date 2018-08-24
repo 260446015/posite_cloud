@@ -1,5 +1,8 @@
 package com.zkjl.posite_cloud.exception;
 
+import lombok.Data;
+
+@Data
 public class CustomerException extends BaseException{
 
 	/**
