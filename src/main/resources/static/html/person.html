@@ -70,6 +70,18 @@
             background: transparent;
             margin-left: 10px;
         }
+        .changepassword{
+            float: right;
+            margin: 20px;
+            overflow: hidden;
+        }
+        .propo_box label {
+            width: 90px;
+            text-align: right;
+        }
+        #propobox{
+
+        }
     </style>
 </head>
 <body>
@@ -101,14 +113,15 @@
     </div>
 
     <div class="section">
+        <div class="" style="overflow: hidden;">
+            <span class="layui-btn layui-btn-normal baocunbtn changepassword">修改密码</span>
+        </div>
         <div id="propo_box" style="display: block;" class="propo_box layui-form">
             <div class="bz_li">
                 <label>头像</label>
                 <div class="layui-upload">
                     <button type="button" class="layui-btn" id="otest"></button>
-                    <div class="layui-upload-list">
-                        <img class="layui-upload-img" id="demo1">
-                        <p id="demoText"></p>
+                    <div class="layui-upload-list" id="demo1">
                     </div>
                 </div>
             </div>
@@ -150,12 +163,31 @@
             </div>
         </div>
     </div>
+
+    <div class="propo_box layui-form" id="propoboxpassword">
+        <div class="bz_li">
+            <label>原密码</label>
+            <input type="text" class="layui-input cp_passord cp_password1" placeholder="请输入密码">
+        </div>
+        <div class="bz_li">
+            <label>新密码</label>
+            <input type="password" class="layui-input cp_passord cp_password2" placeholder="请输入密码">
+        </div>
+        <div class="bz_li">
+            <label>再输入新密码</label>
+            <input type="password" class="layui-input cp_passord cp_password3" placeholder="请输入密码">
+        </div>
+        <div class="" style="text-align: center;clear: both;">
+            <span class="layui-btn layui-btn-normal baocunbtn pro_passwqueing" data-href="false">保存</span>
+        </div>
+    </div>
 </section>
 </body>
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/echarts.min.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
 <script>
+    var zdryscuserdata = JSON.parse(sessionStorage.getItem("zdryscuser"));
     $(".pro_queding").click(function () {
         $("#propo_box").find(".layui-input").each(function (i,item) {
             if(item.value==""){
@@ -163,6 +195,7 @@
             }
         })
     });
+    
     layui.use('upload');
     var upload = layui.upload;
     var uploadInst = upload.render({
@@ -171,7 +204,8 @@
         ,before: function(obj){
             //预读本地文件示例，不支持ie8
             obj.preview(function(index, file, result){
-                $('#demo1').attr('src', result); //图片链接（base64）
+                //$('#demo1').attr('src', result); //图片链接（base64）
+                $('#demo1').html('<img class="layui-upload-img" src="'+result+'">');
             });
         }
         ,done: function(res){
@@ -180,10 +214,110 @@
                 return layer.msg('上传失败');
             }
             //上传成功
-            console.log(res);
+            $('#demo1').attr("data-href",res[0].url);
+            console.log(res[0].url);
         }
         ,error: function(){
 
+        }
+    });
+    
+    function getusermsg() {
+        
+    }
+    
+    function setusermsg() {
+        $.ajax({
+            url: "/api/updateUser",
+            type: "post",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: JSON.stringify({
+                department: $(".ba_bumen").val(),
+                email: $(".ba_email").val(),
+                expireTime: $(".ba_guoqitime").val(),
+                job: $(".ba_gangwei").val(),
+                jobLevel: $("input[name='sex21']:checked").val(),
+                name: $(".ba_name").val(),
+                password: $(".ba_passward").val(),
+                username: $(".ba_username").val(),
+                mobile:$(".ba_mobile").val(),
+                age:$(".ba_age").val(),
+                ifEnable:true
+            }),
+            contentType: "application/json",
+            success: function (res) {
+                console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+
+            }
+        })
+    }
+
+    //修改密码弹窗
+    $(".changepassword").click(function () {
+        layer.open({
+            title: '修改密码',
+            area: ['760px', '390px'],
+            type: 1,
+            skin: 'layui-layer-lan', //样式类名
+            closeBtn: 1, //不显示关闭按钮
+            anim: 1,
+            content: $('#propoboxpassword'),
+            cancel: function () {
+                $("#propoboxpassword").hide();
+            }
+        });
+    });
+    
+    //修改密码
+    $(".pro_passwqueing").click(function () {
+        var key = $(this).attr("data-href");
+        if(key){
+            if($(".cp_password3").val()!=$(".cp_password2").val()){
+                return layer.msg("两次密码不一致", {anim: 6});
+            }
+            changepassword();
+        }
+    });
+
+    function changepassword() {
+        $.ajax({
+            url: "/api/updatePassword",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                oldPassword:$(".cp_password1").val(),
+                newPassword:$(".cp_password3").val(),
+                id:zdryscuserdata.id
+            },
+            success: function (res) {
+                console.log(res)
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                layer.closeAll();
+                layer.msg("密码修改成功");
+            }
+        });
+    }
+
+    //本地验证—密码
+    var password = $('.cp_passord');
+    password.on('blur', function () {
+        if (password.val() != '') {
+            var reg = /^(?![a-zA-z]+$)(?!\d+$)(?![!@#$%^&*]+$)[a-zA-Z\d!@#$%^&*]+$/;
+            if (!reg.test(password.val())) {
+                $(".pro_passwqueing").attr("data-href",false);
+                return layer.msg("请输入6到18位字母数字下划线组成的密码", {anim: 6});
+            } else {
+                $(".pro_passwqueing").attr("data-href",true);
+            }
         }
     });
 </script>
