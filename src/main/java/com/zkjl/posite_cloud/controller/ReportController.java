@@ -3,10 +3,12 @@ package com.zkjl.posite_cloud.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
+import com.zkjl.posite_cloud.domain.pojo.UpdateTask;
 import com.zkjl.posite_cloud.service.IReportService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +31,7 @@ public class ReportController extends BaseController {
     /**
      * 获取报告信息
      * 根据传递参数进行正则判断是否为手机号
+     *
      * @param mobile
      * @return
      */
@@ -46,5 +49,24 @@ public class ReportController extends BaseController {
             return error("获取报告信息出错!");
         }
         return success(result);
+    }
+
+
+    /**
+     * 查看历史报告
+     */
+    @GetMapping(value = "findReportHistory")
+    public ApiResult findReportHistory(String taskid, Integer pageNum, Integer pageSize) {
+        PageImpl<UpdateTask> result;
+        try {
+            result = reportService.findReportHistory(taskid, pageNum, pageSize);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return error("查询历史报告失败");
+        }
+        if(result == null){
+            return successPagesNull(null);
+        }
+        return successPages(result);
     }
 }

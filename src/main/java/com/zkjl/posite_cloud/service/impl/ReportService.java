@@ -4,10 +4,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.Constans;
 import com.zkjl.posite_cloud.common.util.DateUtils;
+import com.zkjl.posite_cloud.common.util.PageUtil;
 import com.zkjl.posite_cloud.dao.CreditsRepository;
+import com.zkjl.posite_cloud.dao.UpdateTaskRepository;
 import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
 import com.zkjl.posite_cloud.domain.pojo.JobInfo;
+import com.zkjl.posite_cloud.domain.pojo.UpdateTask;
 import com.zkjl.posite_cloud.service.IReportService;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -30,6 +34,8 @@ public class ReportService extends CreditsService implements IReportService {
     private MongoTemplate mongoTemplate;
     @Resource
     private CreditsRepository creditsRepository;
+    @Resource
+    private UpdateTaskRepository updateTaskRepository;
 
     @Override
     public JSONObject report(String mobile, String username) {
@@ -159,5 +165,14 @@ public class ReportService extends CreditsService implements IReportService {
         result.put("warnLevel", getWarnLevel(totalSorce, conf));
         result.put("creationTime", DateUtils.getFormatString(jobInfo.getCreationTime()));
         return result;
+    }
+
+    @Override
+    public PageImpl<UpdateTask> findReportHistory(String taskid, Integer pageNum, Integer pageSize) {
+        List<UpdateTask> list = updateTaskRepository.findByTaskid(taskid);
+        if(list.size() == 0){
+            return null;
+        }
+        return (PageImpl<UpdateTask>) PageUtil.pageBeagin(list.size(), pageNum, pageSize, list);
     }
 }

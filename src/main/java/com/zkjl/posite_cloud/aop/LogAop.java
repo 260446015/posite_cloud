@@ -17,7 +17,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
@@ -90,8 +89,12 @@ public class LogAop {
             if(redistask == null){
                 return;
             }
-            BeanUtils.copyProperties(redistask,updateTask);
+            updateTask.setCreationTime(redistask.getCreationTime());
+            updateTask.setIfFinish(redistask.getIfFinish());
             updateTask.setUpdateTime(Calendar.getInstance().getTime());
+            updateTask.setTaskid(redistask.getTaskid());
+            updateTask.setTaskname(redistask.getTaskname());
+            updateTask.setUsername(redistask.getUsername());
             updateTaskRepository.save(updateTask);
         } catch (BeansException e) {
             e.printStackTrace();

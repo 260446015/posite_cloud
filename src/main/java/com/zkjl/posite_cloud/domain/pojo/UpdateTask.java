@@ -15,6 +15,7 @@ import java.util.Date;
 public class UpdateTask {
 
     @Id
+    private String id;
     private String taskid;
     private String username;
     private String redisTaskid;
