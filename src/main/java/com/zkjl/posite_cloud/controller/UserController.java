@@ -6,12 +6,14 @@ import com.zkjl.posite_cloud.domain.dto.LogDTO;
 import com.zkjl.posite_cloud.domain.dto.UserDTO;
 import com.zkjl.posite_cloud.domain.pojo.Log;
 import com.zkjl.posite_cloud.domain.pojo.User;
+import com.zkjl.posite_cloud.domain.vo.UserVo;
 import com.zkjl.posite_cloud.service.IFileService;
 import com.zkjl.posite_cloud.service.IUserService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -200,6 +202,22 @@ public class UserController extends BaseController {
         String[] result;
         try {
             result = this.getCurrentUser().getSentiment().split(",");
+        } catch (Exception e) {
+            return success(null);
+        }
+        return success(result);
+    }
+
+    /**
+     * 查询登录用户
+     */
+    @GetMapping(value = "getLoginUser")
+    @ApiOperation(value = "查询登录用户")
+    public ApiResult getLoginUser() {
+        UserVo result = new UserVo();
+        try {
+            User user = this.getCurrentUser();
+            BeanUtils.copyProperties(user,result);
         } catch (Exception e) {
             return success(null);
         }
