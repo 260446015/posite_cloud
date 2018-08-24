@@ -44,7 +44,7 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
         success: function (res) {
             console.log(res);
             if (res.code != 0) {
-                return layer.msg(res.message, {anim: 6});
+                //return layer.msg(res.message, {anim: 6});
             }
             if (0 === pageNum) {
                 count = res.data.totalNumber;

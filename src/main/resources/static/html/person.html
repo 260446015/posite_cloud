@@ -232,7 +232,7 @@
             success: function (res) {
                 console.log(res)
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 sessionStorage.setItem("zdryscuser", JSON.stringify(res.data));
                 var ores = res.data;
@@ -268,7 +268,7 @@
             success: function (res) {
                 console.log(res);
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 layer.msg("修改用户信息成功");
             }
@@ -322,7 +322,7 @@
             success: function (res) {
                 console.log(res)
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 layer.closeAll();
                 layer.msg("密码修改成功");
