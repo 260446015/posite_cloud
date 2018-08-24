@@ -146,4 +146,8 @@ if(zdryscuserdata){
     }else if(zdryscuserdata.jobLevel=="group"){
         $(".com_gunli").hide();
     }
+    if(zdryscuserdata.image){
+        $(".headerimg").html('<img src="'+zdryscuserdata.image+'" alt="">');
+        $("#demo1").html('<img src="'+zdryscuserdata.image+'" alt="">');
+    }
 }
