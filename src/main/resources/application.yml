@@ -24,6 +24,11 @@ spring:
         min-idle: 0
     #连接超时时间
     timeout: 10000
+  mvc:
+    static-path-pattern: /**
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,
+      classpath:/static/,classpath:/public/,file:${web.upload-path}
 
 config:
   email:
@@ -31,3 +36,6 @@ config:
 logging:
   level:
     org: info
+
+web:
+  upload-path : E:/Apache24/Apache/htdocs/images/upload

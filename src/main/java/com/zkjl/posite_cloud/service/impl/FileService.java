@@ -4,14 +4,13 @@ import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IFileService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +22,8 @@ import java.util.List;
 public class FileService implements IFileService {
     @Resource
     private ApiService apiService;
+    @Value(value = "${web.uploadpath}")
+    private String uploadPath;
 
     @Override
     public JobDTO uploadPhoneNum(MultipartFile multipartFile, String username, String taskname) throws CustomerException {
@@ -87,4 +88,18 @@ public class FileService implements IFileService {
         return jobDTO;
     }
 
+    @Override
+    public String uploadImg(HttpServletRequest req, MultipartFile multipartFile) {
+        String filePath = "";
+        String myFileName = multipartFile.getOriginalFilename();// 文件原名称
+        try {
+            filePath = uploadPath + "/"+myFileName;
+            filePath = filePath.replaceAll("\\/+","/");
+            File localFile = new File(filePath);
+            multipartFile.transferTo(localFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return myFileName;
+    }
 }

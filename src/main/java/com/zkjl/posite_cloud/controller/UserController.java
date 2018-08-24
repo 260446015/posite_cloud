@@ -6,6 +6,7 @@ import com.zkjl.posite_cloud.domain.dto.LogDTO;
 import com.zkjl.posite_cloud.domain.dto.UserDTO;
 import com.zkjl.posite_cloud.domain.pojo.Log;
 import com.zkjl.posite_cloud.domain.pojo.User;
+import com.zkjl.posite_cloud.service.IFileService;
 import com.zkjl.posite_cloud.service.IUserService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -13,8 +14,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author yindawei
@@ -27,6 +37,9 @@ public class UserController extends BaseController {
     private IUserService userService;
 
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    @Resource
+    private IFileService fileService;
 
     /**
      * 创建更改用户
@@ -191,6 +204,48 @@ public class UserController extends BaseController {
             return success(null);
         }
         return success(result);
+    }
+
+    /**
+     * 个人中心更新用户信息
+     */
+    @PostMapping(value = "updateUser")
+    public ApiResult updateUser(@RequestBody User user) {
+        boolean flag;
+        try {
+            flag = userService.updateUser(user);
+        } catch (Exception e) {
+            logger.error("更新用户失败!" + e.getMessage());
+            return error("更新用户失败!" + e.getMessage());
+        }
+        return success(flag);
+    }
+
+    /**
+     * 图片上传
+     *
+     * @param req
+     * @throws Exception
+     */
+    @RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
+    @ResponseBody
+    public List<Map<String, Object>> upload(HttpServletRequest req, HttpServletResponse response) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) req;
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        List multipartFiles = multipartRequest
+                .getFiles("file");// 得到所有的文件
+        for (int i = 0; i < multipartFiles.size(); i++) {
+            Map<String, Object> map = new HashMap<>();
+            MultipartFile multipartFile = (MultipartFile) multipartFiles.get(i);
+            if (multipartFile.getSize() <= 0L) {
+                return null;
+            }
+            String fileUrl = fileService.uploadImg(req, multipartFile);
+            map.put("url", fileUrl);
+            mapList.add(map);
+        }
+        return mapList;
     }
 
 }

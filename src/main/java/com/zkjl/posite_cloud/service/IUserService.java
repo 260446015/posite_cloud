@@ -27,4 +27,6 @@ public interface IUserService {
     boolean enable(String id, Boolean ifEnable);
 
     boolean updateSentiment(String[] msg);
+
+    boolean updateUser(User user) throws CustomerException;
 }

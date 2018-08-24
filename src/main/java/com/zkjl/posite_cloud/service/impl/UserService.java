@@ -212,4 +212,43 @@ public class UserService implements IUserService {
         }
         return true;
     }
+
+    @Override
+    public boolean updateUser(User user) throws CustomerException {
+        Optional<User> byId = userRepository.findById(user.getId());
+        User check = byId.orElse(null);
+        if(check == null){
+            throw new CustomerException("用户不存在");
+        }
+        if(!check.getPassword().equals(user.getPassword())){
+            throw new CustomerException("密码错误");
+        }
+        if(!StringUtils.isBlank(user.getName())){
+            check.setName(user.getName());
+        }
+        if(!StringUtils.isBlank(user.getPassword())){
+            check.setPassword(user.getPassword());
+        }
+        if(null != user.getAge()){
+            check.setAge(user.getAge());
+        }
+        if(!StringUtils.isBlank(user.getMobile())){
+            check.setMobile(user.getMobile());
+        }
+        if(!StringUtils.isBlank(user.getEmail())){
+            check.setEmail(user.getEmail());
+        }
+        if(!StringUtils.isBlank(user.getDepartment())){
+            check.setDepartment(user.getDepartment());
+        }
+        if(!StringUtils.isBlank(user.getJob())){
+            check.setJob(user.getJob());
+        }
+        try {
+            userRepository.save(check);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 }
