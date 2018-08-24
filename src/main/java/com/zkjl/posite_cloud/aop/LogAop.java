@@ -3,6 +3,7 @@ package com.zkjl.posite_cloud.aop;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
 import com.zkjl.posite_cloud.common.util.DateUtils;
 import com.zkjl.posite_cloud.dao.LogRepository;
+import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.pojo.Log;
 import com.zkjl.posite_cloud.domain.pojo.User;
 import org.apache.shiro.SecurityUtils;
@@ -70,5 +71,8 @@ public class LogAop {
     @Before(value = "updateTask()")
     public void saveUpdateTask(JoinPoint joinPoint){
 
+        Object[] args = joinPoint.getArgs();
+        JobDTO jobDTO = (JobDTO) args[0];
+//        jobDTO.set
     }
 }

@@ -52,6 +52,7 @@ public class LoginController extends BaseController{
                 String ip = IpUtil.getMyIP();
                 String area = IpUtil.baiduGetCityCode(ip);
                 vo.setArea(area);
+                vo.setImage("http://localhost:8091/"+vo.getImage());
             } catch (Exception e) {
                 e.printStackTrace();
             }

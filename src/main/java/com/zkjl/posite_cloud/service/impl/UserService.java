@@ -2,7 +2,6 @@ package com.zkjl.posite_cloud.service.impl;
 
 import com.zkjl.posite_cloud.common.util.DateUtils;
 import com.zkjl.posite_cloud.common.util.PageUtil;
-import com.zkjl.posite_cloud.common.util.RegUtil;
 import com.zkjl.posite_cloud.dao.LogRepository;
 import com.zkjl.posite_cloud.dao.UserRepository;
 import com.zkjl.posite_cloud.domain.dto.LogDTO;
@@ -50,9 +49,9 @@ public class UserService implements IUserService {
         if (null != check) {
             throw new CustomerException("用户名已存在");
         }
-        if (!RegUtil.checkPass(user.getPassword())) {
-            throw new CustomerException("密码格式不对");
-        }
+//        if (!RegUtil.checkPass(user.getPassword())) {
+//            throw new CustomerException("密码格式不对");
+//        }
         if (StringUtils.isBlank(user.getJobLevel())) {
             return null;
         }
@@ -263,11 +262,11 @@ public class UserService implements IUserService {
         if (!check.getPassword().equals(oldPassword)) {
             throw new CustomerException("密码错误");
         } else {
-            if (RegUtil.checkPass(newPassword)) {
+//            if (RegUtil.checkPass(newPassword)) {
                 check.setPassword(newPassword);
-            } else {
-                throw new CustomerException("密码格式不对");
-            }
+//            } else {
+//                throw new CustomerException("密码格式不对");
+//            }
         }
         try {
             userRepository.save(check);

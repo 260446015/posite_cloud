@@ -3,6 +3,7 @@ package com.zkjl.posite_cloud.domain.dto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author yindawei
@@ -18,4 +19,5 @@ public class JobDTO implements Serializable {
     private String datas;
     private String taskid;
     private String taskname;
+    private Date updateTime;
 }
