@@ -58,6 +58,9 @@ header{
     height: 70px;
     line-height: 70px;
     color: #fff;
+    display: block;
+    float: left;
+    margin-right: 10px;
 }
 .hd_dl dd img{
     float: right;
@@ -217,4 +220,20 @@ body .layui-layer-lan .layui-layer-title {
     display: block;
     margin: 0 auto;
     width: 150px;
+}
+.headerimg{
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    overflow: hidden;
+    border-radius: 25px;
+    margin-top: 10px;
+    float: right;
+    margin-left: 5px;
+}
+body .headerimg img{
+    width: 50px;
+    height: auto;
+    margin: 0;
+
 }

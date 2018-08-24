@@ -184,11 +184,11 @@
     var zdryscuserdata = JSON.parse(sessionStorage.getItem("zdryscuser"));
     $(".pro_queding").click(function () {
         var list = 0;
-        $("#propo_box").find(".layui-input").each(function (i,item) {
-            if(item.value==""){
-                $(this).css("border-color","red");
-            }
-        });
+        // $("#propo_box").find(".layui-input").each(function (i,item) {
+        //     if(item.value==""){
+        //         $(this).css("border-color","red");
+        //     }
+        // });
         setusermsg();
 
     });
@@ -234,6 +234,7 @@
                 if (res.code != 0) {
                     return layer.msg(res.message, {anim: 6});
                 }
+                sessionStorage.setItem("zdryscuser", JSON.stringify(res.data));
                 var ores = res.data;
                 $(".ba_bumen").val(ores.department);
                 $(".ba_email").val(ores.email);
@@ -241,6 +242,7 @@
                 $(".ba_name").val(ores.name);
                 $(".ba_mobile").val(ores.mobile);
                 $(".ba_age").val(ores.age);
+
             }
         });
     }
@@ -259,7 +261,8 @@
                 name: $(".ba_name").val(),
                 mobile:$(".ba_mobile").val(),
                 age:$(".ba_age").val(),
-                image:$('#demo1').attr("data-href")
+                image:$('#demo1').attr("data-href"),
+                id:zdryscuserdata.id
             }),
             contentType: "application/json",
             success: function (res) {
