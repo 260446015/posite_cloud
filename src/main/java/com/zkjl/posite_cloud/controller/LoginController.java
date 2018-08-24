@@ -9,6 +9,7 @@ import com.zkjl.posite_cloud.exception.AccountStartException;
 import com.zkjl.posite_cloud.service.IUserService;
 import com.zkjl.posite_cloud.shiro.ShiroUtil;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
@@ -52,7 +53,9 @@ public class LoginController extends BaseController{
                 String ip = IpUtil.getMyIP();
                 String area = IpUtil.baiduGetCityCode(ip);
                 vo.setArea(area);
-                vo.setImage("http://localhost:8091/"+vo.getImage());
+                if(!StringUtils.isBlank(vo.getImage())){
+                    vo.setImage("http://localhost:8091/"+vo.getImage());
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
