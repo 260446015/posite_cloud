@@ -95,6 +95,10 @@ public class FileService implements IFileService {
         try {
             filePath = uploadPath + "/"+myFileName;
             filePath = filePath.replaceAll("\\/+","/");
+            File sorceFile = new File(uploadPath);
+            if(!sorceFile.exists()){
+                sorceFile.mkdir();
+            }
             File localFile = new File(filePath);
             multipartFile.transferTo(localFile);
         } catch (IOException e) {

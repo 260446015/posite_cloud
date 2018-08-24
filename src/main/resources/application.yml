@@ -38,4 +38,4 @@ logging:
     org: info
 
 web:
-  upload-path : /home/web/posite_cloud/upload
+  upload-path : D:/home/web/posite_cloud/upload

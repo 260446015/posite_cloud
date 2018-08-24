@@ -74,4 +74,8 @@ public class UserVo {
      * 用户舆情关键词
      */
     private String sentiment;
+    /**
+     * 用户头像
+     */
+    private String image;
 }
