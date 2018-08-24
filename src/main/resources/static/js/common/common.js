@@ -112,7 +112,14 @@ $(".logout").click(function () {
             }
         }
     });
+});
 
+$(".go_person").click(function () {
+    if($(".title").attr("data-href")=="shou"){
+        window.location = "html/person.html";
+    }else{
+        window.location = "person.html";
+    }
 });
 
 //时间戳格式转换换

@@ -58,9 +58,10 @@
         .zd_box div span:nth-child(1) {
             margin-left: 20px;
             float: left;
-            width: 75%;
+            width: 40%;
+            text-align: left;
         }
-        .zd_box div span:nth-child(2) {
+        .zd_box div span:nth-child(3) {
             float: right;
         }
     </style>
@@ -85,7 +86,7 @@
         <dd><span class="usernamecon"></span><img src="../img/defaultimg.png" alt=""></dd>
         <dt class="hd_dt layui-anim layui-anim-upbit">
             <p class="logout">退出登录</p>
-            <p>个人中心</p>
+            <p class="go_person">个人中心</p>
         </dt>
     </dl>
 </header>
@@ -109,6 +110,7 @@
         <div class="zd_box" style="overflow: hidden;">
             <div class="sc_zdgray">
                 <span>标题</span>
+                <span>文章来源</span>
                 <span>采集时间</span>
             </div>
             <p class="zd_boxlist"></p>
@@ -219,12 +221,14 @@
                     if(i%2){
                         list = "<div class='sc_zdgray'>" +
                             "<span>"+item.cleanTitle+"</span>" +
+                            "<span>"+item.columnName+"</span>" +
                             "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
                             "<span class='none' data-href='"+objectitem+"'>"+item.content+"</span>" +
                             "</div>";
                     }else{
                         list = "<div>" +
                             "<span>"+item.cleanTitle+"</span>" +
+                            "<span>"+item.columnName+"</span>" +
                             "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
                             "<span class='none' data-href='"+objectitem+"'>"+item.content+"</span>" +
                             "</div>";

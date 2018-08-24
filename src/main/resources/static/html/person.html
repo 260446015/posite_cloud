@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title class="title" data-href="index">个人报告</title>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=0, maximum-scale=0, user-scalable=no">
+    <meta name="Author" Content="jianghaifei"/>
+    <meta http-equiv="cache-control" content="no-cache">
+    <link rel="shortcut icon" href="../img/logozkjl2.png">
+
+    <!--不缓存-->
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <META HTTP-EQUIV="expires" CONTENT="0">
+
+    <script src="../js/common/jquery-3.3.1.min.js"></script>
+    <!--animate-->
+    <link rel="stylesheet" href="../css/common/animate.css">
+    <!--layui-->
+    <link rel="stylesheet" href="../res/layui/css/layui.css">
+
+    <!--自定义-->
+    <link rel="stylesheet" href="../css/common/common.css?version=0">
+    <link rel="stylesheet" href="../css/common/layout.css?version=0">
+    <link rel="stylesheet" href="../css/guanli.css?version=0">
+    <style>
+        body{
+            background: #edeef2;
+        }
+        .rp_yjbox span:nth-child(2){
+            width: 66%;
+        }
+        .rp_yjbox div {
+            min-height: 30px;
+            line-height: 30px;
+        }
+        .bz_li{
+            float: none;
+            overflow: hidden;
+            margin: 0 auto;
+            width: 610px;
+        }
+        .bz_li input {
+            width: 500px;
+            height: 40px;
+        }
+        .bz_li label {
+            margin-top: 10px;
+        }
+        .pro_queding{
+            width: 300px;
+        }
+        .layui-upload-list {
+            margin: 0 0;
+            float: left;
+            width: 50px;
+            height: 50px;
+            overflow: hidden;
+        }
+        .layui-upload-list img{
+            width: 50px;
+        }
+        #otest{
+            width: 50px;
+            height: 50px;
+            border: 1px dashed #ccc;
+            border-radius: 3px;
+            background: transparent;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <img class="logobox" src="../img/logozkjl1.png" alt="">
+    <div class="title">
+        <p>重点人网络筛查平台</p>
+        <p>Key    person    screening</p>
+    </div>
+    <div class="hd_nav">
+        <a href="../index.html">首页</a>
+        <a href="importan.html">重点人员</a>
+        <a class="com_jifen" href="jifenyj.html">积分预警</a>
+        <a href="caijishezhi.html">采集设置</a>
+        <!--<a>追踪人员</a>-->
+        <a class="com_gunli" href="houtai_user.html">后台管理</a>
+    </div>
+    <dl class="hd_dl">
+        <dd><span class="usernamecon"></span><img src="../img/defaultimg.png" alt=""></dd>
+        <dt class="hd_dt layui-anim layui-anim-upbit">
+            <p class="logout">退出登录</p>
+            <p class="go_person">个人中心</p>
+        </dt>
+    </dl>
+</header>
+<section>
+    <div class="se_title">
+        <p><a href="../index.html">HOME</a>   /   个人中心</p>
+    </div>
+
+    <div class="section">
+        <div id="propo_box" style="display: block;" class="propo_box layui-form">
+            <div class="bz_li">
+                <label>头像</label>
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn" id="otest"></button>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="demo1">
+                        <p id="demoText"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="bz_li">
+                <label>用户名</label>
+                <input type="text" class="layui-input ba_username" placeholder="请输入用户名">
+            </div>
+            <div class="bz_li">
+                <label>姓名</label>
+                <input type="text" class="layui-input ba_name" placeholder="请输入姓名">
+            </div>
+            <div class="bz_li">
+                <label>密码</label>
+                <input type="text" class="layui-input ba_passward" placeholder="请输入密码">
+            </div>
+            <div class="bz_li">
+                <label>年龄</label>
+                <input type="text" class="layui-input ba_age" placeholder="请输入年龄">
+            </div>
+            <div class="bz_li">
+                <label>手机号</label>
+                <input type="text" class="layui-input ba_mobile" placeholder="请输入手机号码">
+            </div>
+            <div class="bz_li">
+                <label>邮箱</label>
+                <input type="text" class="layui-input ba_email" placeholder="请输入邮箱">
+            </div>
+            <div class="bz_li">
+                <label>单位部门</label>
+                <input type="text" class="layui-input ba_bumen" placeholder="请输入单位部门">
+            </div>
+            <div class="bz_li">
+                <label>岗位</label>
+                <input type="text" class="layui-input ba_gangwei" placeholder="请输入岗位">
+            </div>
+
+            <div class="" style="text-align: center;clear: both;">
+                <span class="layui-btn layui-btn-normal baocunbtn pro_queding">保存</span>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+<script src="../res/layui/layui.all.js"></script>
+<script src="../js/common/echarts.min.js"></script>
+<script src="../js/common/common.js?versin=0"></script>
+<script>
+    $(".pro_queding").click(function () {
+        $("#propo_box").find(".layui-input").each(function (i,item) {
+            if(item.value==""){
+                $(this).css("border-color","red");
+            }
+        })
+    });
+    layui.use('upload');
+    var upload = layui.upload;
+    var uploadInst = upload.render({
+        elem: '#otest'
+        ,url: '/api/uploadImg'
+        ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            obj.preview(function(index, file, result){
+                $('#demo1').attr('src', result); //图片链接（base64）
+            });
+        }
+        ,done: function(res){
+            //如果上传失败
+            if(res.code > 0){
+                return layer.msg('上传失败');
+            }
+            //上传成功
+            console.log(res);
+        }
+        ,error: function(){
+
+        }
+    });
+</script>
+</html>

@@ -76,6 +76,12 @@
 <script>
 
     $(".layui-btn").click(function () {
+        if($(".username").val()==""){
+            return layer.msg("请输入用户名");
+        }
+        if($(".passwor").val()==""){
+            return layer.msg("请输入密码");
+        }
         $.ajax({
             url: "/login",
             type: "post",

@@ -53,6 +53,10 @@
             line-height: 2.5;
             text-indent: 2em;
         }
+        .yqdt_content img{
+            display: block;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
@@ -75,7 +79,7 @@
         <dd><span class="usernamecon"></span><img src="../img/defaultimg.png" alt=""></dd>
         <dt class="hd_dt layui-anim layui-anim-upbit">
             <p class="logout">退出登录</p>
-            <p>个人中心</p>
+            <p class="go_person">个人中心</p>
         </dt>
     </dl>
 </header>
@@ -103,7 +107,7 @@
     var inval = JSON.parse(sessionStorage.getItem("yuqingval"))
     if(inval){
         $(".yqdt_title").html(inval.cleanTitle);
-        $(".yqdt_timespapn").html(inval.createTime);
+        $(".yqdt_timespapn").html(zdrysc.timechange(inval.createTime));
         $(".yqdt_fromspan").html('<a href="'+inval.url+'" target="_blank">'+inval.columnName+'</a>');
 
     }
