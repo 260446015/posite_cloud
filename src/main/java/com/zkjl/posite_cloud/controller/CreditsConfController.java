@@ -40,6 +40,7 @@ public class CreditsConfController extends BaseController{
         try {
             username = this.getCurrentUser().getUsername();
             creditsWarn.setUsername(username);
+            creditsWarn.setId(null);
             result = creditsConfService.save(creditsWarn);
         } catch (Exception e) {
             logger.error("保存积分配置出错！",e.getMessage());
