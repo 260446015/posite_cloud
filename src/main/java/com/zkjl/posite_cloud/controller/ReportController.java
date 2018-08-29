@@ -3,7 +3,9 @@ package com.zkjl.posite_cloud.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
+import com.zkjl.posite_cloud.domain.pojo.Redistask;
 import com.zkjl.posite_cloud.domain.pojo.UpdateTask;
+import com.zkjl.posite_cloud.domain.vo.RedistaskVO;
 import com.zkjl.posite_cloud.service.IReportService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -51,20 +53,40 @@ public class ReportController extends BaseController {
         return success(result);
     }
 
+    /**
+     * 按照历史报告传递id，进行报告生成
+     */
+    @GetMapping(value = "reportById")
+    @SystemControllerLog(description = "按照id生成报告")
+    @ApiOperation(value = "按照id生成报告")
+    public ApiResult reportById(String id){
+        JSONObject result;
+        String username;
+        try {
+            username = this.getCurrentUser().getUsername();
+            result = reportService.reportById(id, username);
+        } catch (Exception e) {
+            logger.error("按照id生成报告!"+e.getMessage());
+            return error("按照id生成报告异常");
+        }
+        return success(result);
+    }
 
     /**
      * 查看历史报告
      */
     @GetMapping(value = "findReportHistory")
     public ApiResult findReportHistory(String taskid, Integer pageNum, Integer pageSize) {
-        PageImpl<UpdateTask> result;
+        PageImpl<RedistaskVO> result;
+        String username;
         try {
-            result = reportService.findReportHistory(taskid, pageNum, pageSize);
+            username = this.getCurrentUser().getUsername();
+            result = reportService.findReportHistory(taskid, pageNum, pageSize, username);
         } catch (Exception e) {
             e.printStackTrace();
             return error("查询历史报告失败");
         }
-        if(result == null){
+        if (result == null) {
             return successPagesNull(null);
         }
         return successPages(result);

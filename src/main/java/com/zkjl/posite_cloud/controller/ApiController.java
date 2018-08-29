@@ -144,7 +144,7 @@ public class ApiController extends BaseController {
             username = this.getCurrentUser().getUsername();
             result = apiService.listJob(username);
         } catch (Exception e) {
-            log.error("获取redis任务信息出错!", e.getMessage());
+            log.error("获取redis任务信息出错!"+e.getMessage());
             return error("获取任务信息出错!");
         }
         return success(result);

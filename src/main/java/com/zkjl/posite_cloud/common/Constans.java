@@ -8,6 +8,8 @@ public abstract class Constans {
     public static final String T_USER = "user";
     public static final String T_MOBILEDATAS = "mobiledatas";
     public static final String T_CREDITSWARN = "creditswarn";
+    public static final String T_REDISTASK = "redistask";
+
 
     /**
      * 定义大小批量界限

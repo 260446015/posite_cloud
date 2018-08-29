@@ -87,6 +87,7 @@ public class ScheduleTask {
                     jobInfoRepository.save(data);
                 } catch (Exception e) {
                     logger.error("发送邮件失败,失败数据为data:"+data);
+                    logger.error("失败原因:"+e.getMessage());
                 }
             }
         }

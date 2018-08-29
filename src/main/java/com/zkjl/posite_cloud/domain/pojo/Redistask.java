@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author yindawei
@@ -19,12 +20,15 @@ public class Redistask implements Serializable {
     private static final long serialVersionUID = -2493293907861519932L;
 
     @Id
+    private String id;
     private String taskid;
     private String username;
     private String redisTaskid;
     private Boolean ifFinish;
     private Date creationTime;
     private String taskname;
+    private Integer _version;
+    private List<JobInfo> datas;
 
     public Redistask(String username, String taskid, Boolean ifFinish, String taskname) {
         this.username = username;
@@ -32,6 +36,7 @@ public class Redistask implements Serializable {
         this.ifFinish = ifFinish;
         this.creationTime = Calendar.getInstance().getTime();
         this.taskname = taskname;
+        this._version = 0;
     }
 
     public Redistask() {

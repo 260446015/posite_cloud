@@ -41,7 +41,7 @@ public class LogAop {
     public void logPoint() {
     }
 
-    @Pointcut(value = "execution(public * com.zkjl.posite_cloud.controller.ApiController.updateJob(..))")
+//    @Pointcut(value = "execution(public * com.zkjl.posite_cloud.controller.ApiController.updateJob(..))")
     public void updateTask(){
 
     }
@@ -78,7 +78,7 @@ public class LogAop {
 
     }
 
-    @Before(value = "updateTask()")
+//    @Before(value = "updateTask()")
     public void saveUpdateTask(JoinPoint joinPoint){
         try {
             Object[] args = joinPoint.getArgs();

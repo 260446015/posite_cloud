@@ -9,18 +9,22 @@ import com.zkjl.posite_cloud.dao.CreditsRepository;
 import com.zkjl.posite_cloud.dao.UpdateTaskRepository;
 import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
 import com.zkjl.posite_cloud.domain.pojo.JobInfo;
+import com.zkjl.posite_cloud.domain.pojo.Redistask;
 import com.zkjl.posite_cloud.domain.pojo.UpdateTask;
+import com.zkjl.posite_cloud.domain.vo.RedistaskVO;
 import com.zkjl.posite_cloud.service.IReportService;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.mapreduce.GroupBy;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +40,8 @@ public class ReportService extends CreditsService implements IReportService {
     private CreditsRepository creditsRepository;
     @Resource
     private UpdateTaskRepository updateTaskRepository;
+    @Resource
+    private CreditsService creditsService;
 
     @Override
     public JSONObject report(String mobile, String username) {
@@ -168,11 +174,69 @@ public class ReportService extends CreditsService implements IReportService {
     }
 
     @Override
-    public PageImpl<UpdateTask> findReportHistory(String taskid, Integer pageNum, Integer pageSize) {
-        List<UpdateTask> list = updateTaskRepository.findByTaskid(taskid);
-        if(list.size() == 0){
+    public PageImpl<RedistaskVO> findReportHistory(String taskid, Integer pageNum, Integer pageSize, String username) {
+        List<Redistask> list = mongoTemplate.find(new Query(Criteria.where("taskid").is(taskid).and("datas").ne(null)).with(Sort.by(Sort.Direction.DESC, "_version")), Redistask.class, Constans.T_REDISTASK);
+        if (list.size() == 0) {
             return null;
         }
-        return (PageImpl<UpdateTask>) PageUtil.pageBeagin(list.size(), pageNum, pageSize, list);
+        List<RedistaskVO> result = new ArrayList<>();
+        CreditsWarn conf = creditsService.findCreditsWarnConf(username);
+        List<JobInfo> termData = new ArrayList<>();
+        list.forEach(action -> {
+            int blue = 0;
+            int yellow = 0;
+            int red = 0;
+            List<JobInfo> datas = action.getDatas();
+            RedistaskVO vo = new RedistaskVO();
+            for (JobInfo jobinfo : datas) {
+                //现在循环的是某一个历史任务中，所有关联上的手机号的结果集
+                /**
+                 * 1、拿到某一个手机号对应的实体pojo---》jobinfo
+                 * 2、可以获取到jobinfo中对应的注册信息
+                 * 3、进行积分计算，判断预警程度
+                 * 4、进行相应的积分进行求和计算
+                 * 5、组装vo数据
+                 */
+                termData.clear();
+                termData.add(jobinfo);
+                JSONObject jsonObject = generatorResult(termData, conf);
+                if(jsonObject.getString("warnLevel").equals("蓝色预警")){
+                    blue ++;
+                }else if(jsonObject.getString("warnLevel").equals("橙色预警")){
+                    yellow ++;
+                }else if(jsonObject.getString("warnLevel").equals("红色预警")){
+                    red ++;
+                }else{
+
+                }
+
+            }
+            vo.setBlueCount(blue);
+            vo.setRedCount(red);
+            vo.setYellowCount(yellow);
+            vo.setCreationTime(DateUtils.getFormatString(action.getCreationTime()));
+            vo.setTaskname(action.getTaskname());
+            vo.setId(action.getId());
+            result.add(vo);
+        });
+        return (PageImpl<RedistaskVO>) PageUtil.pageBeagin(result.size(), pageNum, pageSize, result);
+    }
+
+    @Override
+    public JSONObject reportById(String id, String username) {
+        Redistask byId = mongoTemplate.findById(id, Redistask.class);
+        List<JobInfo> datas = byId.getDatas();
+        CreditsWarn conf = creditsService.findCreditsWarnConf(username);
+        List<JSONObject> jsonObjects = generatorList(datas, username);
+        List<JSONObject> blue = jsonObjects.stream().filter(action -> action.getInteger("sorce") > conf.getBlueSorce() && action.getInteger("sorce") <= conf.getYellowSorce()).sorted((a, b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
+        List<JSONObject> yellow = jsonObjects.stream().filter(action -> action.getInteger("sorce") > conf.getYellowSorce() && action.getInteger("sorce") <= conf.getRedSorce()).sorted((a, b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
+        List<JSONObject> red = jsonObjects.stream().filter(action -> action.getInteger("sorce") > conf.getRedSorce()).sorted((a, b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
+        JSONObject result = new JSONObject();
+        result.put("blue", blue);
+        result.put("yellow", yellow);
+        result.put("red", red);
+        result.put("creationTime", DateUtils.getFormatString(datas.get(0).getCreationTime()));
+        getTotalKindCount(datas, conf, result);
+        return result;
     }
 }

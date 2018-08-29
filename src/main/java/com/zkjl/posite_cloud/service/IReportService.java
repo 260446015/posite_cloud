@@ -1,7 +1,9 @@
 package com.zkjl.posite_cloud.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zkjl.posite_cloud.domain.pojo.Redistask;
 import com.zkjl.posite_cloud.domain.pojo.UpdateTask;
+import com.zkjl.posite_cloud.domain.vo.RedistaskVO;
 import org.springframework.data.domain.PageImpl;
 
 /**
@@ -12,5 +14,7 @@ public interface IReportService {
 
     JSONObject report(String mobile, String username);
 
-    PageImpl<UpdateTask> findReportHistory(String taskid, Integer pageNum, Integer pageSize);
+    PageImpl<RedistaskVO> findReportHistory(String taskid, Integer pageNum, Integer pageSize, String username);
+
+    JSONObject reportById(String id, String username);
 }

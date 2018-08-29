@@ -11,4 +11,6 @@ import java.util.List;
  **/
 public interface RedistaskRepository extends MongoRepository<Redistask, String> {
     List<Redistask> findByUsername(String username);
+
+    void deleteByTaskid(String id);
 }

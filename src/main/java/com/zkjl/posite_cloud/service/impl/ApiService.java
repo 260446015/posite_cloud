@@ -21,6 +21,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.redis.core.ListOperations;
@@ -136,8 +139,20 @@ public class ApiService implements IApiService {
             try {
                 stringRedisTemplate.rename(_redisId, redisId);
             } catch (Exception e) {
+                Redistask oldRedis = mongoTemplate.findOne(new Query(Criteria.where("taskid").is(taskId)).with(Sort.by(Sort.Direction.DESC, "_version")), Redistask.class, Constans.T_REDISTASK);
+                oldRedis.setDatas(byTaskid);
+                redistaskRepository.save(oldRedis);
                 byTaskid.forEach(action -> action.setData(null));
                 jobInfoRepository.saveAll(byTaskid);
+                Redistask newRedis = new Redistask(oldRedis.getUsername(), taskId, false, oldRedis.getTaskname());
+                newRedis.setCreationTime(Calendar.getInstance().getTime());
+                newRedis.setIfFinish(false);
+                newRedis.setTaskid(taskId);
+                newRedis.setTaskname(oldRedis.getTaskname());
+                newRedis.setUsername(oldRedis.getUsername());
+                int version = oldRedis.get_version() + 1;
+                newRedis.set_version(version);
+                redistaskRepository.save(newRedis);
                 ListOperations<String, String> stringStringListOperations = stringRedisTemplate.opsForList();
                 stringStringListOperations.trim(redisId, 1, 0);
                 mobiles.forEach(mobile -> stringStringListOperations.rightPush(redisId, mobile));
@@ -256,6 +271,7 @@ public class ApiService implements IApiService {
                 element.put("mobile", action.getMobile());
                 element.put("webtype", jsonObject.getString("webtype"));
                 element.put("app", jsonObject.getString("webname"));
+                element.put("webnames", data);
                 result.add(element);
                 if (result.size() >= 20) {
                     break A;
@@ -345,33 +361,37 @@ public class ApiService implements IApiService {
 
     @Override
     public List<JobinfoVO> listJob(String username) {
+        Aggregation agg = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("username").is(username)),
+                Aggregation.group("taskid").first("taskid").as("taskid").first("taskname").as("taskname").first("creationTime").as("creationTime").first("username").as("username")
+        );
+
+        AggregationResults<Redistask> outputType = mongoTemplate.aggregate(agg, Constans.T_REDISTASK, Redistask.class);
+        List data = (List) outputType.getRawResults().get("result");
         List<JobinfoVO> result = new ArrayList<>();
-        List<Redistask> list = redistaskRepository.findByUsername(username);
         Set<String> keys = stringRedisTemplate.keys(username + "*");
-        list.forEach(action -> {
+        data.forEach(action -> {
+            JSONObject element = new JSONObject((Map<String, Object>) action);
             JobinfoVO vo = new JobinfoVO();
-            vo.setTaskId(action.getTaskid());
-            vo.setCreationTime(action.getCreationTime());
+            if (StringUtils.isBlank(element.getString("taskid"))) {
+                vo.setTaskId(element.getString("_id"));
+            } else {
+                vo.setTaskId(element.getString("taskid"));
+            }
+            vo.setCreationTime(element.getDate("creationTime"));
             vo.setIfFinish(true);
-            vo.setTaskname(action.getTaskname());
+            vo.setTaskname(element.getString("taskname"));
             for (String redisId : keys) {
-                if (redisId.contains(action.getTaskid())) {
+                if (StringUtils.isBlank(element.getString("taskid"))) {
+                    continue;
+                }
+                if (redisId.contains(element.getString("taskid"))) {
                     vo.setIfFinish(false);
                 }
             }
             result.add(vo);
         });
         return result;
-//        GroupBy groupBy = GroupBy.key("taskid").initialDocument("{count:0}").reduceFunction("function(doc, out){out.count++}")
-//                .finalizeFunction("function(out){return out;}");
-//        GroupByResults<JobInfo> res = mongoTemplate.group(Constans.T_MOBILEDATAS, groupBy, JobInfo.class);
-////        DBObject obj = res.getRawResults();
-////        BasicDBList dbList = (BasicDBList) obj.get("retval");
-//        List<Document> retval = (List) res.getRawResults().get("retval");
-//        retval.forEach(action ->{
-//            String taskid = action.getString("taskid");
-//            result.add(taskid);
-//        });
     }
 
     @Override
@@ -431,9 +451,8 @@ public class ApiService implements IApiService {
         boolean flag = false;
         try {
             for (int i = 0; i < ids.length; i++) {
-                redistaskRepository.deleteById(ids[i]);
-                List<JobInfo> byTaskid = jobInfoRepository.findByTaskid(ids[i]);
-                jobInfoRepository.deleteAll(byTaskid);
+                mongoTemplate.remove(new Query(Criteria.where("taskid").is(ids[i])),Constans.T_REDISTASK);
+                mongoTemplate.remove(new Query(Criteria.where("taskid").is(ids[i])),Constans.T_MOBILEDATAS);
                 try {
                     Set keys = redisTemplate.keys(username + "_" + ids[i] + "_*");
                     redisTemplate.delete(keys);
