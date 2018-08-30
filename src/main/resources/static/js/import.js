@@ -57,6 +57,7 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                 var appname = '';
                 var appspsn = '';
                 var odata;
+
                 $.each(item.data,function (i,item) {
                     if(i==0){
                         appname+=item.webname
@@ -64,7 +65,23 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                         appname+="，"+item.webname
                     }
                     appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
+                    console.log(item.webtype)
+
                 });
+                switch (item.warnInfo){
+                    case "红色预警":
+                        oclass = "yjfont_red";
+                        aclass = "yj_red";
+                        break
+                    case "橙色预警":
+                        oclass = "yjfont_orange";
+                        aclass = "yj_orange";
+                        break
+                    case "蓝色预警":
+                        oclass = "yjfont_biue";
+                        aclass = "yj_blue";
+                        break
+                }
                 if(item.data==null){
                     odata = "采集中..."
                 }else{

@@ -222,6 +222,9 @@ $(function () {
                     //return layer.msg(res.message, {anim: 6});
                 }
                 layer.msg("操作完成");
+                setTimeout(function () {
+                    location.reload();
+                },2000);
             }
         })
     }

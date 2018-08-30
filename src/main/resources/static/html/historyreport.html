@@ -115,7 +115,7 @@
     }
 
     //舆情信息
-    yuqinghuoqu("76e9cc0b029361884991768191351266",0,10);
+    yuqinghuoqu(oid,0,10);
     function yuqinghuoqu(taskid,pageNum,pageSize) {
         $(".zd_boxlist").empty();
         $.ajax({
@@ -138,7 +138,7 @@
                     $(".zd_boxlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
                 }
                 if (0 === pageNum) {
-                    count = res.data.count;
+                    count = res.data.totalNumber;
                     setPageNo(count,pageSize);
                     zdrysc.setpagecss();
                 }
@@ -152,23 +152,21 @@
                     var list;
                     if(i%2){
                         list = "<div class='sc_zdgray'>" +
-                            "<span>"+item.cleanTitle+"</span>" +
-                            "<span>"+item.columnName+"</span>" +
-                            "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
-                            "<span class='none' data-href='"+objectitem+"'>"+item.content+"</span>" +
-                            "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
-                            "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
-                            '<span><div class="layui-btn layui-btn-normal baocunbtn" data-href="'+item.mobile+'">查看报告</div></span>' +
+                            "<span>"+item.taskname+"</span>" +
+                            "<span>"+item.redCount+"</span>" +
+                            "<span>"+item.yellowCount+"</span>" +
+                            "<span>"+item.blueCount+"</span>" +
+                            "<span>"+zdrysc.timechange(item.creationTime)+"</span>" +
+                            '<span><div class="layui-btn layui-btn-normal baocunbtn" data-href="'+item.id+'">查看报告</div></span>' +
                             "</div>";
                     }else{
                         list = "<div>" +
-                            "<span>"+item.cleanTitle+"</span>" +
-                            "<span>"+item.columnName+"</span>" +
-                            "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
-                            "<span class='none' data-href='"+objectitem+"'>"+item.content+"</span>" +
-                            "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
-                            "<span>"+zdrysc.timechange(item.createTime)+"</span>" +
-                            '<span><div class="layui-btn layui-btn-normal baocunbtn" data-href="'+item.mobile+'">查看报告</div></span>' +
+                            "<span>"+item.taskname+"</span>" +
+                            "<span>"+item.redCount+"</span>" +
+                            "<span>"+item.yellowCount+"</span>" +
+                            "<span>"+item.blueCount+"</span>" +
+                            "<span>"+zdrysc.timechange(item.creationTime)+"</span>" +
+                            '<span><div class="layui-btn layui-btn-normal baocunbtn" data-href="'+item.id+'">查看报告</div></span>' +
                             "</div>";
                     }
                     $(".zd_boxlist").append(list);
@@ -176,5 +174,9 @@
             }
         });
     }
+
+    $(".zd_boxlist").on("click",".baocunbtn",function () {
+        window.location = "repotr_renwu.html?"+$(this).attr("data-href");
+    });
 </script>
 </html>

@@ -118,7 +118,7 @@ $(function () {
             },
             data: {},
             success: function (res) {
-                //console.log(res);
+                console.log(res);
                 if (res.code != 0) {
                     //return layer.msg(res.message, {anim: 6});
                 }
@@ -126,14 +126,19 @@ $(function () {
                     $(".list_box").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
                 }
                 $.each(res.data,function (i,item) {
+                    var appname = '';
+                    var appspsn = '';
+                    $.each(item.webnames,function (i,item) {
+                        appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
+                    });
                     if(i%2){
-                        list = '<li class="sc_zdgray">' +
+                        list = '<li class="sc_zdgray" data-href="'+appspsn+'">' +
                             '<span>'+item.mobile+'</span>' +
                             '<span>'+item.webtype+'</span>' +
                             '<span>'+item.app+'</span>' +
                             '</li>';
                     }else{
-                        list = '<li>' +
+                        list = '<li data-href="'+appspsn+'">' +
                             '<span>'+item.mobile+'</span>' +
                             '<span>'+item.webtype+'</span>' +
                             '<span>'+item.app+'</span>' +
@@ -156,6 +161,17 @@ $(function () {
             regsintime();
         },3600000);
     }
+    //实时信息
+    $(".list_box").on("click","li",function () {
+        if($(this).attr("data-href")){
+            layer.open({
+                type: 1,
+                shade: false,
+                title: false, //不显示标题
+                content: $(this).attr("data-href")
+            });
+        }
+    });
 
     //图表占比分析
     var dom = document.getElementById("container");
@@ -263,19 +279,35 @@ $(function () {
                     }else{
                         odata = appname;
                     }
+                    var oclass;
+                    var aclass;
+                    switch (item.warnInfo){
+                        case "红色预警":
+                            oclass = "yjfont_red";
+                            aclass = "yj_red";
+                            break
+                        case "橙色预警":
+                            oclass = "yjfont_orange";
+                            aclass = "yj_orange";
+                            break
+                        case "蓝色预警":
+                            oclass = "yjfont_biue";
+                            aclass = "yj_blue";
+                            break
+                    }
                     if(i%2){
-                        list = '<div class="sc_zdgray">' +
+                        list = '<div class="sc_zdgray" data-href="'+appspsn+'">' +
                             '<span>Top '+(i+1)+'</span>' +
                             '<span>'+item.mobile+'</span>' +
                             '<span>'+item.registCount+'</span>' +
-                            '<span>'+item.sorce+'</span>' +
+                            '<span class="'+oclass+'">'+item.warnInfo+'</span>' +
                             '</div>';
                     }else{
-                        list = '<div>' +
+                        list = '<div data-href="'+appspsn+'">' +
                             '<span>Top '+(i+1)+'</span>' +
                             '<span>'+item.mobile+'</span>' +
                             '<span>'+item.registCount+'</span>' +
-                            '<span>'+item.sorce+'</span>' +
+                            '<span class="'+oclass+'">'+item.warnInfo+'</span>' +
                             '</div>';
                     }
                     $(".sc_zdbox").append(list);
@@ -283,4 +315,17 @@ $(function () {
             }
         });
     }
+
+
+    //点击详情
+    $(".sc_zdbox").on("click","div",function () {
+        if($(this).attr("data-href")){
+            layer.open({
+                type: 1,
+                shade: false,
+                title: false, //不显示标题
+                content: $(this).attr("data-href")
+            });
+        }
+    });
 });

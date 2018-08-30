@@ -38,7 +38,6 @@ body .layui-form-select{
 .sc_zdgrayspan{
     display: block;
     padding: 0 30px;
-    text-align: center;
 }
 
 
@@ -100,16 +99,6 @@ section .yj_red{
 }
 .zd_boxlist .baocunbtn1{
     color: #fff;
-}
-
-.yjfont_biue{
-    color: #0aa4ea;
-}
-.yjfont_orange{
-    color: #ff9416;
-}
-.yjfont_red{
-    color: red;
 }
 
 /*按钮盒子*/
