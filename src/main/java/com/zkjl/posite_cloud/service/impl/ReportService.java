@@ -84,7 +84,46 @@ public class ReportService extends CreditsService implements IReportService {
     }
 
     private void getTotalKindCount(List<JobInfo> list, CreditsWarn conf, JSONObject result) {
-        int gambleCount = 0;
+        int gamble = 0;
+        int loans = 0;
+        int yellow = 0;
+        int living = 0;
+        int game = 0;
+        Set<String> checkPerson = new HashSet<>();
+        for (JobInfo jobInfo : list) {
+            JSONArray value = jobInfo.getData();
+            checkPerson.clear();
+            for (Object obj : value) {
+                JSONObject jsonObject = new JSONObject((Map<String, Object>) obj);
+                if (jsonObject.getString("webtype").equals(conf.getGamble().getString("name"))) {
+                    if (checkPerson.add("gamble")) {
+                        gamble += 1;
+                    }
+                } else if (jsonObject.getString("webtype").equals(conf.getLoans().getString("name"))) {
+                    if (checkPerson.add("loans")) {
+                        loans += 1;
+                    }
+                } else if (jsonObject.getString("webtype").equals(conf.getYellow().getString("name"))) {
+                    if (checkPerson.add("yellow")) {
+                        yellow += 1;
+                    }
+                } else if (jsonObject.getString("webtype").equals(conf.getLiving().getString("name"))) {
+                    if (checkPerson.add("living")) {
+                        living += 1;
+                    }
+                } else {
+                    if (checkPerson.add("game")) {
+                        game += 1;
+                    }
+                }
+            }
+        }
+        result.put("gamble", gamble);
+        result.put("loans", loans);
+        result.put("yellow", yellow);
+        result.put("living", living);
+        result.put("game", game);
+        /*int gambleCount = 0;
         int loansCount = 0;
         int yellowCount = 0;
         int livingCount = 0;
@@ -110,7 +149,7 @@ public class ReportService extends CreditsService implements IReportService {
         result.put("loansCount", loansCount);
         result.put("yellowCount", yellowCount);
         result.put("livingCount", livingCount);
-        result.put("gameCount", gameCount);
+        result.put("gameCount", gameCount);*/
     }
 
     private JSONObject generatorByMobile(String mobile, CreditsWarn conf, String username) {
