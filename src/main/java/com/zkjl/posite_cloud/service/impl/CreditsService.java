@@ -129,20 +129,31 @@ public class CreditsService implements ICreditsService {
         List<JobInfo> collect = list.stream().filter(action -> check.add(action.getMobile()) && action.getData() != null).collect(Collectors.toList());
         CreditsWarn conf = findCreditsWarnConf(username);
         collect.forEach(action -> {
+            JSONObject dataKind = new JSONObject();
+            dataKind.put("gamble", new JSONArray());
+            dataKind.put("loans", new JSONArray());
+            dataKind.put("yellow", new JSONArray());
+            dataKind.put("living", new JSONArray());
+            dataKind.put("game", new JSONArray());
             JSONObject data = new JSONObject();
             int totalSorce = 0;
             JSONArray jsonArray = action.getData();
             for (Object obj : jsonArray) {
                 JSONObject action2 = new JSONObject((Map<String, Object>) obj);
                 if (conf.getLiving().getString("name").equals(action2.getString("webtype"))) {
+                    dataKind.getJSONArray("living").add(action2);
                     totalSorce += conf.getLiving().getInteger("sorce");
                 } else if (conf.getGamble().getString("name").equals(action2.getString("webtype"))) {
+                    dataKind.getJSONArray("gamble").add(action2);
                     totalSorce += conf.getGamble().getInteger("sorce");
                 } else if (conf.getYellow().getString("name").equals(action2.getString("webtype"))) {
+                    dataKind.getJSONArray("yellow").add(action2);
                     totalSorce += conf.getYellow().getInteger("sorce");
                 } else if (conf.getGame().getString("name").equals(action2.getString("webtype"))) {
+                    dataKind.getJSONArray("game").add(action2);
                     totalSorce += conf.getGame().getInteger("sorce");
                 } else if (conf.getLoans().getString("name").equals(action2.getString("webtype"))) {
+                    dataKind.getJSONArray("loans").add(action2);
                     totalSorce += conf.getLoans().getInteger("sorce");
                 }
             }
@@ -150,6 +161,7 @@ public class CreditsService implements ICreditsService {
             data.put("registCount", action.getData().size());
             data.put("sorce", totalSorce);
             data.put("data", action.getData());
+            data.put("dataKind",dataKind);
             data.put("creationTime", action.getCreationTime());
             data.put("warnInfo", getWarnLevel(totalSorce, conf));
             result.add(data);
