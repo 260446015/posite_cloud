@@ -364,7 +364,7 @@ public class ApiService implements IApiService {
         Aggregation agg = Aggregation.newAggregation(
                 Aggregation.match(Criteria.where("username").is(username)),
                 Aggregation.sort(Sort.Direction.DESC,"creationTime"),
-                Aggregation.group("taskid").last("_version").as("_version").first("taskid").as("taskid").first("taskname").as("taskname").first("creationTime").as("creationTime").first("username").as("username")
+                Aggregation.group("taskid").first("_version").as("_version").first("taskid").as("taskid").first("taskname").as("taskname").first("creationTime").as("creationTime").first("username").as("username")
         );
 
         AggregationResults<Redistask> outputType = mongoTemplate.aggregate(agg, Constans.T_REDISTASK, Redistask.class);
