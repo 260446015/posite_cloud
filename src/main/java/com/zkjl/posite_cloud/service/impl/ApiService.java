@@ -363,6 +363,7 @@ public class ApiService implements IApiService {
     public List<JobinfoVO> listJob(String username) {
         Aggregation agg = Aggregation.newAggregation(
                 Aggregation.match(Criteria.where("username").is(username)),
+                Aggregation.sort(Sort.Direction.DESC,"creationTime"),
                 Aggregation.group("taskid").last("_version").as("_version").first("taskid").as("taskid").first("taskname").as("taskname").first("creationTime").as("creationTime").first("username").as("username")
         );
 
