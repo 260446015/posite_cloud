@@ -38,7 +38,7 @@ public class CreditsService implements ICreditsService {
     public PageImpl<JSONObject> creditsWarining(CreditsDTO creditsDTO) throws Exception {
         Query query = new Query();
         Criteria criteria = Criteria.where("username").is(creditsDTO.getUsername()).and("data").exists(true);
-        if(!StringUtils.isBlank(creditsDTO.getMobile())){
+        if (!StringUtils.isBlank(creditsDTO.getMobile())) {
             criteria.and("mobile").is(creditsDTO.getMobile());
         }
         query.addCriteria(criteria);

@@ -50,9 +50,9 @@ public class ReportService extends CreditsService implements IReportService {
         CreditsWarn conf = findCreditsWarnConf(username);
         if (mobile.matches(regex)) {
             //生成单个报告文件
-            result = generatorByMobile(mobile, conf);
+            result = generatorByMobile(mobile, conf, username);
         } else {
-            result = generator(mobile, conf);
+            result = generator(mobile, conf, username);
         }
         return result;
     }
@@ -63,14 +63,14 @@ public class ReportService extends CreditsService implements IReportService {
      * @param mobile
      * @return
      */
-    private JSONObject generator(String mobile, CreditsWarn conf) {
+    private JSONObject generator(String mobile, CreditsWarn conf, String username) {
         Query query = new Query();
         query.addCriteria(Criteria.where("taskid").is(mobile)).with(Sort.by(Sort.Direction.DESC, "creationTime"));
         List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
         if (list.size() == 0) {
             return null;
         }
-        List<JSONObject> jsonObjects = generatorList(list, conf.getUsername());
+        List<JSONObject> jsonObjects = generatorList(list, username);
         List<JSONObject> blue = jsonObjects.stream().filter(action -> action.getInteger("sorce") > conf.getBlueSorce() && action.getInteger("sorce") <= conf.getYellowSorce()).sorted((a, b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
         List<JSONObject> yellow = jsonObjects.stream().filter(action -> action.getInteger("sorce") > conf.getYellowSorce() && action.getInteger("sorce") <= conf.getRedSorce()).sorted((a, b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
         List<JSONObject> red = jsonObjects.stream().filter(action -> action.getInteger("sorce") > conf.getRedSorce()).sorted((a, b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
@@ -113,9 +113,9 @@ public class ReportService extends CreditsService implements IReportService {
         result.put("gameCount", gameCount);
     }
 
-    private JSONObject generatorByMobile(String mobile, CreditsWarn conf) {
+    private JSONObject generatorByMobile(String mobile, CreditsWarn conf, String username) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("mobile").is(mobile).and("username").is(conf.getUsername())).with(Sort.by(Sort.Direction.DESC, "creationTime"));
+        query.addCriteria(Criteria.where("mobile").is(mobile).and("username").is(username)).with(Sort.by(Sort.Direction.DESC, "creationTime"));
         List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
         return generatorResult(list, conf);
     }
@@ -200,13 +200,13 @@ public class ReportService extends CreditsService implements IReportService {
                 termData.clear();
                 termData.add(jobinfo);
                 JSONObject jsonObject = generatorResult(termData, conf);
-                if(jsonObject.getString("warnLevel").equals("蓝色预警")){
-                    blue ++;
-                }else if(jsonObject.getString("warnLevel").equals("橙色预警")){
-                    yellow ++;
-                }else if(jsonObject.getString("warnLevel").equals("红色预警")){
-                    red ++;
-                }else{
+                if (jsonObject.getString("warnLevel").equals("蓝色预警")) {
+                    blue++;
+                } else if (jsonObject.getString("warnLevel").equals("橙色预警")) {
+                    yellow++;
+                } else if (jsonObject.getString("warnLevel").equals("红色预警")) {
+                    red++;
+                } else {
 
                 }
 
