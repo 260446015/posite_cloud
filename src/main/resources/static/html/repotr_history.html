@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title class="title" data-href="index">任务报告</title>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=0, maximum-scale=0, user-scalable=no">
+    <meta name="Author" Content="jianghaifei"/>
+    <meta http-equiv="cache-control" content="no-cache">
+    <link rel="shortcut icon" href="../img/logozkjl2.png">
+
+    <!--不缓存-->
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <META HTTP-EQUIV="expires" CONTENT="0">
+
+    <script src="../js/common/jquery-3.3.1.min.js"></script>
+    <!--animate-->
+    <link rel="stylesheet" href="../css/common/animate.css">
+    <!--layui-->
+    <link rel="stylesheet" href="../res/layui/css/layui.css">
+
+    <!--自定义-->
+    <link rel="stylesheet" href="../css/common/common.css?version=0">
+    <link rel="stylesheet" href="../css/common/layout.css?version=0">
+    <link rel="stylesheet" href="../css/report.css?version=0">
+    <style>
+        body{
+            background: #edeef2;
+        }
+        .kongbai {
+            padding: 20px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <img class="logobox" src="../img/logozkjl1.png" alt="">
+    <div class="title">
+        <p>重点人网络筛查平台</p>
+        <p>Key    person    screening</p>
+    </div>
+    <div class="hd_nav">
+        <a href="../index.html">首页</a>
+        <a href="importan.html">重点人员</a>
+        <a class="com_jifen" href="jifenyj.html">积分预警</a>
+        <a href="caijishezhi.html">采集设置</a>
+        <!--<a>追踪人员</a>-->
+        <a class="com_gunli" href="houtai_user.html">后台管理</a>
+    </div>
+    <dl class="hd_dl">
+        <dd><span class="usernamecon"></span><span class="headerimg"><img src="../img/defaultimg.png" alt=""></span></dd>
+        <dt class="hd_dt layui-anim layui-anim-upbit">
+            <p class="logout">退出登录</p>
+            <p class="go_person">个人中心</p>
+        </dt>
+    </dl>
+</header>
+<section>
+    <div class="se_title">
+        <p><a href="../index.html">HOME</a>   /   任务报告</p>
+    </div>
+
+    <div class="xiazai">
+        <div class="layui-btn layui-btn-normal xiazaibtn">下载</div>
+    </div>
+
+    <div class="section">
+        <div class="tittle">
+            <p>批量任务网络行为分析报告</p>
+            <p>
+                <span style="margin-right: 10px;">任务时间：2018-08-10  11:00:00</span>
+                <span>生成时间：2018-08-10  11:35:00</span>
+            </p>
+        </div>
+
+        <div class="sm_title">一、筛查注册情况</div>
+
+        <div class="re_chartbox">
+            <div class="re_charlef">
+                <div id="zhuxing" style="width: 90%;height: 90%;margin:0 5%;"></div>
+            </div>
+            <div class="re_charrig">
+                <div id="huanxing" style="width: 90%;height: 90%;margin:10% 5% 0 5%;"></div>
+            </div>
+            <div class="re_shuomin re_shuomin1"></div>
+        </div>
+
+        <div class="sm_title">二、预警人员情况</div>
+
+        <div class="rp_yjbox">
+            <a style="color: red;">红色预警人员列表</a>
+            <div class="sc_zdgray">
+                <span>手机号</span>
+                <span>注册数量</span>
+                <span>危险积分</span>
+            </div>
+            <p class="rp_redlist" style="overflow: hidden"></p>
+        </div>
+
+        <div class="rp_yjbox">
+            <a style="color: #ff9416;">橙色预警人员列表</a>
+            <div class="sc_zdgray">
+                <span>手机号</span>
+                <span>注册数量</span>
+                <span>危险积分</span>
+            </div>
+            <p class="rp_orangelist" style="overflow: hidden"></p>
+        </div>
+
+        <div class="rp_yjbox">
+            <a style="color: #0aa4ea;">蓝色预警人员列表</a>
+            <div class="sc_zdgray">
+                <span>手机号</span>
+                <span>注册数量</span>
+                <span>危险积分</span>
+            </div>
+            <p class="rp_bluelist" style="overflow: hidden"></p>
+        </div>
+
+        <div class="re_chartbox">
+            <div id="shanxing" style="width: 90%;height: 300px;margin:10% 5% 0 5%;"></div>
+            <div class="re_shuomin re_shuomin2"></div>
+        </div>
+
+        <div class="sm_title">三、结果分析</div>
+        <div class="re_shuomin" style="margin: 20px 0;">通过数据分析，本次筛查任务人员网络异常行为较高，危险指数较高</div>
+
+        <div class="luokuan">中科金联（北京）科技有限公司</div>
+        <div class="luokuan riqi"></div>
+    </div>
+</section>
+</body>
+<script src="../res/layui/layui.all.js"></script>
+<script src="../js/common/echarts.min.js"></script>
+<script src="../js/common/common.js?versin=0"></script>
+<script>
+    var oid = window.location.search.split("?")[1];
+
+    //柱形图
+    var dom1 = document.getElementById("zhuxing");
+    var myChart1 = echarts.init(dom1);
+    var app1 = {};
+    option = null;
+    app1.title = '坐标轴刻度与标签对齐';
+
+    option = {
+        color: ['#1e8cea'],
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis : [
+            {
+                type : 'category',
+                data : ['赌博', '网贷', '涉黄', '直播', '游戏'],
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'平台数量',
+                type:'bar',
+                barWidth: '60%',
+                data:[]
+            }
+        ]
+    };
+    ;
+    if (option && typeof option === "object") {
+        myChart1.setOption(option, true);
+    }
+
+    //环形图
+    var dom2 = document.getElementById("huanxing");
+    var myChart2 = echarts.init(dom2);
+    var app2 = {};
+    option = null;
+    app2.title = '环形图';
+    option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        legend: {
+            x : 'center',
+            y : 'top',
+            data:['赌博', '网贷', '涉黄', '直播', '游戏']
+        },
+        color:['#f1c12e','#a88ee2','#4384f0','#01e0a4','#47bcfb'],
+        series: [
+            {
+                name: '',
+                type: 'pie',
+                radius: ['40%', '55%'],
+                data: []
+            }
+        ]
+    };
+    if (option && typeof option === "object") {
+        myChart2.setOption(option, true);
+    }
+
+    //扇形图
+    var dom3 = document.getElementById("shanxing");
+    var myChart3 = echarts.init(dom3);
+    option = {
+        title : {
+            text: '预警比重统计',
+            subtext: '',
+            x:'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: ['红色预警','橙色预警','蓝色预警']
+        },
+        color:['red','#ff9416','#0aa4ea'],
+        series : [
+            {
+                name: '访问来源',
+                type: 'pie',
+                radius : '55%',
+                center: ['50%', '60%'],
+                data:[
+                    {value:335, name:'红色预警'},
+                    {value:310, name:'橙色预警'},
+                    {value:234, name:'蓝色预警'}
+                ],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    if (option && typeof option === "object") {
+        myChart3.setOption(option, true);
+    }
+
+
+    //数据更新-环形+柱形
+    $.ajax({
+        url: "/api/reportById",
+        type: "get",
+        xhrFields: {
+            withCredentials: true
+        },
+        data:{
+            mobile:oid
+        },
+        success: function (res) {
+            console.log(res)
+            if (res.code != 0) {
+                //return layer.msg(res.message, {anim: 6});
+            }
+            var num = res.data;
+            var odata = [
+                {value:num.gambleCount, name:'赌博'},
+                {value:num.loansCount, name:'网贷'},
+                {value:num.yellowCount, name:'涉黄'},
+                {value:num.gameCount, name:'游戏'},
+                {value:num.livingCount, name:'直播'}
+            ]
+            //柱形
+            myChart1.setOption({
+                series: [{
+                    // 根据名字对应到相应的系列
+                    name: '平台数量占比',
+                    data: odata
+                }]
+            });
+            myChart1.hideLoading();
+            //环形
+            myChart2.setOption({
+                series: [{
+                    // 根据名字对应到相应的系列
+                    name: '平台数量占比',
+                    data: odata
+                }]
+            });
+            myChart2.hideLoading();
+            //扇形
+            myChart3.setOption({
+                series: [{
+                    // 根据名字对应到相应的系列
+                    name: '平台数量占比',
+                    data: [
+                        {value:num.red.length, name:'红色预警'},
+                        {value:num.yellow.length, name:'橙色预警'},
+                        {value:num.blue.length, name:'蓝色预警'}
+                    ]
+                }]
+            });
+            myChart3.hideLoading();
+
+            $(".re_shuomin1").html("  经筛查结果显示，此次任务，其中注册涉黄平台"+num.yellowCount+"人，赌博平台"+num.gambleCount+"人，网袋平台"+num.loansCount+"人，游戏平台"+num.gameCount+"人，直播平台"+num.livingCount+"人。共注册危险网站"+(num.yellowCount+num.gambleCount+num.loansCount+num.gameCount+num.livingCount)+"个。");
+
+            //红色
+            if(res.data.red.length==0){
+                $(".rp_redlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
+            }
+            $.each(res.data.red,function (i,item) {
+                if(i%2){
+                    list = '<div class="sc_zdgray">' +
+                        '<span>'+item.mobile+'</span>' +
+                        '<span>'+item.registCount+'</span>' +
+                        '<span>'+item.sorce+'</span>' +
+                        '</div>';
+                }else{
+                    list = '<div>' +
+                        '<span>'+item.mobile+'</span>' +
+                        '<span>'+item.registCount+'</span>' +
+                        '<span>'+item.sorce+'</span>' +
+                        '</div>';
+                }
+                $(".rp_redlist").append(list);
+            });
+
+            //橙色
+            if(res.data.yellow.length==0){
+                $(".rp_orangelist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
+            }
+            $.each(res.data.yellow,function (i,item) {
+                if(i%2){
+                    list = '<div class="sc_zdgray">' +
+                        '<span>'+item.mobile+'</span>' +
+                        '<span>'+item.registCount+'</span>' +
+                        '<span>'+item.sorce+'</span>' +
+                        '</div>';
+                }else{
+                    list = '<div>' +
+                        '<span>'+item.mobile+'</span>' +
+                        '<span>'+item.registCount+'</span>' +
+                        '<span>'+item.sorce+'</span>' +
+                        '</div>';
+                }
+                $(".rp_orangelist").append(list);
+            });
+
+            //蓝色
+            if(res.data.blue.length==0){
+                $(".rp_bluelist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
+            }
+            $.each(res.data.blue,function (i,item) {
+                if(i%2){
+                    list = '<div class="sc_zdgray">' +
+                        '<span>'+item.mobile+'</span>' +
+                        '<span>'+item.registCount+'</span>' +
+                        '<span>'+item.sorce+'</span>' +
+                        '</div>';
+                }else{
+                    list = '<div>' +
+                        '<span>'+item.mobile+'</span>' +
+                        '<span>'+item.registCount+'</span>' +
+                        '<span>'+item.sorce+'</span>' +
+                        '</div>';
+                }
+                $(".rp_bluelist").append(list);
+            });
+
+            $(".re_shuomin2").html("其中达到蓝色预警人员"+num.red.length+"人，橙色预警"+num.yellow.length+"人，红色预警"+num.blue.length+"人;");
+
+        }
+    });
+
+
+
+
+    $(".xiazaibtn").click(function () {
+        $("header").hide();
+        $(".xiazai").hide();
+        $(".se_title").hide();
+        $("section").css({
+            "overflow": "unset",
+            "padding":"0"
+        });
+        $(".re_chartbox").css({
+            "overflow": "unset"
+        });
+        window.print();
+        $("header").show();
+        $(".xiazai").show();
+        $(".se_title").show();
+        $("section").css({
+            "overflow": "hidden",
+            "padding":"0 1.5%"
+        });
+        $(".re_chartbox").css({
+            "overflow": "hidden"
+        });
+    });
+</script>
+</html>
