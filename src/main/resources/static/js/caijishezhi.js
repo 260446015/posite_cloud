@@ -47,9 +47,9 @@ $(function () {
                         otext = zdrysc.timechange(item.creationTime);
                     }
                     if(item.ifFinish){
-                        list = '<li class=""><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'">'+otext+'</span><a id="'+item.taskId+'" class="btntrue">生成报告</a></li>';
+                        list = '<li class=""><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'" data-href="'+item.reportStatus+'">'+otext+'</span><a id="'+item.taskId+'" class="btntrue">生成报告</a></li>';
                     }else{
-                        list = '<li><input  id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'">'+otext+'</span><a id="'+item.taskId+'" class="btnfalse">正在采集</a></li>';
+                        list = '<li><input  id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span data-href="'+item.reportStatus+'" id="'+item.taskId+'">'+otext+'</span><a id="'+item.taskId+'" class="btnfalse">正在采集</a></li>';
                     }
                     $(".sc_renwu").append(list);
                 });
@@ -65,6 +65,11 @@ $(function () {
                         $(".caiji_down").fadeIn();
                     }else{
                         $(".caiji_up").fadeIn();
+                    }
+                    if(tafirst.reportStatus){
+                        $(".re_history").fadeIn();
+                    }else{
+                        $(".re_history").hide();
                     }
                 }
             }
@@ -84,6 +89,11 @@ $(function () {
             $(".caiji_down").fadeIn();
         }else{
             $(".caiji_up").fadeIn();
+        }
+        if($(this).attr("data-href")=="true"){
+            $(".re_history").fadeIn();
+        }else{
+            $(".re_history").hide();
         }
     });
     //结果列表
