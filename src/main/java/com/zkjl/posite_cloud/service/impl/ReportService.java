@@ -118,11 +118,11 @@ public class ReportService extends CreditsService implements IReportService {
                 }
             }
         }
-        result.put("gamble", gamble);
-        result.put("loans", loans);
-        result.put("yellow", yellow);
-        result.put("living", living);
-        result.put("game", game);
+        result.put("gambleCount", gamble);
+        result.put("loansCount", loans);
+        result.put("yellowCount", yellow);
+        result.put("livingCount", living);
+        result.put("gameCount", game);
         /*int gambleCount = 0;
         int loansCount = 0;
         int yellowCount = 0;
