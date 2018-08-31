@@ -17,4 +17,10 @@ public interface IReportService {
     PageImpl<RedistaskVO> findReportHistory(String taskid, Integer pageNum, Integer pageSize, String username);
 
     JSONObject reportById(String id, String username);
+
+    JSONObject reportByMobileBatch(String[] ids, String username);
+
+    JSONObject reportByTaskBatch(String[] taskid, String username);
+
+    JSONObject reportByPlat(String[] taskid, String[] webtype, String username);
 }

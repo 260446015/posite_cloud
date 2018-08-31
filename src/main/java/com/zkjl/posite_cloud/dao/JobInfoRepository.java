@@ -13,4 +13,6 @@ public interface JobInfoRepository extends MongoRepository<JobInfo,String> {
     List<JobInfo> findByUsername(String username);
 
     List<JobInfo> findByTaskid(String taskId);
+
+    List<JobInfo> findByTaskidIn(String[] taskid);
 }

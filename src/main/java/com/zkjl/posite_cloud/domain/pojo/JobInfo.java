@@ -22,6 +22,7 @@ public class JobInfo implements Serializable {
     private String taskid;
     private String username;
     private String mobile;
+    private String mobileUser;
     private JSONArray data;
     private Date creationTime;
     private Date updateTime;

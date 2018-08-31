@@ -9,6 +9,7 @@ public abstract class Constans {
     public static final String T_MOBILEDATAS = "mobiledatas";
     public static final String T_CREDITSWARN = "creditswarn";
     public static final String T_REDISTASK = "redistask";
+    public static final String T_CRON_CONFIG = "cron_config";
 
 
     /**
