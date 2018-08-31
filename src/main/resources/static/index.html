@@ -70,6 +70,7 @@
     <div class="titlelist none">依法坚决打击“黄赌毒”违法犯罪行为，“保平安、促和谐”，让黄赌毒无所遁形!</div>
     <div class="indexbox1">
         <div class="sc_box1lef">
+            <button id="test">点击测试</button>
             <div class="sc_title">实时进度</div>
             <div class="sc_jindu">
                 <div class="sc_jindu1"><img src="img/jindubeijing.png" alt=""></div>
@@ -136,6 +137,25 @@
 <script src="js/common/common.js?versin=0"></script>
 <script src="js/index.js?versin=0"></script>
 <script>
-
+    $("#test").click(function () {
+        $.ajax({
+            url: "/api/reportByTaskBatch",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                taskid:["504042239ec8e4c9f2c70e2de45000b2","825f50e18e99f6658eb39292f9d9bd38"]
+            },
+            success: function (res) {
+                if (res.code != 0) {
+                    //return layer.msg(res.message, {anim: 6});
+                }
+                getrenwu();
+                layer.closeAll();
+                layer.msg("删除成功");
+            }
+        });
+    })
 </script>
 </html>

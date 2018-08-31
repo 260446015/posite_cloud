@@ -161,6 +161,7 @@ public class CreditsService implements ICreditsService {
             data.put("registCount", action.getData().size());
             data.put("sorce", totalSorce);
             data.put("data", action.getData());
+            data.put("id",action.getId());
             data.put("dataKind",dataKind);
             data.put("creationTime", action.getCreationTime());
             data.put("warnInfo", getWarnLevel(totalSorce, conf));

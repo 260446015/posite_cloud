@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -59,14 +60,14 @@ public class ReportController extends BaseController {
     @GetMapping(value = "reportById")
     @SystemControllerLog(description = "按照id生成报告")
     @ApiOperation(value = "按照id生成报告")
-    public ApiResult reportById(String id){
+    public ApiResult reportById(String id) {
         JSONObject result;
         String username;
         try {
             username = this.getCurrentUser().getUsername();
             result = reportService.reportById(id, username);
         } catch (Exception e) {
-            logger.error("按照id生成报告!"+e.getMessage());
+            logger.error("按照id生成报告!" + e.getMessage());
             return error("按照id生成报告异常");
         }
         return success(result);
@@ -92,5 +93,45 @@ public class ReportController extends BaseController {
         return successPages(result);
     }
 
-//    @GetMapping(value = "")
+    @GetMapping(value = "reportByMobileBatch")
+    public ApiResult reportByMobileBatch(@RequestParam(value = "ids[]") String[] ids) {
+        JSONObject result;
+        String username;
+        try {
+            username = this.getCurrentUser().getUsername();
+            result = reportService.reportByMobileBatch(ids, username);
+        } catch (Exception e) {
+            logger.error("获取手机号批量报告信息出错!" + e.getMessage());
+            return error("获取报告信息出错!");
+        }
+        return success(result);
+    }
+
+    @GetMapping(value = "reportByTaskBatch")
+    public ApiResult reportByTaskBatch(@RequestParam(value = "taskid[]") String[] taskid) {
+        JSONObject result;
+        String username;
+        try {
+            username = this.getCurrentUser().getUsername();
+            result = reportService.reportByTaskBatch(taskid, username);
+        } catch (Exception e) {
+            logger.error("获取任务号批量报告信息出错!" + e.getMessage());
+            return error("获取报告信息出错!");
+        }
+        return success(result);
+    }
+
+    @GetMapping(value = "reportByPlat")
+    public ApiResult reportByPlat(@RequestParam(value = "taskid[]") String[] taskid, @RequestParam(value = "webtype[]") String[] webtype) {
+        JSONObject result;
+        String username;
+        try {
+            username = this.getCurrentUser().getUsername();
+            result = reportService.reportByPlat(taskid, webtype, username);
+        } catch (Exception e) {
+            logger.error("获取任务号批量报告信息出错!" + e.getMessage());
+            return error("获取报告信息出错!");
+        }
+        return success(result);
+    }
 }

@@ -2,10 +2,12 @@ package com.zkjl.posite_cloud.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.zkjl.posite_cloud.common.Constans;
 import com.zkjl.posite_cloud.common.util.DateUtils;
 import com.zkjl.posite_cloud.common.util.PageUtil;
 import com.zkjl.posite_cloud.dao.CreditsRepository;
+import com.zkjl.posite_cloud.dao.JobInfoRepository;
 import com.zkjl.posite_cloud.dao.UpdateTaskRepository;
 import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
 import com.zkjl.posite_cloud.domain.pojo.JobInfo;
@@ -13,6 +15,7 @@ import com.zkjl.posite_cloud.domain.pojo.Redistask;
 import com.zkjl.posite_cloud.domain.pojo.UpdateTask;
 import com.zkjl.posite_cloud.domain.vo.RedistaskVO;
 import com.zkjl.posite_cloud.service.IReportService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -42,6 +45,8 @@ public class ReportService extends CreditsService implements IReportService {
     private UpdateTaskRepository updateTaskRepository;
     @Resource
     private CreditsService creditsService;
+    @Resource
+    private JobInfoRepository jobInfoRepository;
 
     @Override
     public JSONObject report(String mobile, String username) {
@@ -52,7 +57,7 @@ public class ReportService extends CreditsService implements IReportService {
             //生成单个报告文件
             result = generatorByMobile(mobile, conf, username);
         } else {
-            result = generator(mobile, conf, username);
+            result = generator(new String[]{mobile}, conf, username);
         }
         return result;
     }
@@ -63,9 +68,9 @@ public class ReportService extends CreditsService implements IReportService {
      * @param mobile
      * @return
      */
-    private JSONObject generator(String mobile, CreditsWarn conf, String username) {
+    private JSONObject generator(String[] mobile, CreditsWarn conf, String username) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("taskid").is(mobile)).with(Sort.by(Sort.Direction.DESC, "creationTime"));
+        query.addCriteria(Criteria.where("taskid").in(mobile)).with(Sort.by(Sort.Direction.DESC, "creationTime"));
         List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
         if (list.size() == 0) {
             return null;
@@ -277,5 +282,81 @@ public class ReportService extends CreditsService implements IReportService {
         result.put("creationTime", DateUtils.getFormatString(datas.get(0).getCreationTime()));
         getTotalKindCount(datas, conf, result);
         return result;
+    }
+
+    @Override
+    public JSONObject reportByMobileBatch(String[] ids, String username) {
+        Iterable<JobInfo> allById = jobInfoRepository.findAllById(Arrays.asList(ids));
+        ArrayList<JobInfo> datas = Lists.newArrayList(allById);
+        CreditsWarn conf = creditsService.findCreditsWarnConf(username);
+        int gamble = 0;
+        int loans = 0;
+        int yellow = 0;
+        int living = 0;
+        int game = 0;
+        int totalSorce = 0;
+        for (JobInfo jobInfo : datas) {
+            JSONArray data = jobInfo.getData();
+            if (data == null) {
+                return null;
+            }
+            for (Object action : data) {
+                JSONObject jsonObject = new JSONObject((Map<String, Object>) action);
+                if (jsonObject.getString("webtype").equals(conf.getGamble().getString("name"))) {
+                    gamble += 1;
+                    totalSorce += conf.getGamble().getInteger("sorce");
+                } else if (jsonObject.getString("webtype").equals(conf.getLoans().getString("name"))) {
+                    loans += 1;
+                    totalSorce += conf.getLoans().getInteger("sorce");
+                } else if (jsonObject.getString("webtype").equals(conf.getYellow().getString("name"))) {
+                    yellow += 1;
+                    totalSorce += conf.getYellow().getInteger("sorce");
+                } else if (jsonObject.getString("webtype").equals(conf.getLiving().getString("name"))) {
+                    living += 1;
+                    totalSorce += conf.getLiving().getInteger("sorce");
+                } else {
+                    game += 1;
+                    totalSorce += conf.getGame().getInteger("sorce");
+                }
+            }
+        }
+        JSONObject result = new JSONObject();
+        result.put("gamble", gamble);
+        result.put("loans", loans);
+        result.put("yellow", yellow);
+        result.put("living", living);
+        result.put("game", game);
+        result.put("totalSorce", totalSorce);
+        //待定
+        result.put("data", datas);
+//        result.put("warnLevel", getWarnLevel(totalSorce, conf));
+//        result.put("creationTime", DateUtils.getFormatString(jobInfo.getCreationTime()));
+        return result;
+    }
+
+    @Override
+    public JSONObject reportByTaskBatch(String[] taskid, String username) {
+        CreditsWarn conf = creditsService.findCreditsWarnConf(username);
+        JSONObject generator = generator(taskid, conf, username);
+        return generator;
+    }
+
+    @Override
+    public JSONObject reportByPlat(String[] taskid, String[] webtype, String username) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("taskid").in(taskid)).with(Sort.by(Sort.Direction.DESC, "creationTime"));
+        List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
+        /*list.stream().filter(action ->{
+            boolean flag = false;
+            if (!StringUtils.isBlank(log.getBeginDate())) {
+                if (action.getCretionTime().compareTo(log.getBeginDate()) >= 0) {
+                    flag = true;
+                }
+            } else {
+                flag = true;
+            }
+            return flag;
+        })*/
+        return null;
     }
 }
