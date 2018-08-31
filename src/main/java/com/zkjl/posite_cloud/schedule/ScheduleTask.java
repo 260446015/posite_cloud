@@ -7,6 +7,7 @@ import com.zkjl.posite_cloud.common.util.EmailUtils;
 import com.zkjl.posite_cloud.dao.JobInfoRepository;
 import com.zkjl.posite_cloud.dao.UserRepository;
 import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
+import com.zkjl.posite_cloud.domain.pojo.CronConfig;
 import com.zkjl.posite_cloud.domain.pojo.JobInfo;
 import com.zkjl.posite_cloud.domain.pojo.User;
 import com.zkjl.posite_cloud.service.ICreditsService;
@@ -17,9 +18,14 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.annotation.SchedulingConfigurer;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +35,7 @@ import java.util.Map;
  * @date 2018/8/21 15:31
  **/
 @Component
-public class ScheduleTask {
+public class ScheduleTask implements SchedulingConfigurer {
 
     @Resource
     private MongoTemplate mongoTemplate;
@@ -41,7 +47,7 @@ public class ScheduleTask {
     private JobInfoRepository jobInfoRepository;
     private static Logger logger = LoggerFactory.getLogger(ScheduleTask.class);
 
-    @Scheduled(cron = "0 0/5 * * * ?")
+//    @Scheduled(cron = "0 0/5 * * * ?")
     public void timerToNow() {
         Query query = new Query();
         query.addCriteria(Criteria.where("ifSendEmail").is(null).and("data").ne(null)).limit(1000).with(Sort.by(Sort.Direction.DESC, "creationTime"));
@@ -102,5 +108,25 @@ public class ScheduleTask {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
+        scheduledTaskRegistrar.addTriggerTask(
+                //1.添加任务内容(Runnable)
+                this::timerToNow,
+                //2.设置执行周期(Trigger)
+                triggerContext -> {
+                    //2.1 从数据库获取执行周期
+                    CronConfig cronConfig = mongoTemplate.findOne(new Query(Criteria.where("username").is("base")), CronConfig.class, Constans.T_CRON_CONFIG);
+                    String cron = cronConfig.getCron();
+                    //2.2 合法性校验.
+                    if (StringUtils.isEmpty(cron)) {
+                        // Omitted Code ..
+                    }
+                    //2.3 返回执行周期(Date)
+                    return new CronTrigger(cron).nextExecutionTime(triggerContext);
+                }
+        );
     }
 }
