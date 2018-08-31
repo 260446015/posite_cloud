@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title class="title" data-href="index">重点人员列表</title>
+    <title class="title" data-href="index">报告管理</title>
     <meta name="renderer" content="webkit"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=0, maximum-scale=0, user-scalable=no">
@@ -32,13 +32,11 @@
         .section{
             background: #fff;
         }
-        .layui-layer-content{
-            color: #fff;
-            background: #1e8cea;
-            padding: 20px;
+        .layui-form-checkbox[lay-skin=primary] span {
+            width: auto;
         }
         .zd_box div span {
-            width: 25%;
+            width: 16.6%;
         }
     </style>
 </head>
@@ -51,7 +49,7 @@
     </div>
     <div class="hd_nav">
         <a href="../index.html">首页</a>
-        <a class="hd_active" href="importan.html">重点人员</a><a href="reportindex.html">报告管理</a>
+        <a href="importan.html">重点人员</a><a class="hd_active" href="reportindex.html">报告管理</a>
         <a class="com_jifen" href="jifenyj.html">积分预警</a>
         <!--<a href="report.html">生成报告</a>-->
         <a href="caijishezhi.html">采集设置</a>
@@ -68,9 +66,15 @@
 </header>
 <section>
     <div class="se_title">
-        <p><a href="../index.html">HOME</a>   /   重点人员列表</p>
+        <p><a href="../index.html">HOME</a>   /   报告管理</p>
     </div>
     <div class="section">
+        <div class="htbtnbox">
+            <a href="reportindex.html" class="ht_btn ht_active">个人报告</a>
+            <a href="re_renwu.html" class="ht_btn">任务报告</a>
+            <a style="border-right: 1px solid #ccc;" href="re_pingtai.html" class="ht_btn">平台报告</a>
+        </div>
+
         <div class="bz_box layui-form" style="padding-top: 20px;overflow: unset;">
             <div class="bz_li">
                 <label>手机号码</label>
@@ -103,15 +107,17 @@
                 <label>最高分数</label>
                 <input type="text" class="layui-input ba_maxcore" placeholder="请输入最高分数">
             </div>
-            <div class="layui-btn layui-btn-normal baocunbtn">查询</div>
+            <div class="layui-btn layui-btn-normal baocunbtn baocunbtn1">查询</div>
         </div>
-
-        <div class="zd_box" style="overflow: hidden;">
+        <div class="messhuo">您可以根据需要，选择标记要导出报告的电话号码，生成批量号码报告。<span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">生成批量个人报告</span></div>
+        <div class="zd_box layui-form" style="overflow: hidden;">
             <div class="sc_zdgray">
+                <span></span>
                 <span>手机号</span>
                 <span>分数</span>
                 <span>App</span>
                 <span>采集时间</span>
+                <span>报告</span>
             </div>
             <p class="zd_boxlist"></p>
         </div>
@@ -121,7 +127,7 @@
 </body>
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
-<script src="../js/import.js?versin=0"></script>
+<script src="../js/report.js?versin=0"></script>
 <script>
     getimportlist("","","",0,10,"","");
 </script>

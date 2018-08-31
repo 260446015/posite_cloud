@@ -247,3 +247,43 @@ body .headerimg img{
 .yjfont_red{
     color: red;
 }
+
+.beian{
+    height: 50px;
+    overflow: hidden;
+    margin-top: 1.6%;
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    text-align: center;
+    line-height: 50px;
+    clear: both;
+    width: 102.8%;
+    margin-left: -1.4%;
+}
+
+.section{
+    background: #fff;
+}
+
+.htbtnbox{
+    margin: 20px;
+    overflow: hidden;
+}
+.ht_btn{
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    float: left;
+    cursor: pointer;
+    font-size: 14px;
+}
+.htbtnbox .ht_active{
+    color: #fff;
+    background: #1e8cea;
+}
+.htbtnbox a{
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}

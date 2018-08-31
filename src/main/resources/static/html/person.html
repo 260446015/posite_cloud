@@ -89,12 +89,12 @@
 <header>
     <img class="logobox" src="../img/logozkjl1.png" alt="">
     <div class="title">
-        <p>重点人网络筛查平台</p>
+        <p>联知重点人筛查系统</p>
         <p>Key    person    screening</p>
     </div>
     <div class="hd_nav">
         <a href="../index.html">首页</a>
-        <a href="importan.html">重点人员</a>
+        <a href="importan.html">重点人员</a><a href="reportindex.html">报告管理</a>
         <a class="com_jifen" href="jifenyj.html">积分预警</a>
         <a href="caijishezhi.html">采集设置</a>
         <!--<a>追踪人员</a>-->
@@ -270,6 +270,7 @@
                 if (res.code != 0) {
                     //return layer.msg(res.message, {anim: 6});
                 }
+                sessionStorage.setItem("zdryscuser", JSON.stringify(res.data));
                 layer.msg("修改用户信息成功");
             }
         })

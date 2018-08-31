@@ -89,20 +89,25 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                 }
                 if(i%2){
                     list = '<div class="sc_zdgray">' +
+                        '<span><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"></span>' +
                         '<span>'+item.mobile+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
                         '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
+                        '<span><div class="layui-btn layui-btn-normal baocunbtn" data-href="'+item.mobile+'">查看报告</div></span>' +
                         '</div>';
                 }else{
                     list = '<div>' +
+                        '<span><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"></span>' +
                         '<span>'+item.mobile+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
                         '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
+                        '<span><div class="layui-btn layui-btn-normal baocunbtn" data-href="'+item.mobile+'">查看报告</div></span>' +
                         '</div>';
                 }
                 $(".zd_boxlist").append(list);
+                form.render();
             });
         }
     });
@@ -130,7 +135,7 @@ form.on('select(aihao)', function(data){
     $(".ba_fenlei").attr("data-href",data.value);
 });
 
-$(".baocunbtn").click(function () {
+$(".baocunbtn1").click(function () {
     var data = JSON.stringify({
         maxSorce: $(".ba_maxcore").val(),
         minSorce: $(".ba_minscore").val(),
@@ -140,4 +145,15 @@ $(".baocunbtn").click(function () {
     });
     $(".listpage").attr("data-href",data);
     getimportlist($(".ba_maxcore").val(),$(".ba_minscore").val(),$(".ba_number").val(),0,10,$(".ba_pingtai").val(),$(".ba_fenlei").attr("data-href"));
+});
+
+
+//是否全选
+form.on('checkbox(quanxuan)', function(data){
+    if(data.elem.checked){
+        $("input[name='deleteli']").prop('checked',true);
+    }else{
+        $("input[name='deleteli']").prop('checked',false);
+    }
+    form.render();
 });

@@ -100,11 +100,11 @@ $(function () {
         });
     }
     //点击详情
-    $(".sc_yuqing").on("click","a",function () {
-        sessionStorage.setItem("yuqingdetial",$(this).find(".none").html());
-        sessionStorage.setItem("yuqingval",$(this).attr("data-href"));
-        window.location = "html/yuqingdetial.html";
-    });
+    // $(".sc_yuqing").on("click","a",function () {
+    //     sessionStorage.setItem("yuqingdetial",$(this).find(".none").html());
+    //     sessionStorage.setItem("yuqingval",$(this).attr("data-href"));
+    //     window.location = "html/yuqingdetial.html";
+    // });
 
     //获取实时注册情况
     var keynum = 0;
@@ -185,8 +185,6 @@ $(function () {
             formatter: "{a} <br/>{b}: {c} ({d}%)"
         },
         legend: {
-            orient: 'vertical',
-            x: 'left',
             data:['网络赌博','网络贷款','色情网站','网络游戏','网络直播']
         },
         color:['#f1c12e','#a88ee2','#4384f0','#01e0a4','#47bcfb'],
