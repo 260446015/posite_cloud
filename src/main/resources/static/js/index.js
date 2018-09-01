@@ -326,4 +326,59 @@ $(function () {
             });
         }
     });
+
+
+    //任务报告首页展示
+    //任务列表
+    getrenwu();
+    function getrenwu() {
+        $(".sc_renwuwqqe").empty();
+        $.ajax({
+            url: "/api/listJob",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data:{},
+            success: function (res) {
+                console.log(res)
+                if (res.code != 0) {
+                    //return layer.msg(res.message, {anim: 6});
+                }
+                if(res.data.length==0){
+                    $(".sc_renwu,.im_contenlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
+                }
+                $.each(res.data,function (i,item) {
+                    var list;
+                    var otext = "";
+                    var key = "否";
+                    var ospan = "";
+                    if(item.ifFinish){
+                        ospan = '<i data-href="'+item.taskId+'" class="layui-btn layui-btn-normal baocunbtn32" style="float: none;">查看报告</i>';
+                    }else{
+                        ospan = '<i data-href="'+item.taskId+'" class="layui-btn layui-btn-normal" style="float: none;background: #ccc;">查看报告</i>';
+                    }
+                    if(i%2){
+                        list = '<div class="sc_zdgray">' +
+                            '<span class="asdasd">'+item.taskname+'</span>' +
+                            '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
+                            '<span>'+ospan+'</span>' +
+                            '</div>';
+                    }else{
+                        list = '<div>' +
+                            '<span class="asdasd">'+item.taskname+'</span>' +
+                            '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
+                            '<span>'+ospan+'</span>' +
+                            '</div>';
+                    }
+                    $(".sc_renwuwqqe").append(list);
+                });
+            }
+        });
+    }
+
+    //生成任务报告
+    $(".sc_renwuwqqe").on("click",".baocunbtn32",function () {
+        window.location = "html/repotr_renwu.html?"+$(this).attr("data-href");
+    });
 });

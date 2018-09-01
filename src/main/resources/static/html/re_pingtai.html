@@ -32,6 +32,68 @@
         .section{
             background: #fff;
         }
+        .zd_box div span {
+            width: 25%;
+        }
+        .zd_box p {
+            min-height: 0;
+        }
+        .icon-zhankaigengduo{
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+        }
+        .zd_box div {
+            height: auto;
+            line-height: 30px;
+            overflow: hidden;
+            margin-top: -1px;
+        }
+        .renwulis{
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            overflow: hidden;
+            display: block;
+            clear: both;
+            padding: 10px;
+            background: #fff;
+            display: none;
+        }
+        .renwulis i{
+            float: left;
+            width: 25%;
+            overflow: hidden;
+        }
+        .renwulis a{
+            float: left;
+            width: 80%;
+            margin-left: 1%;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .renwulis .layui-form-checkbox{
+            float: left;
+            margin: 5px 0 0 10px;
+            width: 100%;
+        }
+        .layui-form-checkbox[lay-skin=primary] i {
+            float: left;
+        }
+        .layui-form-checkbox[lay-skin=primary] span {
+            width: 89%;
+            text-align: left;
+            padding-left: 1%;
+        }
+        .layui-form-checkbox span {
+           padding: 0;
+        }
+        .shoucang{
+            cursor: pointer;
+        }
+        .iconfont{
+            color: #999;
+        }
     </style>
 </head>
 <body>
@@ -72,13 +134,48 @@
         <div class="messhuo">您可以根据需要，选择标记要导出报告的电话号码，生成批量号码报告。<span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">生成批量个人报告</span></div>
         <div class="zd_box layui-form" style="overflow: hidden;">
             <div class="sc_zdgray">
-                <span>手机号</span>
-                <span>分数</span>
-                <span>App</span>
-                <span>采集时间</span>
+                <span>序号</span>
+                <span>平台类别</span>
                 <span>报告</span>
+                <span>操作</span>
             </div>
-            <p class="zd_boxlist"></p>
+            <p class="zd_boxlist">
+                <div>
+                    <span>1</span>
+                    <span>网络赌博</span>
+                    <span class="cha_report"><span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">查看报告</span></span>
+                    <span class="shoucang" data-href="true"><i class="iconfont icon-zhankaigengduo"></i></span>
+                    <h3 class="renwulis"></h3>
+                </div>
+                <div class="sc_zdgray">
+                    <span>2</span>
+                    <span>网络贷款</span>
+                    <span class="cha_report"><span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">查看报告</span></span>
+                    <span class="shoucang" data-href="true"><i class="iconfont icon-zhankaigengduo"></i></span>
+                    <h3 class="renwulis"></h3>
+                </div>
+                <div>
+                    <span>3</span>
+                    <span>涉黄平台</span>
+                    <span class="cha_report"><span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">查看报告</span></span>
+                    <span class="shoucang" data-href="true"><i class="iconfont icon-zhankaigengduo"></i></span>
+                    <h3 class="renwulis"></h3>
+                </div>
+                <div class="sc_zdgray">
+                    <span>4</span>
+                    <span>网络直播</span>
+                    <span class="cha_report"><span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">查看报告</span></span>
+                    <span class="shoucang" data-href="true"><i class="iconfont icon-zhankaigengduo"></i></span>
+                    <h3 class="renwulis"></h3>
+                </div>
+                <div>
+                    <span>5</span>
+                    <span>网络游戏</span>
+                    <span class="cha_report"><span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">查看报告</span></span>
+                    <span class="shoucang" data-href="true"><i class="iconfont icon-zhankaigengduo"></i></span>
+                    <h3 class="renwulis"></h3>
+                </div>
+            </p>
         </div>
     </div>
 </section>
@@ -86,6 +183,81 @@
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
 <script>
+    //分页设置
+    layui.use(['laypage','layer','element','form']);
+    var laypage = layui.laypage;
+    var element = layui.element;
+    var form = layui.form;
+    //任务列表
+    getrenwu();
+    function getrenwu() {
+        $(".sc_renwu").empty();
+        $.ajax({
+            url: "/api/listJob",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data:{},
+            success: function (res) {
+                console.log(res)
+                if (res.code != 0) {
+                    //return layer.msg(res.message, {anim: 6});
+                }
+                if(res.data.length==0){
+                    $(".sc_renwu,.im_contenlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
+                }
+                $.each(res.data,function (i,item) {
+                    var list;
+                    var otext = "";
+                    var key = "否";
+                    var ospan = "";
+                    if(item.taskname){
+                        otext = item.taskname;
+                    }else{
+                        otext = zdrysc.timechange(item.creationTime);
+                    }
+                    if(item.ifFinish){
+                        list = '<i><input type="checkbox" class="quanxuna" name="like1[read]" lay-skin="primary"  lay-filter="quanxuan" title="'+otext+'" value="'+item.taskId+'"></i>'
+                    }else{
+                        list = '<i><input type="checkbox" class="quanxuna" name="like1[read]" lay-skin="primary"  lay-filter="quanxuan" title="'+otext+'" value="'+item.taskId+'" disabled></i>'
+                    }
+                    $(".renwulis").append(list);
+                });
+                form.render();
+            }
+        });
+    }
 
+    $(".shoucang").click(function () {
+        if($(this).attr("data-href")=="true"){
+            $(this).html('<i class="iconfont icon-shouqi"></i>');
+            $(this).parent("div").find(".renwulis").slideDown();
+            $(this).attr("data-href",false);
+        }else{
+            $(this).html('<i class="iconfont icon-zhankaigengduo"></i>');
+            $(this).parent("div").find(".renwulis").slideUp();
+            $(this).attr("data-href",true);
+        }
+    });
+
+    $(".cha_report").click(function () {
+        var _this = $(this).parent("div").find(".renwulis");
+        var _othis = $(this).parent("div").find(".shoucang");
+        var olist = [];
+        _this.find(".layui-form-checkbox").each(function (i,item) {
+            var oid = $(this).siblings("input").attr("value");
+            if(item.getAttribute("class")=="layui-unselect layui-form-checkbox layui-form-checked"){
+                olist.push(oid)
+            }
+        });
+        if(olist.length==0){
+            _othis.attr("data-href",false);
+            _this.slideDown();
+            _othis.html('<i class="iconfont icon-shouqi"></i>');
+            layer.msg("请选择需要生成报告的任务");
+        }
+        console.log(olist)
+    });
 </script>
 </html>

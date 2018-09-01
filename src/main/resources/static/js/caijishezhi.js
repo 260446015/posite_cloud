@@ -47,9 +47,9 @@ $(function () {
                         otext = zdrysc.timechange(item.creationTime);
                     }
                     if(item.ifFinish){
-                        list = '<li class=""><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'" data-href="'+item.reportStatus+'">'+otext+'</span><a id="'+item.taskId+'" class="btntrue">生成报告</a></li>';
+                        list = '<li class=""><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'" data-code="'+item.ifFinish+'" data-href="'+item.reportStatus+'">'+otext+'</span></li>';
                     }else{
-                        list = '<li><input  id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span data-href="'+item.reportStatus+'" id="'+item.taskId+'">'+otext+'</span><a id="'+item.taskId+'" class="btnfalse">正在采集</a></li>';
+                        list = '<li><input  id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span data-href="'+item.reportStatus+'" data-code="'+item.ifFinish+'" id="'+item.taskId+'">'+otext+'</span></li>';
                     }
                     $(".sc_renwu").append(list);
                 });
@@ -85,7 +85,7 @@ $(function () {
         $(".re_history").attr("data-href",$(this).attr("id"));
         jindu($(this).attr("id"));
         $(".im_btnbox").find(".none").hide();
-        if($(this).parent("li").find("a").html()=="生成报告"){
+        if($(this).attr("data-code")=="true"){
             $(".caiji_down").fadeIn();
         }else{
             $(".caiji_up").fadeIn();

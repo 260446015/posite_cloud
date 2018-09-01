@@ -5,6 +5,7 @@ layui.use(['laypage','layer','element','form']);
 var laypage = layui.laypage;
 var element = layui.element;
 var form = layui.form;
+var oajax = [];
 
 function setPageNo(count,limitnum) {
     laypage.render({
@@ -65,8 +66,6 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                         appname+="，"+item.webname
                     }
                     appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
-                    console.log(item.webtype)
-
                 });
                 switch (item.warnInfo){
                     case "红色预警":
@@ -89,7 +88,7 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                 }
                 if(i%2){
                     list = '<div class="sc_zdgray">' +
-                        '<span><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"></span>' +
+                        '<span><input id="'+item.id+'" type="checkbox" name="deleteli" lay-skin="primary" lay-filter="xuanzhong"></span>' +
                         '<span>'+item.mobile+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
@@ -98,7 +97,7 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                         '</div>';
                 }else{
                     list = '<div>' +
-                        '<span><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"></span>' +
+                        '<span><input id="'+item.id+'" type="checkbox" name="deleteli" lay-skin="primary" lay-filter="xuanzhong"></span>' +
                         '<span>'+item.mobile+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
@@ -156,4 +155,51 @@ form.on('checkbox(quanxuan)', function(data){
         $("input[name='deleteli']").prop('checked',false);
     }
     form.render();
+});
+
+//选中
+form.on('checkbox(xuanzhong)', function(data){
+    var oid = data.elem.getAttribute("id");
+    var key = $.inArray(oid,oajax);
+    if(data.elem.checked){
+        if(key=="-1"){
+            oajax.push(oid);
+        }
+    }else{
+        oajax.splice($.inArray(oid,oajax),1);
+    }
+});
+
+
+//点击生成局部报告
+$(".baocunbtn12").click(function () {
+    if(oajax.length==0){
+        return layer.msg("请标记要生成报告的号码；");
+    }
+    var oioi = "";
+    $.each(oajax,function (i,item) {
+        if(i==0){
+            oioi+=item
+        }else{
+            oioi+=","+item
+        }
+    });
+    console.log(oioi);
+    $.ajax({
+        url: "/api/reportByMobileBatch",
+        type: "post",
+        xhrFields: {
+            withCredentials: true
+        },
+        data: {
+            ids:oajax
+        },
+        success: function (res) {
+            console.log(res);
+            if (res.code != 0) {
+                //return layer.msg(res.message, {anim: 6});
+            }
+        }
+    })
+
 });
