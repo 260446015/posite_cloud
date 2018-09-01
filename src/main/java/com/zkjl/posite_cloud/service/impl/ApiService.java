@@ -70,15 +70,17 @@ public class ApiService implements IApiService {
         String taskId = getTaskId(jobDTO);
         List<JobInfo> preSaveDatas = new ArrayList<>();
         List<String> mobiles = Arrays.asList(jobDTO.getDatas().split(","));
-        Set<String> check = new HashSet<>();
         for (String mobile : mobiles) {
-            check.add(mobile);
             JobInfo jobInfo = new JobInfo();
             jobInfo.setTaskid(taskId);
             jobInfo.setUsername(jobDTO.getUsername());
             jobInfo.setCreationTime(Calendar.getInstance().getTime());
             jobInfo.setMobile(mobile.split("`")[0]);
-            jobInfo.setMobileUser(mobile.split("`")[1]);
+            try {
+                jobInfo.setMobileUser(mobile.split("`")[1]);
+            } catch (Exception e) {
+                jobInfo.setMobileUser("");
+            }
             preSaveDatas.add(jobInfo);
         }
         jobInfoRepository.saveAll(preSaveDatas);

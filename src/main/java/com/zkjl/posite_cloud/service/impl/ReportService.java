@@ -98,6 +98,9 @@ public class ReportService extends CreditsService implements IReportService {
         for (JobInfo jobInfo : list) {
             JSONArray value = jobInfo.getData();
             checkPerson.clear();
+            if(value == null){
+                continue;
+            }
             for (Object obj : value) {
                 JSONObject jsonObject = new JSONObject((Map<String, Object>) obj);
                 if (jsonObject.getString("webtype").equals(conf.getGamble().getString("name"))) {
@@ -183,7 +186,7 @@ public class ReportService extends CreditsService implements IReportService {
         int game = 0;
         int totalSorce = 0;
         JSONArray data = jobInfo.getData();
-        if (data == null) {
+        if (data == null || data.size() == 0) {
             return null;
         }
         for (Object action : data) {
@@ -244,6 +247,9 @@ public class ReportService extends CreditsService implements IReportService {
                 termData.clear();
                 termData.add(jobinfo);
                 JSONObject jsonObject = generatorResult(termData, conf);
+                if(jsonObject == null){
+                    continue;
+                }
                 if (jsonObject.getString("warnLevel").equals("蓝色预警")) {
                     blue++;
                 } else if (jsonObject.getString("warnLevel").equals("橙色预警")) {
