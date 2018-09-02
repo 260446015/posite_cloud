@@ -22,5 +22,5 @@ public interface IReportService {
 
     JSONObject reportByTaskBatch(String[] taskid, String username);
 
-    JSONObject reportByPlat(String[] taskid, String[] webtype, String username);
+    JSONObject reportByPlat(String[] taskid, String webtype, String username);
 }

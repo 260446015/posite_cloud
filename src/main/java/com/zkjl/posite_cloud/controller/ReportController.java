@@ -122,7 +122,7 @@ public class ReportController extends BaseController {
     }
 
     @GetMapping(value = "reportByPlat")
-    public ApiResult reportByPlat(@RequestParam(value = "taskid[]") String[] taskid, @RequestParam(value = "webtype[]") String[] webtype) {
+    public ApiResult reportByPlat(@RequestParam(value = "taskid[]") String[] taskid, String webtype) {
         JSONObject result;
         String username;
         try {

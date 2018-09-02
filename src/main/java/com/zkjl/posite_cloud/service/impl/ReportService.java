@@ -98,7 +98,7 @@ public class ReportService extends CreditsService implements IReportService {
         for (JobInfo jobInfo : list) {
             JSONArray value = jobInfo.getData();
             checkPerson.clear();
-            if(value == null){
+            if (value == null) {
                 continue;
             }
             for (Object obj : value) {
@@ -247,7 +247,7 @@ public class ReportService extends CreditsService implements IReportService {
                 termData.clear();
                 termData.add(jobinfo);
                 JSONObject jsonObject = generatorResult(termData, conf);
-                if(jsonObject == null){
+                if (jsonObject == null) {
                     continue;
                 }
                 if (jsonObject.getString("warnLevel").equals("蓝色预警")) {
@@ -348,21 +348,45 @@ public class ReportService extends CreditsService implements IReportService {
     }
 
     @Override
-    public JSONObject reportByPlat(String[] taskid, String[] webtype, String username) {
+    public JSONObject reportByPlat(String[] taskid, String webtype, String username) {
+        String[] split = webtype.split(",");
+        int length = split.length;
         Query query = new Query();
         query.addCriteria(Criteria.where("taskid").in(taskid)).with(Sort.by(Sort.Direction.DESC, "creationTime"));
         List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
         /*list.stream().filter(action ->{
-            boolean flag = false;
-            if (!StringUtils.isBlank(log.getBeginDate())) {
-                if (action.getCretionTime().compareTo(log.getBeginDate()) >= 0) {
-                    flag = true;
-                }
-            } else {
-                flag = true;
-            }
-            return flag;
+
         })*/
+
+        int gamble = 0;
+        int loans = 0;
+        int yellow = 0;
+        int living = 0;
+        int game = 0;
+        JSONObject result = new JSONObject();
+        for (String aSplit : split) {
+            result.put(aSplit, 0);
+        }
+        Set<String> checkSet = new HashSet<>();
+        for (JobInfo jobInfo : list) {
+            checkSet.clear();
+            JSONArray data = jobInfo.getData();
+            for (int i = 0; i < data.size(); i++) {
+                JSONObject jsonObject = new JSONObject((Map<String, Object>) data.get(i));
+                for (int j = 0; j < split.length; j++) {
+                    String aSplit = split[j];
+                    if (jsonObject.getString("webtype").equals(aSplit)) {
+                        if (checkSet.add(aSplit)) {
+                            int intValue = result.getIntValue(split[j]);
+                            intValue += 1;
+                            result.put(split[j], intValue);
+                        }
+                    }
+
+                }
+            }
+        }
+        System.out.println(result);
         return null;
     }
 }
