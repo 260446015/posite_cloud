@@ -309,6 +309,11 @@
             myChart1.hideLoading();
             //环形
             myChart2.setOption({
+                legend: {
+                    x : 'center',
+                    y : 'top',
+                    data:legendarr
+                },
                 series: [{
                     // 根据名字对应到相应的系列
                     name: '平台数量占比',
