@@ -76,6 +76,13 @@ public class ReportService extends CreditsService implements IReportService {
             return null;
         }
         List<JSONObject> jsonObjects = generatorList(list, username);
+        JSONObject result = getWarnKindObject(conf, jsonObjects);
+        result.put("creationTime", DateUtils.getFormatString(list.get(0).getCreationTime()));
+        getTotalKindCount(list, conf, result);
+        return result;
+    }
+
+    private JSONObject getWarnKindObject(CreditsWarn conf, List<JSONObject> jsonObjects) {
         List<JSONObject> blue = jsonObjects.stream().filter(action -> action.getInteger("sorce") > conf.getBlueSorce() && action.getInteger("sorce") <= conf.getYellowSorce()).sorted((a, b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
         List<JSONObject> yellow = jsonObjects.stream().filter(action -> action.getInteger("sorce") > conf.getYellowSorce() && action.getInteger("sorce") <= conf.getRedSorce()).sorted((a, b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
         List<JSONObject> red = jsonObjects.stream().filter(action -> action.getInteger("sorce") > conf.getRedSorce()).sorted((a, b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
@@ -83,8 +90,6 @@ public class ReportService extends CreditsService implements IReportService {
         result.put("blue", blue);
         result.put("yellow", yellow);
         result.put("red", red);
-        result.put("creationTime", DateUtils.getFormatString(list.get(0).getCreationTime()));
-        getTotalKindCount(list, conf, result);
         return result;
     }
 
@@ -278,13 +283,7 @@ public class ReportService extends CreditsService implements IReportService {
         List<JobInfo> datas = byId.getDatas();
         CreditsWarn conf = creditsService.findCreditsWarnConf(username);
         List<JSONObject> jsonObjects = generatorList(datas, username);
-        List<JSONObject> blue = jsonObjects.stream().filter(action -> action.getInteger("sorce") > conf.getBlueSorce() && action.getInteger("sorce") <= conf.getYellowSorce()).sorted((a, b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
-        List<JSONObject> yellow = jsonObjects.stream().filter(action -> action.getInteger("sorce") > conf.getYellowSorce() && action.getInteger("sorce") <= conf.getRedSorce()).sorted((a, b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
-        List<JSONObject> red = jsonObjects.stream().filter(action -> action.getInteger("sorce") > conf.getRedSorce()).sorted((a, b) -> b.getInteger("sorce").compareTo(a.getInteger("sorce"))).collect(Collectors.toList());
-        JSONObject result = new JSONObject();
-        result.put("blue", blue);
-        result.put("yellow", yellow);
-        result.put("red", red);
+        JSONObject result = getWarnKindObject(conf, jsonObjects);
         result.put("creationTime", DateUtils.getFormatString(datas.get(0).getCreationTime()));
         getTotalKindCount(datas, conf, result);
         return result;
@@ -355,27 +354,48 @@ public class ReportService extends CreditsService implements IReportService {
         List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
         JSONObject result = new JSONObject();
         for (String aSplit : split) {
-            result.put(aSplit, 0);
+            result.put(aSplit, new HashMap<String, Set<JobInfo>>());
         }
-        Set<String> checkSet = new HashSet<>();
+
+//        Set<String> checkSet = new HashSet<>();
+
         for (JobInfo jobInfo : list) {
-            checkSet.clear();
+//            checkSet.clear();
             JSONArray data = jobInfo.getData();
             for (int i = 0; i < data.size(); i++) {
                 JSONObject jsonObject = new JSONObject((Map<String, Object>) data.get(i));
                 for (int j = 0; j < split.length; j++) {
                     String aSplit = split[j];
                     if (jsonObject.getString("webtype").equals(aSplit)) {
-                        if (checkSet.add(aSplit)) {
-                            int intValue = result.getIntValue(split[j]);
-                            intValue += 1;
-                            result.put(split[j], intValue);
-                        }
+//                        if (checkSet.add(aSplit)) {
+                            HashMap<String, Set<JobInfo>> hashMap = result.getObject(split[j], HashMap.class);
+                            Set<JobInfo> webname = hashMap.get(jsonObject.getString("webname"));
+                            if (webname == null) {
+                                Set<JobInfo> set = new HashSet<>();
+                                set.add(jobInfo);
+                                hashMap.put(jsonObject.getString("webname"), set);
+                            } else {
+                                webname.add(jobInfo);
+                            }
+//                        }
                     }
 
                 }
             }
         }
+        System.out.println(result);
+        Set<JobInfo> preData = new HashSet<>();
+        result.forEach((k,v) ->{
+            HashMap<String,Set<JobInfo>> hashMap = (HashMap<String, Set<JobInfo>>) v;
+            hashMap.forEach((k2,v2) -> preData.addAll(v2));
+            System.out.println(hashMap);
+        });
+        System.out.println(preData);
+        CreditsWarn conf = creditsService.findCreditsWarnConf(username);
+        List<JSONObject> jsonObjects = generatorList(list, username);
+        JSONObject warnKindObject = getWarnKindObject(conf, jsonObjects);
+//        getTotalKindCount(jobInfos, conf, result);
+        result.putAll(warnKindObject);
         System.out.println(result);
         return result;
     }
