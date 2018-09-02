@@ -13,6 +13,7 @@ import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
 import com.zkjl.posite_cloud.domain.pojo.JobInfo;
 import com.zkjl.posite_cloud.domain.pojo.Redistask;
 import com.zkjl.posite_cloud.domain.pojo.UpdateTask;
+import com.zkjl.posite_cloud.domain.vo.JobinfoVO;
 import com.zkjl.posite_cloud.domain.vo.RedistaskVO;
 import com.zkjl.posite_cloud.service.IReportService;
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +48,8 @@ public class ReportService extends CreditsService implements IReportService {
     private CreditsService creditsService;
     @Resource
     private JobInfoRepository jobInfoRepository;
+    @Resource
+    private ApiService apiService;
 
     @Override
     public JSONObject report(String mobile, String username) {
@@ -290,9 +293,14 @@ public class ReportService extends CreditsService implements IReportService {
     }
 
     @Override
-    public JSONObject reportByMobileBatch(String[] ids, String username) {
-        Iterable<JobInfo> allById = jobInfoRepository.findAllById(Arrays.asList(ids));
-        ArrayList<JobInfo> datas = Lists.newArrayList(allById);
+    public JSONObject reportByMobileBatch(String[] ids, String username, Boolean ifSelectAll) {
+        List<JobInfo> preDatas;
+        if(Boolean.TRUE.equals(ifSelectAll)){
+            preDatas = jobInfoRepository.findByUsername(username);
+        }else{
+            Iterable<JobInfo> allById = jobInfoRepository.findAllById(Arrays.asList(ids));
+            preDatas = Lists.newArrayList(allById);
+        }
         CreditsWarn conf = creditsService.findCreditsWarnConf(username);
         int gamble = 0;
         int loans = 0;
@@ -300,7 +308,7 @@ public class ReportService extends CreditsService implements IReportService {
         int living = 0;
         int game = 0;
         int totalSorce = 0;
-        for (JobInfo jobInfo : datas) {
+        for (JobInfo jobInfo : preDatas) {
             JSONArray data = jobInfo.getData();
             if (data == null) {
                 return null;
@@ -333,29 +341,35 @@ public class ReportService extends CreditsService implements IReportService {
         result.put("game", game);
         result.put("totalSorce", totalSorce);
         //待定
-        result.put("data", datas);
+        result.put("data", preDatas);
 //        result.put("warnLevel", getWarnLevel(totalSorce, conf));
 //        result.put("creationTime", DateUtils.getFormatString(jobInfo.getCreationTime()));
         return result;
     }
 
     @Override
-    public JSONObject reportByTaskBatch(String[] taskid, String username) {
+    public JSONObject reportByTaskBatch(String[] taskid, String username, Boolean ifSelectAll) {
+        JSONObject generator;
         CreditsWarn conf = creditsService.findCreditsWarnConf(username);
-        JSONObject generator = generator(taskid, conf, username);
+        if (Boolean.FALSE.equals(ifSelectAll)) {
+            generator = generator(taskid, conf, username);
+        } else {
+            List<JobinfoVO> jobinfoVOS = apiService.listJob(username);
+            List<String> collect = jobinfoVOS.stream().map(JobinfoVO::getTaskId).collect(Collectors.toList());
+            String[] strings = collect.toArray(new String[]{});
+            generator = generator(strings, conf, username);
+        }
+
         return generator;
     }
 
     @Override
     public JSONObject reportByPlat(String[] taskid, String webtype, String username) {
-        String[] split = webtype.split(",");
         Query query = new Query();
         query.addCriteria(Criteria.where("taskid").in(taskid)).with(Sort.by(Sort.Direction.DESC, "creationTime"));
         List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
         JSONObject result = new JSONObject();
-        for (String aSplit : split) {
-            result.put(aSplit, new HashMap<String, Set<JobInfo>>());
-        }
+        result.put("data", new HashMap<String, Set<JobInfo>>());
 
 //        Set<String> checkSet = new HashSet<>();
 
@@ -364,30 +378,29 @@ public class ReportService extends CreditsService implements IReportService {
             JSONArray data = jobInfo.getData();
             for (int i = 0; i < data.size(); i++) {
                 JSONObject jsonObject = new JSONObject((Map<String, Object>) data.get(i));
-                for (int j = 0; j < split.length; j++) {
-                    String aSplit = split[j];
-                    if (jsonObject.getString("webtype").equals(aSplit)) {
-//                        if (checkSet.add(aSplit)) {
-                            HashMap<String, Set<JobInfo>> hashMap = result.getObject(split[j], HashMap.class);
-                            Set<JobInfo> webname = hashMap.get(jsonObject.getString("webname"));
-                            if (webname == null) {
-                                Set<JobInfo> set = new HashSet<>();
-                                set.add(jobInfo);
-                                hashMap.put(jsonObject.getString("webname"), set);
-                            } else {
-                                webname.add(jobInfo);
-                            }
-//                        }
-                    }
 
+                if (jsonObject.getString("webtype").equals(webtype)) {
+//                        if (checkSet.add(aSplit)) {
+                    HashMap<String, Set<JobInfo>> hashMap = result.getObject("data", HashMap.class);
+                    Set<JobInfo> webname = hashMap.get(jsonObject.getString("webname"));
+                    if (webname == null) {
+                        Set<JobInfo> set = new HashSet<>();
+                        set.add(jobInfo);
+                        hashMap.put(jsonObject.getString("webname"), set);
+                    } else {
+                        webname.add(jobInfo);
+                    }
+//                        }
                 }
             }
         }
         System.out.println(result);
         Set<JobInfo> preData = new HashSet<>();
-        result.forEach((k,v) ->{
-            HashMap<String,Set<JobInfo>> hashMap = (HashMap<String, Set<JobInfo>>) v;
-            hashMap.forEach((k2,v2) -> preData.addAll(v2));
+        result.forEach((k, v) ->
+
+        {
+            HashMap<String, Set<JobInfo>> hashMap = (HashMap<String, Set<JobInfo>>) v;
+            hashMap.forEach((k2, v2) -> preData.addAll(v2));
             System.out.println(hashMap);
         });
         System.out.println(preData);

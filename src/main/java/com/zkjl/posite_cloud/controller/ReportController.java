@@ -94,12 +94,12 @@ public class ReportController extends BaseController {
     }
 
     @GetMapping(value = "reportByMobileBatch")
-    public ApiResult reportByMobileBatch(@RequestParam(value = "ids[]") String[] ids) {
+    public ApiResult reportByMobileBatch(@RequestParam(value = "ids[]") String[] ids, Boolean ifSellectAll) {
         JSONObject result;
         String username;
         try {
             username = this.getCurrentUser().getUsername();
-            result = reportService.reportByMobileBatch(ids, username);
+            result = reportService.reportByMobileBatch(ids, username, ifSellectAll);
         } catch (Exception e) {
             logger.error("获取手机号批量报告信息出错!" + e.getMessage());
             return error("获取报告信息出错!");
@@ -108,12 +108,12 @@ public class ReportController extends BaseController {
     }
 
     @GetMapping(value = "reportByTaskBatch")
-    public ApiResult reportByTaskBatch(@RequestParam(value = "taskid[]") String[] taskid) {
+    public ApiResult reportByTaskBatch(@RequestParam(value = "taskid[]") String[] taskid, Boolean ifSelectAll) {
         JSONObject result;
         String username;
         try {
             username = this.getCurrentUser().getUsername();
-            result = reportService.reportByTaskBatch(taskid, username);
+            result = reportService.reportByTaskBatch(taskid, username, ifSelectAll);
         } catch (Exception e) {
             logger.error("获取任务号批量报告信息出错!" + e.getMessage());
             return error("获取报告信息出错!");

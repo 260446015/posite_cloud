@@ -18,9 +18,9 @@ public interface IReportService {
 
     JSONObject reportById(String id, String username);
 
-    JSONObject reportByMobileBatch(String[] ids, String username);
+    JSONObject reportByMobileBatch(String[] ids, String username, Boolean ifSelectAll);
 
-    JSONObject reportByTaskBatch(String[] taskid, String username);
+    JSONObject reportByTaskBatch(String[] taskid, String username, Boolean ifSelectAll);
 
     JSONObject reportByPlat(String[] taskid, String webtype, String username);
 }
