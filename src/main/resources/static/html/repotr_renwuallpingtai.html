@@ -164,7 +164,7 @@
         xAxis : [
             {
                 type : 'category',
-                data : ['赌博', '网贷', '涉黄', '直播', '游戏'],
+                data : [],
                 axisTick: {
                     alignWithLabel: true
                 }
@@ -203,7 +203,7 @@
         legend: {
             x : 'center',
             y : 'top',
-            data:['赌博', '网贷', '涉黄', '直播', '游戏']
+            data:[]
         },
         color:['#f1c12e','#a88ee2','#4384f0','#01e0a4','#47bcfb'],
         series: [
@@ -280,19 +280,30 @@
                 //return layer.msg(res.message, {anim: 6});
             }
             var num = res.data;
-            var odata = [
-                {value:num.gambleCount, name:'赌博'},
-                {value:num.loansCount, name:'网贷'},
-                {value:num.yellowCount, name:'涉黄'},
-                {value:num.gameCount, name:'游戏'},
-                {value:num.livingCount, name:'直播'}
-            ]
+            var legendarr = [];
+            var oddata = [];
+            $.each(res.data.贷款,function (i,item) {
+                var aval = {
+                    value:item.length, name:i
+                }
+                legendarr.push(i);
+                oddata.push(aval);
+            });
             //柱形
             myChart1.setOption({
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : legendarr,
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
                 series: [{
                     // 根据名字对应到相应的系列
                     name: '平台数量占比',
-                    data: odata
+                    data: oddata
                 }]
             });
             myChart1.hideLoading();
@@ -301,7 +312,7 @@
                 series: [{
                     // 根据名字对应到相应的系列
                     name: '平台数量占比',
-                    data: odata
+                    data: oddata
                 }]
             });
             myChart2.hideLoading();
@@ -319,7 +330,7 @@
             });
             myChart3.hideLoading();
 
-            $(".re_shuomin1").html("  经筛查结果显示，此次任务，其中注册涉黄平台"+num.yellowCount+"人，赌博平台"+num.gambleCount+"人，网袋平台"+num.loansCount+"人，游戏平台"+num.gameCount+"人，直播平台"+num.livingCount+"人。共注册危险网站"+(num.yellowCount+num.gambleCount+num.loansCount+num.gameCount+num.livingCount)+"个。");
+            // $(".re_shuomin1").html("  经筛查结果显示，此次任务，其中注册涉黄平台"+num.yellowCount+"人，赌博平台"+num.gambleCount+"人，网袋平台"+num.loansCount+"人，游戏平台"+num.gameCount+"人，直播平台"+num.livingCount+"人。共注册危险网站"+(num.yellowCount+num.gambleCount+num.loansCount+num.gameCount+num.livingCount)+"个。");
 
             //红色
             if(res.data.red.length==0){
