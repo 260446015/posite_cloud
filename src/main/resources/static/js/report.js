@@ -176,12 +176,14 @@ form.on('checkbox(xuanzhong)', function(data){
 //点击生成局部报告
 $(".baocunbtn12").click(function () {
     if($(this).attr("data-val")=="false"){
-        
+        oajax = ['123','456'];
+        sessionStorage.setItem("zdrsc_data",JSON.stringify(oajax));
+        window.location = "reportall.html?true";
     }else{
         if(oajax.length==0){
             return layer.msg("请标记要生成报告的号码；");
         }
         sessionStorage.setItem("zdrsc_data",JSON.stringify(oajax));
-        window.location = "reportall.html"
+        window.location = "reportall.html?false"
     }
 });

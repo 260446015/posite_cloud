@@ -160,9 +160,11 @@
     //是否全选
     form.on('checkbox(quanxuan)', function(data){
         if(data.elem.checked){
+            $(".baocunbtn2").attr("data-val",false);
             $("input[name='deleteli']").prop('checked',true);
         }else{
             $("input[name='deleteli']").prop('checked',false);
+            $(".baocunbtn2").attr("data-val",true);
         }
         form.render();
     });
@@ -183,11 +185,22 @@
     });
 
     $(".baocunbtn2").click(function () {
-        if(oajax.length==0){
-            return layer.msg("请标记要生成报告的号码；");
+        if($(this).attr("data-val")=="false"){
+            oajax = ['123','456'];
+            sessionStorage.setItem("zdrsc_data",JSON.stringify(oajax));
+            window.location = "repotr_renwuall.html?true";
+        }else{
+            if(oajax.length==0){
+                return layer.msg("请标记要生成报告的号码；");
+            }
+            sessionStorage.setItem("zdrsc_data",JSON.stringify(oajax));
+            window.location = "repotr_renwuall.html?false"
         }
-        sessionStorage.setItem("zdrsc_data",JSON.stringify(oajax));
-        window.location = "repotr_renwuall.html"
+        // if(oajax.length==0){
+        //     return layer.msg("请标记要生成报告的号码；");
+        // }
+        // sessionStorage.setItem("zdrsc_data",JSON.stringify(oajax));
+        // window.location = "repotr_renwuall.html"
     });
 </script>
 </html>
