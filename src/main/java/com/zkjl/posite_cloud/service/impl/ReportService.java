@@ -350,19 +350,9 @@ public class ReportService extends CreditsService implements IReportService {
     @Override
     public JSONObject reportByPlat(String[] taskid, String webtype, String username) {
         String[] split = webtype.split(",");
-        int length = split.length;
         Query query = new Query();
         query.addCriteria(Criteria.where("taskid").in(taskid)).with(Sort.by(Sort.Direction.DESC, "creationTime"));
         List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
-        /*list.stream().filter(action ->{
-
-        })*/
-
-        int gamble = 0;
-        int loans = 0;
-        int yellow = 0;
-        int living = 0;
-        int game = 0;
         JSONObject result = new JSONObject();
         for (String aSplit : split) {
             result.put(aSplit, 0);
@@ -387,6 +377,6 @@ public class ReportService extends CreditsService implements IReportService {
             }
         }
         System.out.println(result);
-        return null;
+        return result;
     }
 }
