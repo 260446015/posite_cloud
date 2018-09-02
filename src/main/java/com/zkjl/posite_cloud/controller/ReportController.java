@@ -94,12 +94,12 @@ public class ReportController extends BaseController {
     }
 
     @GetMapping(value = "reportByMobileBatch")
-    public ApiResult reportByMobileBatch(@RequestParam(value = "ids[]") String[] ids, Boolean ifSellectAll) {
+    public ApiResult reportByMobileBatch(@RequestParam(value = "ids[]") String[] ids, Boolean ifSelectAll) {
         JSONObject result;
         String username;
         try {
             username = this.getCurrentUser().getUsername();
-            result = reportService.reportByMobileBatch(ids, username, ifSellectAll);
+            result = reportService.reportByMobileBatch(ids, username, ifSelectAll);
         } catch (Exception e) {
             logger.error("获取手机号批量报告信息出错!" + e.getMessage());
             return error("获取报告信息出错!");
