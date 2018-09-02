@@ -150,9 +150,11 @@ $(".baocunbtn1").click(function () {
 //是否全选
 form.on('checkbox(quanxuan)', function(data){
     if(data.elem.checked){
+        $(".baocunbtn12").attr("data-val",false);
         $("input[name='deleteli']").prop('checked',true);
     }else{
         $("input[name='deleteli']").prop('checked',false);
+        $(".baocunbtn12").attr("data-val",true);
     }
     form.render();
 });
@@ -173,9 +175,13 @@ form.on('checkbox(xuanzhong)', function(data){
 
 //点击生成局部报告
 $(".baocunbtn12").click(function () {
-    if(oajax.length==0){
-        return layer.msg("请标记要生成报告的号码；");
+    if($(this).attr("data-val")=="false"){
+        
+    }else{
+        if(oajax.length==0){
+            return layer.msg("请标记要生成报告的号码；");
+        }
+        sessionStorage.setItem("zdrsc_data",JSON.stringify(oajax));
+        window.location = "reportall.html"
     }
-    sessionStorage.setItem("zdrsc_data",JSON.stringify(oajax));
-    window.location = "reportall.html"
 });
