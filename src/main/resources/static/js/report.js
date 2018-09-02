@@ -176,30 +176,6 @@ $(".baocunbtn12").click(function () {
     if(oajax.length==0){
         return layer.msg("请标记要生成报告的号码；");
     }
-    var oioi = "";
-    $.each(oajax,function (i,item) {
-        if(i==0){
-            oioi+=item
-        }else{
-            oioi+=","+item
-        }
-    });
-    console.log(oioi);
-    $.ajax({
-        url: "/api/reportByMobileBatch",
-        type: "post",
-        xhrFields: {
-            withCredentials: true
-        },
-        data: {
-            ids:oajax
-        },
-        success: function (res) {
-            console.log(res);
-            if (res.code != 0) {
-                //return layer.msg(res.message, {anim: 6});
-            }
-        }
-    })
-
+    sessionStorage.setItem("zdrsc_data",JSON.stringify(oajax));
+    window.location = "reportall.html"
 });

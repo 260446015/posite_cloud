@@ -143,35 +143,35 @@
                 <div>
                     <span>1</span>
                     <span>网络赌博</span>
-                    <span class="cha_report"><span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">查看报告</span></span>
+                    <span class="cha_report" data-href="赌博"><span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">查看报告</span></span>
                     <span class="shoucang" data-href="true"><i class="iconfont icon-zhankaigengduo"></i></span>
                     <h3 class="renwulis"></h3>
                 </div>
                 <div class="sc_zdgray">
                     <span>2</span>
                     <span>网络贷款</span>
-                    <span class="cha_report"><span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">查看报告</span></span>
+                    <span class="cha_report" data-href="贷款"><span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">查看报告</span></span>
                     <span class="shoucang" data-href="true"><i class="iconfont icon-zhankaigengduo"></i></span>
                     <h3 class="renwulis"></h3>
                 </div>
                 <div>
                     <span>3</span>
                     <span>涉黄平台</span>
-                    <span class="cha_report"><span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">查看报告</span></span>
+                    <span class="cha_report" data-href="涉黄"><span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">查看报告</span></span>
                     <span class="shoucang" data-href="true"><i class="iconfont icon-zhankaigengduo"></i></span>
                     <h3 class="renwulis"></h3>
                 </div>
                 <div class="sc_zdgray">
                     <span>4</span>
                     <span>网络直播</span>
-                    <span class="cha_report"><span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">查看报告</span></span>
+                    <span class="cha_report" data-href="直播"><span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">查看报告</span></span>
                     <span class="shoucang" data-href="true"><i class="iconfont icon-zhankaigengduo"></i></span>
                     <h3 class="renwulis"></h3>
                 </div>
                 <div>
                     <span>5</span>
                     <span>网络游戏</span>
-                    <span class="cha_report"><span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">查看报告</span></span>
+                    <span class="cha_report" data-href="游戏"><span class="layui-btn layui-btn-normal baocunbtn baocunbtn2" style="float: none;">查看报告</span></span>
                     <span class="shoucang" data-href="true"><i class="iconfont icon-zhankaigengduo"></i></span>
                     <h3 class="renwulis"></h3>
                 </div>
@@ -255,9 +255,12 @@
             _othis.attr("data-href",false);
             _this.slideDown();
             _othis.html('<i class="iconfont icon-shouqi"></i>');
-            layer.msg("请选择需要生成报告的任务");
+            return layer.msg("请选择需要生成报告的任务");
         }
         console.log(olist)
+        sessionStorage.setItem("zdrsc_data",JSON.stringify(olist));
+        sessionStorage.setItem("zdrsc_name",$(this).attr("data-href"));
+        window.location = "repotr_renwuallpingtai.html"
     });
 </script>
 </html>
