@@ -296,7 +296,10 @@ public class ReportService extends CreditsService implements IReportService {
     public JSONObject reportByMobileBatch(String[] ids, String username, Boolean ifSelectAll) {
         List<JobInfo> preDatas;
         if(Boolean.TRUE.equals(ifSelectAll)){
-            preDatas = jobInfoRepository.findByUsername(username);
+            Query query = new Query();
+            Criteria criteria = Criteria.where("username").is(username).and("data").exists(true);
+            query.addCriteria(criteria);
+            preDatas = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
         }else{
             Iterable<JobInfo> allById = jobInfoRepository.findAllById(Arrays.asList(ids));
             preDatas = Lists.newArrayList(allById);
