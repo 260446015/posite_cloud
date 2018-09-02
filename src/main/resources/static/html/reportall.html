@@ -247,10 +247,12 @@
             myChart2.hideLoading();
 
             //app注册情况
+            var oi = 0;
             $.each(res.data.data,function (i,item) {
                 var phone = item.mobile;
                 $.each(item.data,function (i,item) {
-                    if(i%2){
+
+                    if(oi%2){
                         list = '<div class="sc_zdgray">' +
                             '<span>'+phone+'</span>' +
                             '<span>'+item.webtype+'</span>' +
@@ -263,7 +265,9 @@
                             '<span>'+item.webname+'</span>' +
                             '</div>';
                     }
+
                     $(".rplist").append(list);
+                    oi++;
                 });
 
             });
