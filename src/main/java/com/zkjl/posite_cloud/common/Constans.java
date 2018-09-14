@@ -20,7 +20,7 @@ public abstract class Constans {
     /**
      * 舆情URL
      */
-    public static final String SENTIMENT_URL = "http://114.55.179.202:8199/restserver/index/query/fullQuery";
+    public static final String SENTIMENT_URL = "http://120.27.151.183:8181/restserver/index/query/fullQuery";
 
     /**
      * 设置二级用户上传数量

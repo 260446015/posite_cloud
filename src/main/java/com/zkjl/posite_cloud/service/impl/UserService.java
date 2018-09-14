@@ -273,6 +273,6 @@ public class UserService implements IUserService {
         } catch (Exception e) {
             return false;
         }
-        return false;
+        return true;
     }
 }

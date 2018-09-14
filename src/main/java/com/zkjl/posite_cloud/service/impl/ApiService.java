@@ -23,7 +23,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.redis.core.ListOperations;
@@ -118,7 +117,7 @@ public class ApiService implements IApiService {
         log.info("当前生成的redisId:" + redisId);
         ListOperations listOperations = stringRedisTemplate.opsForList();
         List<String> mobiles = Arrays.asList(jobDTO.getDatas().split(","));
-        mobiles.forEach(mobile -> listOperations.rightPush(redisId, mobile));
+        mobiles.forEach(mobile -> listOperations.rightPush(redisId, mobile.split("`")[0]));
     }
 
     @Override
