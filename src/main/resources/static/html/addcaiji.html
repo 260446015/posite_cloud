@@ -106,9 +106,11 @@
             , choose: function (obj) {
                 obj.preview(function (index, file, result) {
                     var typeup = file.name.split(".").pop();
-                    //console.log(typeup)
-                    if(typeup=="txt"){
+                    if(typeup=="txt"||typeup=="xls"||typeup=="xlsx"){
+                        console.log(typeup)
                         $("#uploadactive").fadeIn();
+                    }else{
+                        layer.msg("当前不支持"+typeup+"格式文件上传！")
                     }
                 });
             }
