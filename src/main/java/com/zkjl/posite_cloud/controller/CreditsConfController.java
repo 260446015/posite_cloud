@@ -39,10 +39,10 @@ public class CreditsConfController extends BaseController{
         String username;
         try {
             username = this.getCurrentUser().getUsername();
-            creditsWarn.setUsername(username);
-            if(creditsWarn.getUsername().equals("base")){
+            if(creditsWarn.getId().equals("5baad9f99881bcb65a91c2ee")){
                 creditsWarn.setId(null);
             }
+            creditsWarn.setUsername(username);
             result = creditsConfService.save(creditsWarn);
         } catch (Exception e) {
             logger.error("保存积分配置出错！",e.getMessage());
