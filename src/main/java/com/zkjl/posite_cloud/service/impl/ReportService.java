@@ -12,17 +12,13 @@ import com.zkjl.posite_cloud.dao.UpdateTaskRepository;
 import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
 import com.zkjl.posite_cloud.domain.pojo.JobInfo;
 import com.zkjl.posite_cloud.domain.pojo.Redistask;
-import com.zkjl.posite_cloud.domain.pojo.UpdateTask;
 import com.zkjl.posite_cloud.domain.vo.JobinfoVO;
 import com.zkjl.posite_cloud.domain.vo.RedistaskVO;
+import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IReportService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.mapreduce.GroupBy;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -357,7 +353,8 @@ public class ReportService extends CreditsService implements IReportService {
         if (Boolean.FALSE.equals(ifSelectAll)) {
             generator = generator(taskid, conf, username);
         } else {
-            List<JobinfoVO> jobinfoVOS = apiService.listJob(username);
+            JSONObject jsonObject = apiService.listJob(username);
+            List<JobinfoVO> jobinfoVOS = (List<JobinfoVO>) jsonObject.get(username);
             List<String> collect = jobinfoVOS.stream().map(JobinfoVO::getTaskId).collect(Collectors.toList());
             String[] strings = collect.toArray(new String[]{});
             generator = generator(strings, conf, username);
@@ -414,5 +411,19 @@ public class ReportService extends CreditsService implements IReportService {
         result.putAll(warnKindObject);
         System.out.println(result);
         return result;
+    }
+
+    @Override
+    public void exportPosite(String[] taskid,String username) throws CustomerException {
+        Query query = new Query();
+        Criteria criteria = Criteria.where("taskid").in(taskid).and("data").exists(true);
+        query.addCriteria(criteria);
+        List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
+        if (list.size() == 0) {
+            throw new CustomerException("导出数据为空，请确认数据无误后，再进行导出");
+        }
+        List<JSONObject> result = generatorList(list, username);
+//        ExcelUtil.exportExcel();
+        System.out.println("11111");
     }
 }

@@ -3,18 +3,13 @@ package com.zkjl.posite_cloud.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
-import com.zkjl.posite_cloud.domain.pojo.Redistask;
-import com.zkjl.posite_cloud.domain.pojo.UpdateTask;
 import com.zkjl.posite_cloud.domain.vo.RedistaskVO;
 import com.zkjl.posite_cloud.service.IReportService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -133,5 +128,11 @@ public class ReportController extends BaseController {
             return error("获取报告信息出错!");
         }
         return success(result);
+    }
+
+    @GetMapping(value = "exportPosite")
+    public void exportPosite(@RequestParam(value = "taskid[]") String[] taskid){
+        String username = this.getCurrentUser().getUsername();
+//        reportService.exportPosite(taskid,username);
     }
 }

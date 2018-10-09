@@ -4,15 +4,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.Constans;
 import com.zkjl.posite_cloud.common.util.*;
-import com.zkjl.posite_cloud.dao.CreditsRepository;
-import com.zkjl.posite_cloud.dao.JobInfoRepository;
-import com.zkjl.posite_cloud.dao.RedistaskRepository;
-import com.zkjl.posite_cloud.dao.UserRepository;
+import com.zkjl.posite_cloud.dao.*;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
-import com.zkjl.posite_cloud.domain.pojo.CreditsWarn;
-import com.zkjl.posite_cloud.domain.pojo.JobInfo;
-import com.zkjl.posite_cloud.domain.pojo.Redistask;
+import com.zkjl.posite_cloud.domain.pojo.*;
 import com.zkjl.posite_cloud.domain.vo.JobinfoVO;
 import com.zkjl.posite_cloud.service.IApiService;
 import org.apache.commons.lang3.StringUtils;
@@ -60,6 +55,8 @@ public class ApiService implements IApiService {
     private CreditsService creditsService;
     @Resource
     private UserRepository userRepository;
+    @Resource
+    private AssignTaskRepository assignTaskRepository;
 
     private static final Logger log = LoggerFactory.getLogger(ApiService.class);
 
@@ -362,10 +359,82 @@ public class ApiService implements IApiService {
     }
 
     @Override
-    public List<JobinfoVO> listJob(String username) {
+    public JSONObject listAllJob(String username) {
+        JSONObject result = new JSONObject();
+        List<JobinfoVO> jsonObject = listJob2(username);
+        result.put("job", jsonObject);
+        User byUsername = userRepository.findByUsername(username);
+        if(byUsername.getJobLevel().equals("admin")){
+            List<JobinfoVO> adminData = listJob2(username);
+            result.put("job",adminData);
+            result.put("mark",1);
+            result.put("user",null);
+            result.put("username",username);
+            List<User> secondUser = userRepository.findByCreator(username);
+            if(secondUser.size() != 0){
+                JSONArray secondArr = new JSONArray();
+                for (User aSecondUser : secondUser) {
+                    JSONObject element = new JSONObject();
+                    String elementUsername = aSecondUser.getUsername();
+                    element.put("job", listJob2(elementUsername));
+                    element.put("user", null);
+                    element.put("mark", 2);
+                    element.put("username",elementUsername);
+                    List<User> thirdUser = userRepository.findByCreator(elementUsername);
+                    if (thirdUser.size() != 0) {
+                        JSONArray thirdArr = new JSONArray();
+                        for (int i = 0; i < thirdUser.size(); i++) {
+                            JSONObject elementThird = new JSONObject();
+                            String elementUsernameThird = thirdUser.get(i).getUsername();
+                            elementThird.put("job", listJob2(elementUsernameThird));
+                            elementThird.put("mark",3);
+                            elementThird.put("username",elementUsernameThird);
+                            thirdArr.add(elementThird);
+                        }
+                        element.put("user", thirdArr);
+
+                    }
+                    secondArr.add(element);
+                }
+                result.put("user",secondArr);
+
+            }
+        }else if(byUsername.getJobLevel().equals("group")){
+            List<JobinfoVO> groupData = listJob2(username);
+            result.put("job",groupData);
+            result.put("mark",2);
+            result.put("user",null);
+            result.put("username",username);
+            List<User> secondUser = userRepository.findByCreator(username);
+            if(secondUser.size() != 0){
+                JSONArray sendArr = new JSONArray();
+                for (int i = 0; i < secondUser.size(); i++) {
+                    JSONObject element = new JSONObject();
+                    String elementUsername = secondUser.get(i).getUsername();
+                    element.put("job",listJob2(elementUsername));
+                    element.put("mark",3);
+                    element.put("username",elementUsername);
+                    sendArr.add(element);
+                }
+                result.put("user",sendArr);
+
+            }
+        }else {
+            List<JobinfoVO> normalData = listJob2(username);
+            result.put("job",normalData);
+            result.put("username",username);
+            result.put("mark",3);
+        }
+
+        return result;
+    }
+
+    @Override
+    public JSONObject listJob(String username) {
+        JSONObject resultData = new JSONObject();
         Aggregation agg = Aggregation.newAggregation(
                 Aggregation.match(Criteria.where("username").is(username)),
-                Aggregation.sort(Sort.Direction.ASC,"creationTime"),
+                Aggregation.sort(Sort.Direction.ASC, "creationTime"),
                 Aggregation.group("taskid").last("_version").as("_version").first("taskid").as("taskid").first("taskname").as("taskname").last("creationTime").as("creationTime").first("username").as("username")
         );
 
@@ -385,7 +454,7 @@ public class ApiService implements IApiService {
             vo.setIfFinish(true);
             vo.setTaskname(element.getString("taskname"));
             vo.setReportStatus(false);
-            if(element.getInteger("_version") > 0){
+            if (element.getInteger("_version") > 0) {
                 vo.setReportStatus(true);
             }
             for (String redisId : keys) {
@@ -399,7 +468,71 @@ public class ApiService implements IApiService {
             result.add(vo);
         });
         result.sort(Comparator.comparing(JobinfoVO::getCreationTime));
+        JSONObject nextData = new JSONObject();
+        nextData.put("job",result);
+        List<User> byCreator = userRepository.findByCreator(username);
+        if(byCreator.size() != 0){
+            byCreator.forEach(action ->{
+                JSONObject next = new JSONObject();
+                next.put(action.getUsername(),null);
+
+            });
+        }
+        resultData.put(username,result);
+        return resultData;
+    }
+    private List<JobinfoVO> listJob2(String username) {
+        Aggregation agg = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("username").is(username)),
+                Aggregation.sort(Sort.Direction.ASC, "creationTime"),
+                Aggregation.group("taskid").last("_version").as("_version").first("taskid").as("taskid").first("taskname").as("taskname").last("creationTime").as("creationTime").first("username").as("username")
+        );
+
+        AggregationResults<Redistask> outputType = mongoTemplate.aggregate(agg, Constans.T_REDISTASK, Redistask.class);
+        List data = (List) outputType.getRawResults().get("result");
+        List<JobinfoVO> result = new ArrayList<>();
+        Set<String> keys = stringRedisTemplate.keys(username + "*");
+        data.forEach(action -> {
+            JSONObject element = new JSONObject((Map<String, Object>) action);
+            JobinfoVO vo = new JobinfoVO();
+            if (StringUtils.isBlank(element.getString("taskid"))) {
+                vo.setTaskId(element.getString("_id"));
+            } else {
+                vo.setTaskId(element.getString("taskid"));
+            }
+            vo.setCreationTime(element.getDate("creationTime"));
+            vo.setIfFinish(true);
+            vo.setTaskname(element.getString("taskname"));
+            vo.setReportStatus(false);
+            if (element.getInteger("_version") > 0) {
+                vo.setReportStatus(true);
+            }
+            for (String redisId : keys) {
+                if (StringUtils.isBlank(element.getString("taskid"))) {
+                    continue;
+                }
+                if (redisId.contains(element.getString("taskid"))) {
+                    vo.setIfFinish(false);
+                }
+            }
+            result.add(vo);
+        });
+        result.sort(Comparator.comparing(JobinfoVO::getCreationTime));
+        JSONObject nextData = new JSONObject();
+        nextData.put("job",result);
+        List<User> byCreator = userRepository.findByCreator(username);
+        if(byCreator.size() != 0){
+            byCreator.forEach(action ->{
+                JSONObject next = new JSONObject();
+                next.put(action.getUsername(),null);
+
+            });
+        }
         return result;
+    }
+
+    private boolean ifHasNext(String username){
+        return userRepository.findByCreator(username).size() != 0;
     }
 
     @Override
@@ -459,8 +592,8 @@ public class ApiService implements IApiService {
         boolean flag = false;
         try {
             for (int i = 0; i < ids.length; i++) {
-                mongoTemplate.remove(new Query(Criteria.where("taskid").is(ids[i])),Constans.T_REDISTASK);
-                mongoTemplate.remove(new Query(Criteria.where("taskid").is(ids[i])),Constans.T_MOBILEDATAS);
+                mongoTemplate.remove(new Query(Criteria.where("taskid").is(ids[i])), Constans.T_REDISTASK);
+                mongoTemplate.remove(new Query(Criteria.where("taskid").is(ids[i])), Constans.T_MOBILEDATAS);
                 try {
                     Set keys = redisTemplate.keys(username + "_" + ids[i] + "_*");
                     redisTemplate.delete(keys);
@@ -473,5 +606,25 @@ public class ApiService implements IApiService {
             log.error("根据任务id删除任务出错!", e.getMessage());
         }
         return flag;
+    }
+
+    @Override
+    public boolean taskAssignment(String[] taskid, String[] userid) {
+        List<AssignTask> saveData = new ArrayList<>();
+        for (int i = 0; i < userid.length; i++) {
+            for (int j = 0; j < taskid.length; j++) {
+                AssignTask assignTask = new AssignTask();
+                assignTask.setUserid(userid[i]);
+                assignTask.setTaskid(taskid[j]);
+                assignTask.setCreateTime(Calendar.getInstance().getTime());
+                saveData.add(assignTask);
+            }
+        }
+        try {
+            assignTaskRepository.saveAll(saveData);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 }

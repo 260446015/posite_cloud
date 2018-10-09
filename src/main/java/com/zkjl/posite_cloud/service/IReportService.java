@@ -1,9 +1,8 @@
 package com.zkjl.posite_cloud.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.zkjl.posite_cloud.domain.pojo.Redistask;
-import com.zkjl.posite_cloud.domain.pojo.UpdateTask;
 import com.zkjl.posite_cloud.domain.vo.RedistaskVO;
+import com.zkjl.posite_cloud.exception.CustomerException;
 import org.springframework.data.domain.PageImpl;
 
 /**
@@ -23,4 +22,6 @@ public interface IReportService {
     JSONObject reportByTaskBatch(String[] taskid, String username, Boolean ifSelectAll);
 
     JSONObject reportByPlat(String[] taskid, String webtype, String username);
+
+    void exportPosite(String[] taskid,String username) throws CustomerException;
 }

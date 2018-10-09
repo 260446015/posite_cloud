@@ -3,7 +3,6 @@ package com.zkjl.posite_cloud.service;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
-import com.zkjl.posite_cloud.domain.vo.JobinfoVO;
 
 import java.util.List;
 
@@ -25,11 +24,15 @@ public interface IApiService {
 
     JSONObject getSentiment(SentimentDTO sentimentDTO, String userSentiment);
 
-    List<JobinfoVO> listJob(String username);
+    JSONObject listJob(String username);
 
     JSONObject searchByTaskid(String taskId, Integer pageNum, Integer pageSize, String msg);
 
     JSONObject searchByTaskidPlan(String taskId);
 
     boolean deleteBatch(String[] ids, String username);
+
+    JSONObject listAllJob(String username);
+
+    boolean taskAssignment(String[] taskid, String[] userid);
 }

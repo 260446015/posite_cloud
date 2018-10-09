@@ -40,11 +40,11 @@ public class UserService implements IUserService {
     @Override
     public User create(User user) throws CustomerException {
         User loginUser = (User) SecurityUtils.getSubject().getPrincipal();
-        /*if (loginUser.getPermission().contains("create1")) {
+        if (loginUser.getJobLevel().equals("admin")) {
             user.setJobLevel("group");
-        } else if (loginUser.getPermission().contains("create2")) {
+        } else if (loginUser.getJobLevel().equals("group")) {
             user.setJobLevel("normal");
-        }*/
+        }
         User check = userRepository.findByUsername(user.getUsername());
         if (null != check) {
             throw new CustomerException("用户名已存在");

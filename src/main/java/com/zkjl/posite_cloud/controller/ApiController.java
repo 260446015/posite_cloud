@@ -5,7 +5,6 @@ import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
-import com.zkjl.posite_cloud.domain.vo.JobinfoVO;
 import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IApiService;
 import io.swagger.annotations.ApiOperation;
@@ -138,13 +137,13 @@ public class ApiController extends BaseController {
     @GetMapping(value = "listJob")
     @ApiOperation(value = "获取任务信息")
     public ApiResult listRedisJob() {
-        List<JobinfoVO> result;
+        JSONObject result;
         String username;
         try {
             username = this.getCurrentUser().getUsername();
-            result = apiService.listJob(username);
+            result = apiService.listAllJob(username);
         } catch (Exception e) {
-            log.error("获取redis任务信息出错!"+e.getMessage());
+            log.error("获取redis任务信息出错!" + e.getMessage());
             return error("获取任务信息出错!");
         }
         return success(result);
@@ -218,6 +217,25 @@ public class ApiController extends BaseController {
             return error("批量删除任务进度出错!");
         }
         return success(flag);
+    }
+
+    /**
+     * 任务指定接口
+     */
+    @PostMapping(value = "assignment",params = {"taskid","userid"})
+    public ApiResult taskAssignment(@RequestParam(value = "taskid[]") String[] taskid,
+                                    @RequestParam(value = "userid[]") String[] userid) {
+        boolean result;
+        try {
+            if(taskid.length == 0 || userid.length == 0){
+                return error("请确保传入的参数长度不为0");
+            }
+            result = apiService.taskAssignment(taskid, userid);
+        } catch (Exception e) {
+            log.error("任务指定接口出错!", e.getMessage());
+            return error("任务指定接口出错!");
+        }
+        return success(result);
     }
 
 }
