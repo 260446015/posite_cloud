@@ -3,6 +3,7 @@ package com.zkjl.posite_cloud.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.Constans;
+import com.zkjl.posite_cloud.common.util.DateUtils;
 import com.zkjl.posite_cloud.common.util.EmailUtils;
 import com.zkjl.posite_cloud.common.util.PageUtil;
 import com.zkjl.posite_cloud.dao.CreditsRepository;
@@ -163,7 +164,7 @@ public class CreditsService implements ICreditsService {
             data.put("data", action.getData());
             data.put("id",action.getId());
             data.put("dataKind",dataKind);
-            data.put("creationTime", action.getCreationTime());
+            data.put("creationTime", DateUtils.getFormatString(action.getCreationTime()));
             data.put("warnInfo", getWarnLevel(totalSorce, conf));
             result.add(data);
         });

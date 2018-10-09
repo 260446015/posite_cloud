@@ -27,4 +27,11 @@ public class JobInfo implements Serializable {
     private Date creationTime;
     private Date updateTime;
     private Boolean ifSendEmail;
+    /**
+     * 0未处理
+     * 1处理中
+     * 2已处理
+     * 3已通报
+     */
+    private Integer handleMark;
 }

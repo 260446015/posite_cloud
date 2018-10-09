@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
 import com.zkjl.posite_cloud.domain.vo.RedistaskVO;
+import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IReportService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -133,6 +134,10 @@ public class ReportController extends BaseController {
     @GetMapping(value = "exportPosite")
     public void exportPosite(@RequestParam(value = "taskid[]") String[] taskid){
         String username = this.getCurrentUser().getUsername();
-//        reportService.exportPosite(taskid,username);
+        try {
+            reportService.exportPosite(taskid,username);
+        } catch (CustomerException e) {
+            e.printStackTrace();
+        }
     }
 }
