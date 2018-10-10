@@ -86,4 +86,8 @@ public class User {
      * 查询数量
      */
     private Integer searchCount;
+    /**
+     * 查询总量
+     */
+    private Integer totalSerachCount;
 }

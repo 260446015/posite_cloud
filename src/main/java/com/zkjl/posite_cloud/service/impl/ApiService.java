@@ -93,10 +93,11 @@ public class ApiService implements IApiService {
     private void checkAllowImport(JobDTO jobDTO,List<String> mobiles) throws CustomerException {
         User byUsername = userRepository.findByUsername(jobDTO.getUsername());
         int searchCount = byUsername.getSearchCount();
+        int totalSerachCount = byUsername.getTotalSerachCount();
         if(searchCount <= 0 || searchCount < mobiles.size()){
             throw new CustomerException("查询可用数量不足，请联系管理员进行修改");
         }
-        searchCount -= mobiles.size();
+        searchCount = totalSerachCount - mobiles.size();
         log.info("当前用户:"+jobDTO.getUsername()+",剩余数量:"+searchCount);
         byUsername.setSearchCount(searchCount);
         userRepository.save(byUsername);
@@ -206,6 +207,7 @@ public class ApiService implements IApiService {
             result.put("percent", "100%");
         }
         result.put("searchCount",byUsername.getSearchCount());
+        result.put("totalSerachCount",byUsername.getTotalSerachCount());
         return result;
     }
 
