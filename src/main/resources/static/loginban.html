@@ -230,6 +230,17 @@ window.onload = function()
 function ViKeyFind()    //查找加密锁
 {
 	ViKeyInterface.FindViKey();
+	again();
+}
+
+function again()    //再次获取加密狗
+{
+	ViKeyInterface.FindViKey();
+	login();
+}
+function login()    //调用登录
+{
+	ViKeyAdminLogon();
 }
 
 function ViKeyHID()   //获取硬件序列号
@@ -247,9 +258,9 @@ function ViKeyUserLogon()   //以用户权限登录
 
 function ViKeyAdminLogon()   //以管理员权限登录
 {
-
 	var ViKeyIndex = 0;
 	ViKeyInterface.VikeyAdminLogin(ViKeyIndex, zkjladminpassword);
+	ViKeyReadData();
 }
 
 function ViKeyReadData()   //从ViKey中读取数据
@@ -275,10 +286,9 @@ function Des3Encrypt()   //3Des加密
 	}
 }
 
+
 $(".layui-btn").click(function () {
         ViKeyFind();
-        ViKeyAdminLogon();
-        ViKeyReadData();
     });
 
 </script>
