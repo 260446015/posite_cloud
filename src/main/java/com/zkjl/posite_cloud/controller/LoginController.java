@@ -9,7 +9,6 @@ import com.zkjl.posite_cloud.exception.AccountStartException;
 import com.zkjl.posite_cloud.service.IUserService;
 import com.zkjl.posite_cloud.shiro.ShiroUtil;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
@@ -43,9 +42,10 @@ public class LoginController extends BaseController{
      * @return 返回响应
      */
     @PostMapping(value = "/login")
-    public ApiResult loginAjax(HttpServletRequest request, String password, String type) {
+    public ApiResult loginAjax(HttpServletRequest request, String username, String type, String password) {
         if (request.getAttribute("success") != null && (boolean) request.getAttribute("success")) {
-            User login = userService.findUserById(password);
+//            userLogoServiceImpl.addLoginLogo(getUserId());
+            User login = userService.selectByUsernameAndPassword(username, password);
             UserVo vo = new UserVo();
             BeanUtils.copyProperties(login,vo);
             vo.setArea("");

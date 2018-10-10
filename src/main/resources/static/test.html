@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <button id="test">点击</button>
+</body>
+<script src="../js/common/jquery-3.3.1.min.js"></script>
+<script>
+    $("#test").click(function () {
+        var data = {"taskid":["504042239ec8e4c9f2c70e2de45000b2","504042239ec8e4c9f2c70e2de45000b2"]};
+        $.ajax({
+            url:"/api/exportPosite",
+            data:data,
+            success:function (res) {
+                console.log(res.data);
+            }
+        })
+    })
+</script>
+</html>

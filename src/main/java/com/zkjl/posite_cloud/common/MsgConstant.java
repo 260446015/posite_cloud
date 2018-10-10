@@ -92,4 +92,5 @@ public class MsgConstant {
 	 */
 	public static final String UNENABLE = "用户未启用";
 
+
 }
