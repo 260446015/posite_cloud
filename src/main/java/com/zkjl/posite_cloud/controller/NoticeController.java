@@ -35,7 +35,7 @@ public class NoticeController extends BaseController{
         return success(result);
     }
 
-    @GetMapping(params = {"pageNum,pageSize"})
+    @GetMapping
     public ApiResult find(Integer pageNum,Integer pageSize,String startTime,String endTime){
         PageImpl<Notice> result;
         try{
