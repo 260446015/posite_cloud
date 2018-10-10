@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="css/common/common.css?version=0">
     <link rel="stylesheet" href="css/common/layout.css?version=0">
     <link rel="stylesheet" href="css/common/index.css?version=0">
+    <link href="vikey/ViKeyTest.css" rel="stylesheet" type="text/css">
     <style>
         .layui-form{
             width: 440px;
@@ -78,13 +79,207 @@
     <div class="centit">
         <button class="layui-btn layui-btn-fluid" style="background: #3aa3fd;margin-bottom: 30px;">确定</button>
     </div>
-    <a class="downchajian" href="#">网页认证插件下载</a>
+    <a class="downchajian" href="/vikey/ViKey网页控件_谷歌.exe">网页认证插件下载</a>
 </div>
 
 </body>
 <script src="res/layui/layui.all.js"></script>
 <script src="js/common/common.js?versin=0"></script>
+
+<script src="vikey/ViKeyInterface.js"></script>
 <script>
+var zkjluserpassword="zkjluser";
+var zkjladminpassword="zkjladmin";
+var ViKeyInterface;
+var bHasInstallVikey = 0;
+
+
+function IsInstallVikey()
+{
+	if(bHasInstallVikey == 0)
+	{
+		alert("尚未安装插件，或插件尚未正常运行");
+	}
+	else
+	{
+		console.log("插件工作正常");
+	}
+}
+
+window.onload = function()
+{
+	var strSocketResult;
+	ViKeyInterface=new ViKeySocketInterface(); //创建UK类
+
+	ViKeyInterface.ViKeySocket.onmessage = function(msg)
+	{
+		var ReceiveJsonData = JSON.parse(msg.data);
+
+		if(ReceiveJsonData.FunctionType == "VikeyFind")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				console.log("已找到ViKey加密锁数量：" + ReceiveJsonData.Count);
+			}
+			else
+			{
+				console.log("查找失败 ERRORCODE："+ ReceiveJsonData.ErrorCode);
+			}
+		}
+		else if(ReceiveJsonData.FunctionType == "CheckInstall")
+		{
+			//alert("CheckInstall");
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				bHasInstallVikey = 1;
+				//IsInstallVikey();
+			}
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyUserLogin")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				console.log("用户登录成功");
+			}
+			else
+			{
+				console.log("用户权限登陆失败 ERRORCODE：" + ReceiveJsonData.ErrorCode);
+			}
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyAdminLogin")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				console.log("管理员权限登陆成功");
+			}
+			else
+			{
+				console.log("管理员权限登陆失败 ERRORCODE：" + ReceiveJsonData.ErrorCode);
+			}
+		}
+
+		else if(ReceiveJsonData.FunctionType == "VikeyReadData")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+
+				console.log("读取数据成功: " +  ReceiveJsonData.Data);
+				$.ajax({
+            url: "/login",
+            type: "post",
+			data: {
+                password: ReceiveJsonData.Data
+
+            },
+            xhrFields: {
+                withCredentials: true
+            },
+
+            success: function (res) {
+                console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                sessionStorage.setItem("zdryscuser", JSON.stringify(res.data));
+                window.location = "index.html";
+            }
+        });
+			}
+			else
+			{
+				console.log("从加密狗中读取数据失败 ERRORCODE：" + ReceiveJsonData.ErrorCode);
+			}
+		}
+		else if(ReceiveJsonData.FunctionType == "VikeyWriteData")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				console.log("写入数据成功: " + 	FM.EditWriteData.value);
+			}
+			else
+			{
+				console.log("向加密狗中写入数据失败 ERRORCODE：" + ReceiveJsonData.ErrorCode);
+			}
+		}
+		else if(ReceiveJsonData.FunctionType == "Vikey3DesEncrypt")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				console.log("3DES加密生成密文："+ReceiveJsonData.Result);
+			}
+			else
+			{
+				console.log("3DES加密失败 ERRORCODE：" + ReceiveJsonData.ErrorCode);
+			}
+		}
+		else if(ReceiveJsonData.FunctionType == "Vikey3DesDecrypt")
+		{
+			if(ReceiveJsonData.ErrorCode == 0)
+			{
+				console.log("3DES解密生成密文："+ReceiveJsonData.Result);
+			}
+			else
+			{
+				console.log("3DES解密失败 ERRORCODE：" + ReceiveJsonData.ErrorCode);
+			}
+		}
+
+	};
+}
+
+function ViKeyFind()    //查找加密锁
+{
+	ViKeyInterface.FindViKey();
+}
+
+function ViKeyHID()   //获取硬件序列号
+{
+	var ViKeyIndex = 0;
+	ViKeyInterface.VikeyGetHID(ViKeyIndex);
+}
+
+function ViKeyUserLogon()   //以用户权限登录
+{
+
+	var ViKeyIndex = 0;
+	ViKeyInterface.VikeyUserLogin(ViKeyIndex, zkjluserpassword);
+}
+
+function ViKeyAdminLogon()   //以管理员权限登录
+{
+
+	var ViKeyIndex = 0;
+	ViKeyInterface.VikeyAdminLogin(ViKeyIndex, zkjladminpassword);
+}
+
+function ViKeyReadData()   //从ViKey中读取数据
+{
+	var ViKeyIndex = 0;
+	var Addr = 0;
+	var Length = 32;
+	ViKeyInterface.VikeyReadData(ViKeyIndex, Addr, Length);
+}
+
+function Des3Encrypt()   //3Des加密
+{
+	var FM = window.document.ViKeyForm;
+	var ViKeyIndex = 0;
+
+	if(FM.edtDesEncrypt.value.length != 24)
+	{
+		alert("加密长度必须为24个字符");
+	}
+	else
+	{
+		ViKeyInterface.Vikey3DesEncrypt(ViKeyIndex, 24, FM.edtDesEncrypt.value);
+	}
+}
+
+$(".layui-btn").click(function () {
+        ViKeyFind();
+        ViKeyAdminLogon();
+        ViKeyReadData();
+    });
 
 </script>
 </html>

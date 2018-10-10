@@ -2,6 +2,7 @@ package com.zkjl.posite_cloud.controller;
 
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
+import com.zkjl.posite_cloud.common.ViKeyJavaObj;
 import com.zkjl.posite_cloud.domain.dto.LogDTO;
 import com.zkjl.posite_cloud.domain.dto.UserDTO;
 import com.zkjl.posite_cloud.domain.pojo.Log;
@@ -279,6 +280,52 @@ public class UserController extends BaseController {
             mapList.add(map);
         }
         return mapList;
+    }
+    public static byte[] strToByteArray(String str) {
+        if (str == null) {
+            return null;
+        }
+        byte[] byteArray = str.getBytes();
+        return byteArray;
+    }
+
+
+    public static void main(String[] args){
+        int[]	dwCount=new int[1];
+        short	Index = 0;
+        int[]	HID= new int[1];
+        long retval=0;
+        ViKeyJavaObj viKeyJavaObj=new ViKeyJavaObj();
+        // 查找加密狗
+        retval = viKeyJavaObj.ViKeyFind(dwCount);
+        if (retval == viKeyJavaObj.VIKEY_SUCCESS)
+        {
+            System.out.println("系统中找到ViKey加密狗数量:"+dwCount[0]);
+        }
+        else
+        {
+            System.out.println("系统中没有找到ViKey加密狗");
+            return;
+        }
+
+        Index = 0;
+        //获取加密狗硬件ID
+        retval = viKeyJavaObj.ViKeyGetHID(Index, HID);
+        if (retval == viKeyJavaObj.VIKEY_SUCCESS)
+        {
+            System.out.println("获取加密狗的硬件ID:"+HID[0]);
+        }
+        else
+        {
+            System.out.println("获取加密狗类型错误");
+            return;
+        }
+        //System.out.println(System.getProperty("java.library.path"));
+       /* byte [] k=strToByteArray("zkjluser");
+
+        int a =viKeyJavaObj.ViKeyUserLogin((short) 0, k);
+
+        System.out.println(a);*/
     }
 
 }
