@@ -185,6 +185,7 @@ public class ApiService implements IApiService {
     public JSONObject realTimeData(String username) throws Exception {
         JSONObject result = new JSONObject();
         List<JobInfo> total = jobInfoRepository.findByUsername(username);
+        User byUsername = userRepository.findByUsername(username);
         if (total.size() == 0) {
             result.put("successData", 0);
             result.put("totalCount", 0);
@@ -204,6 +205,7 @@ public class ApiService implements IApiService {
         if(keys.size() == 0){
             result.put("percent", "100%");
         }
+        result.put("searchCount",byUsername.getSearchCount());
         return result;
     }
 
