@@ -98,7 +98,7 @@ function IsInstallVikey()
 {
 	if(bHasInstallVikey == 0)
 	{
-		alert("尚未安装插件，或插件尚未正常运行");
+		return layer.msg("尚未安装插件，或插件尚未正常运行");
 	}
 	else
 	{
@@ -123,7 +123,8 @@ window.onload = function()
 			}
 			else
 			{
-				console.log("查找失败 ERRORCODE："+ ReceiveJsonData.ErrorCode);
+			    console.log("查找失败 ERRORCODE："+ ReceiveJsonData.ErrorCode);
+				return layer.msg("尚未发现加密狗，或加密狗尚未正常运行");
 			}
 		}
 		else if(ReceiveJsonData.FunctionType == "CheckInstall")
@@ -287,9 +288,10 @@ function Des3Encrypt()   //3Des加密
 }
 
 
-$(".layui-btn").click(function () {
+  $(".layui-btn").click(function () {
         ViKeyFind();
-    });
+  });
+
 
 </script>
 </html>
