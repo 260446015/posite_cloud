@@ -345,10 +345,10 @@ $(function () {
                 if (res.code != 0) {
                     //return layer.msg(res.message, {anim: 6});
                 }
-                if(res.data.length==0||res.data==""){
+                if(res.data.job.length==0||res.data==""){
                     $(".sc_renwuwqqe").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
                 }
-                $.each(res.data,function (i,item) {
+                $.each(res.data.job,function (i,item) {
                     var list;
                     var otext = "";
                     var key = "否";
