@@ -345,8 +345,8 @@ $(function () {
                 if (res.code != 0) {
                     //return layer.msg(res.message, {anim: 6});
                 }
-                if(res.data.length==0){
-                    $(".sc_renwu,.im_contenlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
+                if(res.data.length==0||res.data==""){
+                    $(".sc_renwuwqqe").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
                 }
                 $.each(res.data,function (i,item) {
                     var list;
@@ -381,4 +381,20 @@ $(function () {
     $(".sc_renwuwqqe").on("click",".baocunbtn32",function () {
         window.location = "html/repotr_renwu.html?"+$(this).attr("data-href");
     });
+
+
+
+
+    //首页滚动
+    function AutoScroll(obj) {
+        $(obj).find("ul:first").animate({
+            marginTop: "-30px"
+        }, 500, function () {
+            $(this).css({
+                marginTop: "0px"
+            }).find("li:first").appendTo(this);
+        });
+    }
+
+    setInterval(function () { AutoScroll("#gundong") }, 5000);
 });

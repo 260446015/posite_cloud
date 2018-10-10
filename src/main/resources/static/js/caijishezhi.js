@@ -5,6 +5,7 @@ $(function () {
     var laypage = layui.laypage;
     var element = layui.element;
     var form = layui.form;
+    //分页
     function setPageNo(count,limitnum) {
         laypage.render({
             elem: 'listpage'
@@ -19,10 +20,27 @@ $(function () {
             }
         });
     }
+    //三级菜单
+    function refreshcaidan() {
+        $(".tree label").click(function(event) {
+            var $this = $(this).parent();
+            var $ul = $this.parent().children("ul");
+
+            if ($ul.length > 0) {
+                if($ul.is(":visible")){
+                    $ul.slideUp();
+                    $this.children("i").removeClass("fa-minus").addClass("fa-plus");
+                } else {
+                    $ul.slideDown();
+                    $this.children("i").removeClass("fa-plus").addClass("fa-minus");
+                }
+            }
+        });
+    }
     //任务列表
     getrenwu();
     function getrenwu() {
-        $(".sc_renwu").empty();
+        $(".treeul").empty();
         $.ajax({
             url: "/api/listJob",
             type: "get",
@@ -36,9 +54,55 @@ $(function () {
                     //return layer.msg(res.message, {anim: 6});
                 }
                 if(res.data.length==0){
-                    $(".sc_renwu,.im_contenlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
+                    $(".treeul,.im_contenlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
                 }
-                $.each(res.data,function (i,item) {
+                //开始一级user
+                $.each(res.data.user,function (i,item) {
+                    var oli = '<li>' +
+                        '<span><input type="checkbox" name="deletespan" lay-skin="primary"><label>'+item.username+'</label></span>' +
+                        '<ul style="display: none;">'
+                    $.each(item.job,function (i,item) {
+                        //一级下li
+                        var otext = "";
+                        if(item.taskname){
+                            otext = item.taskname;
+                        }else{
+                            otext = zdrysc.timechange(item.creationTime);
+                        }
+                        if(item.ifFinish){
+                            oli += '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label id="'+item.taskId+'" data-code="'+item.ifFinish+'" data-href="'+item.reportStatus+'">'+otext+'</label></li>';
+                        }else{
+                            oli += '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label data-href="'+item.reportStatus+'" data-code="'+item.ifFinish+'" id="'+item.taskId+'">'+otext+'</label></li>';
+                        }
+                    });
+                    //一级下用户
+                    $.each(item.user,function (i,item) {
+                        oli += '<li>' +
+                            '<span><input type="checkbox" name="deletespan" lay-skin="primary"><label>'+item.username+'</label></span>' +
+                            '<ul style="display: none;">'
+                        //二级下li
+                        $.each(item.job,function (i,item) {
+                            var otext = "";
+                            if(item.taskname){
+                                otext = item.taskname;
+                            }else{
+                                otext = zdrysc.timechange(item.creationTime);
+                            }
+                            if(item.ifFinish){
+                                oli += '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label id="'+item.taskId+'" data-code="'+item.ifFinish+'" data-href="'+item.reportStatus+'">'+otext+'</label></li>';
+                            }else{
+                                oli += '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label data-href="'+item.reportStatus+'" data-code="'+item.ifFinish+'" id="'+item.taskId+'">'+otext+'</label></li>';
+                            }
+                        });
+                        oli += '</ul>' +
+                            '</li>'
+                    });
+                    oli += '</ul>' +
+                        '</li>'
+                    $(".treeul").append(oli);
+                })
+                //开始一级列表
+                $.each(res.data.job,function (i,item) {
                     var list;
                     var otext = "";
                     if(item.taskname){
@@ -47,17 +111,18 @@ $(function () {
                         otext = zdrysc.timechange(item.creationTime);
                     }
                     if(item.ifFinish){
-                        list = '<li class=""><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span id="'+item.taskId+'" data-code="'+item.ifFinish+'" data-href="'+item.reportStatus+'">'+otext+'</span></li>';
+                        list = '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label id="'+item.taskId+'" data-code="'+item.ifFinish+'" data-href="'+item.reportStatus+'">'+otext+'</label></li>';
                     }else{
-                        list = '<li><input  id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><span data-href="'+item.reportStatus+'" data-code="'+item.ifFinish+'" id="'+item.taskId+'">'+otext+'</span></li>';
+                        list = '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label data-href="'+item.reportStatus+'" data-code="'+item.ifFinish+'" id="'+item.taskId+'">'+otext+'</label></li>';
                     }
-                    $(".sc_renwu").append(list);
+                    $(".treeul").append(list);
                 });
+                refreshcaidan();
                 form.render();
-                if(res.data.length>0){
-                    var tafirst = res.data[res.data.length - 1];
+                if(res.data.job.length>0){
+                    var tafirst = res.data.job[res.data.job.length - 1];
                     getlist(0,10,tafirst.taskId);
-                    $(".sc_renwu").find("li").eq(res.data.length - 1).addClass("re_active");
+                    $(".treeul").find("li").eq($(".treeul").find("li").length - 1).addClass("re_active");
                     $(".listpage").attr("data-href",tafirst.taskId,"");
                     jindu(tafirst.taskId);
                     $(".re_history").attr("data-href",tafirst.taskId);
@@ -76,9 +141,9 @@ $(function () {
         });
     }
     //点击切换
-    $(".sc_renwu").on("click","span",function () {
+    $(".treeul").on("click",".oneli label",function () {
         $(".im_contenlist").empty();
-        $(".sc_renwu").find("li").removeClass("re_active");
+        $(".treeul").find("li").removeClass("re_active");
         $(this).parent("li").addClass("re_active");
         $(".listpage").attr("data-href",$(this).attr("id"));
         getlist(0,10,$(this).attr("id"),"");
@@ -210,7 +275,7 @@ $(function () {
         });
     }
     //生成任务报告
-    $(".sc_renwu").on("click",".btntrue",function () {
+    $(".treeul").on("click",".btntrue",function () {
         window.location = "repotr_renwu.html?"+$(this).attr("id");
     });
     //开启关闭任务
@@ -269,7 +334,7 @@ $(function () {
     //批量删除方法
     function piliangshanchu() {
         var olist = [];
-        $(".sc_renwu").find(".layui-form-checkbox").each(function (i,item) {
+        $(".treeul").find(".layui-form-checkbox").each(function (i,item) {
             var oid = $(this).siblings("input").attr("id");
             if(item.getAttribute("class")=="layui-unselect layui-form-checkbox layui-form-checked"){
                 olist.push(oid)
@@ -298,9 +363,24 @@ $(function () {
             }
         });
     }
-
     //历史报告跳转
     $(".re_history").click(function () {
         window.location = "historyreport.html?"+$(this).attr("data-href");
+    });
+    //一件收起放开
+    $(".shoufang").click(function () {
+        if($(this).attr("data-href")=="true"){
+            $(".treeul").find("ul").slideDown();
+            $(this).attr({
+                "data-href":false,
+                "class":"shoufang iconfont icon-shouqi"
+            });
+        }else{
+            $(".treeul").find("ul").slideUp();
+            $(this).attr({
+                "data-href":true,
+                "class":"shoufang iconfont icon-zhankaigengduo"
+            });
+        }
     });
 })

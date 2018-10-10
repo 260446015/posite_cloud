@@ -58,7 +58,7 @@
         </dt>
     </dl>
 </header>
-<section>
+<section id="shadow">
     <div class="se_title">
         <p><a href="../index.html">HOME</a>   /   任务报告</p>
     </div>
@@ -135,6 +135,7 @@
 </body>
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/echarts.min.js"></script>
+<script src="../js/shuiyin.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
 <script>
     var oid = window.location.search.split("?")[1];
@@ -384,6 +385,9 @@
             });
 
             $(".re_shuomin2").html("其中达到蓝色预警人员"+num.red.length+"人，橙色预警"+num.yellow.length+"人，红色预警"+num.blue.length+"人;");
+
+            //水印
+            watermark();
 
         }
     });

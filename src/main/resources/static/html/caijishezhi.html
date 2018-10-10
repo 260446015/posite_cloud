@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="../css/common/common.css?version=0">
     <link rel="stylesheet" href="../css/common/layout.css?version=0">
     <link rel="stylesheet" href="../css/caiji.css?version=0">
+    <link rel="stylesheet" href="../css/tree.css?version=0">
     <style>
         body{
             background: #edeef2;
@@ -33,6 +34,52 @@
             color: #fff;
             background: #1e8cea;
             padding: 20px;
+        }
+
+        .tree > ul > li:before,
+        .tree > ul > li:after{display: none; }
+        body .tree .layui-form-checkbox[lay-skin=primary] {
+            float: left;
+            line-height: 15px!important;
+        }
+        /*.tree > ul > li > ul {*/
+            /*padding: 8px 0;*/
+        /*}*/
+        /*.tree > ul{*/
+            /*padding: 8px 0;*/
+        /*}*/
+        .tree li {position: relative;list-style: none; margin: 0;  padding:6px 10px;}
+        .tree li:before,
+        .tree li:after {content: ""; position: absolute; left: -.1em; top: -1.1em; width: 1em; }
+        .tree li:before{height: 2.15em; border-bottom: 2px solid #1E9FFF; }
+        .tree li:after{height: 100%; border-left: 2px solid #1E9FFF; }
+        .tree li:nth-child(1):before{height: 1em; top: .2em; }
+        .tree li:last-child:after{height: 2.3em; }
+        .tree span {position: relative;display: block; z-index: 1; padding: .35em .5em .4em .5em; border-radius: .2em; background-color: #1E9FFF; color: white;overflow: hidden; }
+        .tree span label{
+            cursor: pointer;
+            float: left;
+            width: 82%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+        }
+        .tree span i{margin-left: .5em; }
+        .oneli{
+            cursor: pointer;
+        }
+        .oneli:hover{
+            background: rgba(0,0,0,.3);
+            color: #fff;
+        }
+        .oneli label{
+            cursor: pointer;
+            width: 90%;
+            display: inline-block;
+        }
+        .treeul .re_active{
+            background: rgba(0,0,0,.3);
+            color: #fff;
         }
     </style>
 </head>
@@ -71,11 +118,15 @@
             </div>
             <div class="sc_pilaing layui-form">
                 <input type="checkbox" class="quanxuna" name="like1[read]" lay-skin="primary" title="全选" lay-filter="quanxuan">
-                <i class="piliangdelete">批量删除</i>
+                <label data-href="true" class="shoufang iconfont icon-zhankaigengduo"></label>
+                <label class="piliangdelete">批量删除</label>
             </div>
             <ul class="sc_renwu layui-form">
                 <!--<li><span>2018-23-12 12:!2:!2</span><a>生成报告</a></li>-->
             </ul>
+            <div class="tree layui-form">
+                <ul class="treeul"></ul>
+            </div>
         </div>
 
 
@@ -131,6 +182,16 @@
 <script src="../js/common/common.js?versin=0"></script>
 <script src="../js/caijishezhi.js?versin=0"></script>
 <script>
+    $(function() {
+        //分页设置
+        layui.use(['laypage','layer','element','form']);
+        var laypage = layui.laypage;
+        var element = layui.element;
+        var form = layui.form;
+        //$(".tree span").append($("<i class='fa fa-plus fa-fw'></i>"));
+        //$(".tree>ul ul").hide();
+        form.render();
 
+    });
 </script>
 </html>

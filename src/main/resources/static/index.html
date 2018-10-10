@@ -40,6 +40,29 @@
         body .layui-layer-page .sc_zdgrayspan{
             display: block;
         }
+        .gonggao{
+            height: 40px;
+            line-height: 40px;
+            background: #fff;
+        }
+        .scrollDiv{
+            float: left;
+            width: 50%;
+            height: 30px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+        .scrollDiv li{
+            height: 30px;
+            line-height: 30px;
+        }
+        .gg_rig{
+            width: 30%;
+            float: right;
+            overflow: hidden;
+            text-align: right;
+            padding-right: 20px;
+        }
     </style>
 </head>
 <body>
@@ -68,6 +91,23 @@
     </dl>
 </header>
 <div class="indexbox">
+    <div class="gonggao">
+        <div class="gg_lef">
+            <span class="iconfont icon-gonggao">公告：</span>
+            <div class="scrollDiv" id="gundong">
+                <ul style="margin-top: 0px;">
+                    <li><a href="html/systemmessage.html">新增加网站：奇乐融，拍拍贷，人人贷</a></li>
+                    <li><a href="html/systemmessage.html">2018年10月1日系统升级维护，给您带来的不便敬请谅解</a></li>
+                    <li><a href="html/systemmessage.html">新增网站：beplay、人人直播</a></li>
+                    <li><a href="html/systemmessage.html">2018年10月8日系统升级维护，给您带来的不便敬请谅解</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="gg_rig">
+            监测总量：<span>2000</span>;  剩余：<span>299</span>
+        </div>
+    </div>
+
     <div class="titlelist none">依法坚决打击“黄赌毒”违法犯罪行为，“保平安、促和谐”，让黄赌毒无所遁形!</div>
     <div class="indexbox1">
         <div class="sc_box1lef">
@@ -93,7 +133,7 @@
             </div>
         </div>
         <div class="sc_box1rig" style="width:32.6%;margin-right: 1.5%;">
-            <div class="sc_title">重点人画像排名<a href="html/importan.html;">查看更多>></a></div>
+            <div class="sc_title">危险指数预警<a href="html/importan.html;">查看更多>></a></div>
             <div class="sc_zhongdian">
                 <div class="sc_zdgray">
                     <span>排名</span>
@@ -144,9 +184,10 @@
         </div>
     </div>
 
-    <div class="beian">版权所有©中科金联（北京）科技有限公司京ICP备15043082号</div>
+    <div class="beian">
+        版权所有©中科金联（北京）科技有限公司京ICP备15043082号
+    </div>
 </div>
-
 </body>
 <script src="res/layui/layui.all.js"></script>
 <script src="js/common/echarts.min.js"></script>
