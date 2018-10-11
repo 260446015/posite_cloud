@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * @author yindawei
  * @date 2018/10/11 13:46
  **/
-//@Configuration
+@Configuration
 public class SSLConfig {
 
     @Value(value = "${http.port}")
@@ -33,7 +33,7 @@ public class SSLConfig {
                 SecurityConstraint securityConstraint = new SecurityConstraint();
                 securityConstraint.setUserConstraint("CONFIDENTIAL");
                 SecurityCollection collection = new SecurityCollection();
-                collection.addPattern("/*");
+                collection.addPattern("/api/*");
                 securityConstraint.addCollection(collection);
                 context.addConstraint(securityConstraint);
             }
