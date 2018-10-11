@@ -1,6 +1,7 @@
 package com.zkjl.posite_cloud.shiro;
 
 import com.zkjl.posite_cloud.dao.UserRepository;
+import com.zkjl.posite_cloud.domain.pojo.User;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -66,7 +67,7 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
     /**
      * 创建token
      */
-    /*@Override
+    @Override
     protected UsernamePasswordToken createToken(ServletRequest request, ServletResponse response) {
         String password = getPassword(request);
         User user=userBaseRepository.findById(password).get();
@@ -75,16 +76,16 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
         boolean rememberMe = isRememberMe(request);
         String host = getHost(request);
         return new UsernamePasswordToken(username, newpassword.toCharArray(), rememberMe, host);
-    }*/
+    }
 
-    @Override
+    /*@Override
     protected UsernamePasswordToken createToken(ServletRequest request, ServletResponse response) {
         String username = getUsername(request);
         String password = getPassword(request);
         boolean rememberMe = isRememberMe(request);
         String host = getHost(request);
         return new UsernamePasswordToken(username, password.toCharArray(), rememberMe, host);
-    }
+    }*/
 
     /**
      * 未登录拦截处理

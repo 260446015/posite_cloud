@@ -41,7 +41,7 @@ public class LoginController extends BaseController{
      *            携带成功或失败的request
      * @return 返回响应
      */
-    /*@PostMapping(value = "/login")
+    @PostMapping(value = "/login")
     public ApiResult loginAjax(HttpServletRequest request, String password, String type) {
         if (request.getAttribute("success") != null && (boolean) request.getAttribute("success")) {
             User login = userService.findUserById(password);
@@ -75,9 +75,9 @@ public class LoginController extends BaseController{
             }
         }
         return error(message);
-    }*/
+    }
 
-    @PostMapping(value = "/login")
+    /*@PostMapping(value = "/login")
     public ApiResult loginAjax(HttpServletRequest request, String username, String type, String password) {
         if (request.getAttribute("success") != null && (boolean) request.getAttribute("success")) {
 //            userLogoServiceImpl.addLoginLogo(getUserId());
@@ -112,7 +112,7 @@ public class LoginController extends BaseController{
             }
         }
         return error(message);
-    }
+    }*/
 
     @GetMapping(value = "login")
     private ModelAndView login(ModelAndView modelAndView){
