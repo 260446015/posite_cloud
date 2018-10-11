@@ -82,4 +82,12 @@ public class User {
      * 用户头像
      */
     private String image;
+    /**
+     * 查询数量
+     */
+    private Integer searchCount;
+    /**
+     * 查询总量
+     */
+    private Integer totalSerachCount;
 }

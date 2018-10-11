@@ -1,12 +1,10 @@
 package com.zkjl.posite_cloud.shiro;
 
 import com.zkjl.posite_cloud.common.MsgConstant;
-import com.zkjl.posite_cloud.common.util.IpUtil;
 import com.zkjl.posite_cloud.dao.RoleRepository;
 import com.zkjl.posite_cloud.dao.UserRepository;
 import com.zkjl.posite_cloud.domain.pojo.Role;
 import com.zkjl.posite_cloud.domain.pojo.User;
-import com.zkjl.posite_cloud.domain.vo.UserVo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -16,11 +14,9 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
-import javax.security.auth.login.AccountExpiredException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;

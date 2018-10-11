@@ -3,7 +3,6 @@ package com.zkjl.posite_cloud.domain.vo;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author yindawei
@@ -13,7 +12,7 @@ import java.util.Date;
 public class JobinfoVO implements Serializable {
     private static final long serialVersionUID = -2524390291306720047L;
     private String taskId;
-    private Date creationTime;
+    private String creationTime;
     private Boolean ifFinish;
     private String taskname;
     private Boolean reportStatus;

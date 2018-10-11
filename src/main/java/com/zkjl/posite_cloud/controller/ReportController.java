@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author yindawei
@@ -132,10 +134,10 @@ public class ReportController extends BaseController {
     }
 
     @GetMapping(value = "exportPosite")
-    public void exportPosite(@RequestParam(value = "taskid[]") String[] taskid){
+    public void exportPosite(@RequestParam(value = "taskid[]") String[] taskid, HttpServletResponse response, HttpServletRequest request){
         String username = this.getCurrentUser().getUsername();
         try {
-            reportService.exportPosite(taskid,username);
+            reportService.exportPosite(taskid,username,response,request);
         } catch (CustomerException e) {
             e.printStackTrace();
         }

@@ -9,6 +9,7 @@ import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
 import com.zkjl.posite_cloud.domain.pojo.*;
 import com.zkjl.posite_cloud.domain.vo.JobinfoVO;
+import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IApiService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -61,11 +62,12 @@ public class ApiService implements IApiService {
     private static final Logger log = LoggerFactory.getLogger(ApiService.class);
 
     @Override
-    public JobDTO createJob(JobDTO jobDTO) {
+    public JobDTO createJob(JobDTO jobDTO) throws CustomerException {
         checkMobile(jobDTO);
         String taskId = getTaskId(jobDTO);
         List<JobInfo> preSaveDatas = new ArrayList<>();
         List<String> mobiles = Arrays.asList(jobDTO.getDatas().split(","));
+        checkAllowImport(jobDTO,mobiles);
         for (String mobile : mobiles) {
             JobInfo jobInfo = new JobInfo();
             jobInfo.setTaskid(taskId);
@@ -88,7 +90,20 @@ public class ApiService implements IApiService {
         return jobDTO;
     }
 
-    private void checkMobile(JobDTO jobDTO) {
+    private void checkAllowImport(JobDTO jobDTO,List<String> mobiles) throws CustomerException {
+        User byUsername = userRepository.findByUsername(jobDTO.getUsername());
+        int searchCount = byUsername.getSearchCount();
+        int totalSerachCount = byUsername.getTotalSerachCount();
+        if(searchCount <= 0 || searchCount < mobiles.size()){
+            throw new CustomerException("查询可用数量不足，请联系管理员进行修改");
+        }
+        searchCount = totalSerachCount - mobiles.size();
+        log.info("当前用户:"+jobDTO.getUsername()+",剩余数量:"+searchCount);
+        byUsername.setSearchCount(searchCount);
+        userRepository.save(byUsername);
+    }
+
+    private void checkMobile(JobDTO jobDTO) throws CustomerException {
         String datas = jobDTO.getDatas();
         String[] split = datas.split(",");
         log.info("校验数据之前的数量:" + split.length);
@@ -97,6 +112,9 @@ public class ApiService implements IApiService {
             if (RegUtil.checkMobile(aSplit)) {
                 check.add(aSplit);
             }
+        }
+        if(check.size() == 0){
+            throw new CustomerException("传入的数据不能为空，请确认数据传入无误");
         }
         String join = StringUtils.join(check, ",");
         String[] split1 = join.split(",");
@@ -168,6 +186,7 @@ public class ApiService implements IApiService {
     public JSONObject realTimeData(String username) throws Exception {
         JSONObject result = new JSONObject();
         List<JobInfo> total = jobInfoRepository.findByUsername(username);
+        User byUsername = userRepository.findByUsername(username);
         if (total.size() == 0) {
             result.put("successData", 0);
             result.put("totalCount", 0);
@@ -183,6 +202,12 @@ public class ApiService implements IApiService {
         percent.setMaximumFractionDigits(4);
         String format = percent.format(successCount.divide(totalCount, 4, RoundingMode.HALF_UP));
         result.put("percent", format);
+        Set keys = redisTemplate.keys(username + "*");
+        if(keys.size() == 0){
+            result.put("percent", "100%");
+        }
+        result.put("searchCount",byUsername.getSearchCount());
+        result.put("totalSerachCount",byUsername.getTotalSerachCount());
         return result;
     }
 
@@ -460,7 +485,7 @@ public class ApiService implements IApiService {
             } else {
                 vo.setTaskId(element.getString("taskid"));
             }
-            vo.setCreationTime(element.getDate("creationTime"));
+            vo.setCreationTime(DateUtils.getFormatString(element.getDate("creationTime")));
             vo.setIfFinish(true);
             vo.setTaskname(element.getString("taskname"));
             vo.setReportStatus(false);
@@ -513,7 +538,7 @@ public class ApiService implements IApiService {
             } else {
                 vo.setTaskId(element.getString("taskid"));
             }
-            vo.setCreationTime(element.getDate("creationTime"));
+            vo.setCreationTime(DateUtils.getFormatString(element.getDate("creationTime")));
             vo.setIfFinish(true);
             vo.setTaskname(element.getString("taskname"));
             vo.setReportStatus(false);
@@ -563,7 +588,7 @@ public class ApiService implements IApiService {
             } else {
                 vo.setTaskId(element.getString("taskid"));
             }
-            vo.setCreationTime(element.getDate("creationTime"));
+            vo.setCreationTime(DateUtils.getFormatString(element.getDate("creationTime")));
             vo.setIfFinish(true);
             vo.setTaskname(element.getString("taskname"));
             vo.setReportStatus(false);
@@ -634,6 +659,10 @@ public class ApiService implements IApiService {
         result.put("percent", format);
         result.put("successCount", successCount);
         result.put("totalCount", byTaskId.size());
+        Set keys = redisTemplate.keys("*" + taskId + "*");
+        if(keys.size()  == 0){
+            result.put("percent", "100%");
+        }
         return result;
     }
 

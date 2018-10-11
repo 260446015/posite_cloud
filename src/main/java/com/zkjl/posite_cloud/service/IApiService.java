@@ -3,6 +3,7 @@ package com.zkjl.posite_cloud.service;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
+import com.zkjl.posite_cloud.exception.CustomerException;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  **/
 public interface IApiService {
 
-    JobDTO createJob(JobDTO jobDTO);
+    JobDTO createJob(JobDTO jobDTO) throws CustomerException;
 
     Boolean updateJob(JobDTO jobDTO);
 

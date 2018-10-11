@@ -45,7 +45,6 @@ public class LogAop {
         Signature signature = joinPoint.getSignature();
         MethodSignature methodSignature = (MethodSignature) signature;
         Method targetMethod = methodSignature.getMethod();
-        System.out.println("当前session:"+request.getSession().getId());
         SystemControllerLog annotation = targetMethod.getAnnotation(SystemControllerLog.class);
         try {
             if(annotation != null){
