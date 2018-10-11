@@ -41,6 +41,42 @@ public class LoginController extends BaseController{
      *            携带成功或失败的request
      * @return 返回响应
      */
+    /*@PostMapping(value = "/login")
+    public ApiResult loginAjax(HttpServletRequest request, String password, String type) {
+        if (request.getAttribute("success") != null && (boolean) request.getAttribute("success")) {
+            User login = userService.findUserById(password);
+            UserVo vo = new UserVo();
+            BeanUtils.copyProperties(login,vo);
+            vo.setArea("");
+            try {
+                String ip = IpUtil.getMyIP();
+                String area = IpUtil.baiduGetCityCode(ip);
+                vo.setArea(area);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return success(vo);
+        }
+        // 登录失败从request中获取shiro处理的异常信息。
+        String message = MsgConstant.LOGIN_ERRROR;
+        String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
+        LOGGER.info("登陆失败的原因" + error);
+        if (error != null) {
+            if (error.equals(IncorrectCredentialsException.class.getName())) {
+                message = MsgConstant.CREDENTIAL_ERROR;
+            } else if (error.equals(ExpiredCredentialsException.class.getName())) {
+                message = MsgConstant.ACCOUNTEXPIRED;
+            } else if (error.equals(AccountStartException.class.getName())) {
+                message = MsgConstant.ACCOUNTSTART;
+            } else if (error.equals(ExcessiveAttemptsException.class.getName())) {
+                message = MsgConstant.LOCKING;
+            }else if (error.equals(DisabledAccountException.class.getName())) {
+                message = MsgConstant.UNENABLE;
+            }
+        }
+        return error(message);
+    }*/
+
     @PostMapping(value = "/login")
     public ApiResult loginAjax(HttpServletRequest request, String username, String type, String password) {
         if (request.getAttribute("success") != null && (boolean) request.getAttribute("success")) {

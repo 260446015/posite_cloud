@@ -66,6 +66,17 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
     /**
      * 创建token
      */
+    /*@Override
+    protected UsernamePasswordToken createToken(ServletRequest request, ServletResponse response) {
+        String password = getPassword(request);
+        User user=userBaseRepository.findById(password).get();
+        String username = user.getUsername();
+        String newpassword = user.getPassword();
+        boolean rememberMe = isRememberMe(request);
+        String host = getHost(request);
+        return new UsernamePasswordToken(username, newpassword.toCharArray(), rememberMe, host);
+    }*/
+
     @Override
     protected UsernamePasswordToken createToken(ServletRequest request, ServletResponse response) {
         String username = getUsername(request);

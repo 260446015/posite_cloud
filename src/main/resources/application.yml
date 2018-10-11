@@ -1,5 +1,12 @@
 server:
-  port: 8091
+  port: 8443
+ ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: 123456
+    key-store-type: PKCS12
+    key-alias: keyperson
+http:
+  port: 8080
 spring:
   data:
     mongodb:
@@ -29,7 +36,6 @@ spring:
   resources:
     static-locations: classpath:/META-INF/resources/,classpath:/resources/,
       classpath:/static/,classpath:/public/,file:${web.upload-path}
-
 config:
   email:
 
@@ -38,4 +44,4 @@ logging:
     org: info
 
 web:
-  upload-path : /home/web/posite_cloud/upload
+  upload-path: /home/web/posite_cloud/upload
