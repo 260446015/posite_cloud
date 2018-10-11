@@ -4,7 +4,9 @@ import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
 import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
+import org.apache.tomcat.websocket.server.WsSci;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * @author yindawei
  * @date 2018/10/11 13:46
  **/
-@Configuration
+//@Configuration
 public class SSLConfig {
 
     @Value(value = "${http.port}")
@@ -47,5 +49,21 @@ public class SSLConfig {
         connector.setSecure(false);
         connector.setRedirectPort(serverPort);
         return connector;
+    }
+
+    /**
+     * 创建wss协议接口
+     * @return
+     */
+    @Bean
+    public TomcatContextCustomizer tomcatContextCustomizer() {
+        System.out.println("TOMCATCONTEXTCUSTOMIZER INITILIZED");
+        return new TomcatContextCustomizer() {
+            @Override
+            public void customize(Context context) {
+                context.addServletContainerInitializer(new WsSci(), null);
+            }
+
+        };
     }
 }

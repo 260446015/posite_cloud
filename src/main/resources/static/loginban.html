@@ -82,14 +82,19 @@
     <a class="downchajian" href="/vikey/ViKey网页控件_谷歌.exe">网页认证插件下载</a>
 </div>
 
+<div id="member_password" style="display:none">
+<tr>
+      <td><div align="right" class="ctbody3">用户密码：</div></td>
+      <td><input name="UserPin2" type="text" class="cttextboxt" id="UserPin2" value="" size="90" maxlength="32"></td>
+      <td><input name="btnUserPin2" type="button" class="ctbottom" id="btnUserPin2" value="用户登录" ></td>
+    </tr>
+</div>
 </body>
 <script src="res/layui/layui.all.js"></script>
 <script src="js/common/common.js?versin=0"></script>
 
 <script src="vikey/ViKeyInterface.js"></script>
 <script>
-var zkjluserpassword="zkjluser";
-var zkjladminpassword="zkjladmin";
 var ViKeyInterface;
 var bHasInstallVikey = 0;
 
@@ -144,6 +149,8 @@ window.onload = function()
 			}
 			else
 			{
+			    return layer.msg("用户登录失败");
+			    $('#member_password').hide();
 				console.log("用户权限登陆失败 ERRORCODE：" + ReceiveJsonData.ErrorCode);
 			}
 		}
@@ -163,7 +170,6 @@ window.onload = function()
 		{
 			if(ReceiveJsonData.ErrorCode == 0)
 			{
-
 				console.log("读取数据成功: " +  ReceiveJsonData.Data);
 				$.ajax({
             url: "/login",
@@ -241,7 +247,17 @@ function again()    //再次获取加密狗
 }
 function login()    //调用登录
 {
-	ViKeyAdminLogon();
+  layer.open({
+             title: "用户验证",
+             area: [200, 200],
+             type: 1,
+             closeBtn: 1, //不显示关闭按钮
+             anim: 2,
+             content: $('#member_password'),
+             cancel: function () {
+                $('#member_password').hide();
+             }
+            });
 }
 
 function ViKeyHID()   //获取硬件序列号
@@ -250,11 +266,12 @@ function ViKeyHID()   //获取硬件序列号
 	ViKeyInterface.VikeyGetHID(ViKeyIndex);
 }
 
-function ViKeyUserLogon()   //以用户权限登录
+function ViKeyUserLogon(password)   //以用户权限登录
 {
 
 	var ViKeyIndex = 0;
-	ViKeyInterface.VikeyUserLogin(ViKeyIndex, zkjluserpassword);
+	ViKeyInterface.VikeyUserLogin(ViKeyIndex, password);
+	ViKeyReadData();
 }
 
 function ViKeyAdminLogon()   //以管理员权限登录
@@ -287,6 +304,15 @@ function Des3Encrypt()   //3Des加密
 	}
 }
 
+$(".ctbottom").click(function () {
+       var pwd=$("#UserPin2").val();
+       if(pwd==null ||pwd==""){
+       return layer.msg("尚未安装插件，或插件尚未正常运行");
+       }else{
+       ViKeyUserLogon(pwd);
+       }
+
+  });
 
   $(".layui-btn").click(function () {
         ViKeyFind();

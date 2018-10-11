@@ -6,11 +6,11 @@ function ViKeySocketInterface()
     var strSocketResult = '';
     if (u.substring(0, 5) == "https") 
 	{
-		url = "wss://112.244.72.30:8189/test";
+		url = "wss://localhost:8189/test";
 	}
 	else 
 	{
-		url = "ws://112.244.72.30:8189/test";
+		url = "ws://localhost:8189/test";
 	}
     
     var ViKeySocket;
