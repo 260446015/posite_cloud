@@ -12,10 +12,13 @@ $(function () {
             },
             data: {},
             success: function (res) {
+                console.log(res)
                 //console.log(res.data.percent);
                 if (res.code != 0) {
                     //return layer.msg(res.message, {anim: 6});
                 }
+                $(".totaljiance").html(res.data.totalSerachCount);
+                $(".shengjiance").html(res.data.searchCount);
                 var s = (res.data.successData)/(res.data.totalCount);
                 var H = $(".sc_jindu").height();
                 var d = $(".sc_jindu").width();
@@ -385,7 +388,7 @@ $(function () {
 
 
 
-    //首页滚动
+    //首页公告滚动
     function AutoScroll(obj) {
         $(obj).find("ul:first").animate({
             marginTop: "-30px"
@@ -395,6 +398,33 @@ $(function () {
             }).find("li:first").appendTo(this);
         });
     }
+    geisysmessage();
+    function geisysmessage() {
+        $(".gongg_list").empty();
+        $.ajax({
+            url: "/api/notice",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                pageNum:0,
+                pageSize:10
+            },
+            success: function (res) {
+                //console.log(res)
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                $.each(res.data.dataList,function (i,item) {
+                    var list = '<li><a href="html/systemmessage.html">'+item.content+'</a></li>'
+                    $(".gongg_list").append(list);
+                });
+                if(res.data.dataList.length>1){
+                    setInterval(function () { AutoScroll("#gundong") }, 5000);
+                }
+            }
+        })
+    }
 
-    setInterval(function () { AutoScroll("#gundong") }, 5000);
 });

@@ -51,12 +51,13 @@
 
 }
 .rp_yjbox div{
-    height: 30px;
+    min-height: 30px;
     line-height: 30px;
+    overflow: hidden;
 }
 .rp_yjbox span{
     float: left;
-    width: 33%;
+    width: 15%;
     text-align: center;
     min-height: 10px;
 }

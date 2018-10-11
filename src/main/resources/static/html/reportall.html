@@ -67,7 +67,7 @@
         </dt>
     </dl>
 </header>
-<section>
+<section id="shadow">
     <div class="se_title">
         <p><a href="../index.html">HOME</a>   /   任务报告</p>
     </div>
@@ -120,6 +120,7 @@
 </body>
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/echarts.min.js"></script>
+<script src="../js/shuiyin.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
 <script>
     var amobile = window.location.search.split("?")[1];
@@ -287,6 +288,9 @@
                     break
             }
             $(".re_shuomin2").html("通过数据分析，该人员网络异常等级为"+zhuatai+"，危险指数"+num.totalSorce+";");
+
+            //水印
+            watermark();
         }
     })
 

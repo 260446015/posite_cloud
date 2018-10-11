@@ -33,6 +33,18 @@
             padding: 20px;
             overflow: hidden;
         }
+        .rp_yjbox span:nth-child(2) {
+            float: left;
+            width: 20%;
+            text-align: center;
+            min-height: 10px;
+        }
+        .rp_yjbox span:nth-child(4) {
+            float: left;
+            width: 35%;
+            text-align: left;
+            min-height: 10px;
+        }
     </style>
 </head>
 <body>
@@ -93,8 +105,10 @@
         <div class="rp_yjbox">
             <a style="color: red;">红色预警人员列表</a>
             <div class="sc_zdgray">
+                <span>姓名</span>
                 <span>手机号</span>
                 <span>注册数量</span>
+                <span style="text-align: center;">注册app</span>
                 <span>危险积分</span>
             </div>
             <p class="rp_redlist" style="overflow: hidden"></p>
@@ -103,8 +117,10 @@
         <div class="rp_yjbox">
             <a style="color: #ff9416;">橙色预警人员列表</a>
             <div class="sc_zdgray">
+                <span>姓名</span>
                 <span>手机号</span>
                 <span>注册数量</span>
+                <span style="text-align: center;">注册app</span>
                 <span>危险积分</span>
             </div>
             <p class="rp_orangelist" style="overflow: hidden"></p>
@@ -113,8 +129,10 @@
         <div class="rp_yjbox">
             <a style="color: #0aa4ea;">蓝色预警人员列表</a>
             <div class="sc_zdgray">
+                <span>姓名</span>
                 <span>手机号</span>
                 <span>注册数量</span>
+                <span style="text-align: center;">注册app</span>
                 <span>危险积分</span>
             </div>
             <p class="rp_bluelist" style="overflow: hidden"></p>
@@ -343,16 +361,31 @@
                 $(".rp_redlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
             }
             $.each(res.data.red,function (i,item) {
+                var appname = '';
+                var appspsn = '';
+                $.each(item.data,function (i,item) {
+                    if(i==0){
+                        appname+=item.webname
+                    }else{
+                        appname+="，"+item.webname
+                    }
+                    appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
+                    console.log(appname)
+                });
                 if(i%2){
                     list = '<div class="sc_zdgray">' +
+                        '<span></span>' +
                         '<span>'+item.mobile+'</span>' +
                         '<span>'+item.registCount+'</span>' +
+                        '<span>'+appname+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '</div>';
                 }else{
                     list = '<div>' +
+                        '<span></span>' +
                         '<span>'+item.mobile+'</span>' +
                         '<span>'+item.registCount+'</span>' +
+                        '<span>'+appname+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '</div>';
                 }
@@ -364,16 +397,37 @@
                 $(".rp_orangelist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
             }
             $.each(res.data.yellow,function (i,item) {
+                var appname = '';
+                var appspsn = '';
+                var otext = '';
+                if(item.data.length<=3){
+                    otext = "text-align:center;"
+                }else{
+                    otext = "text-align:left;"
+                }
+                $.each(item.data,function (i,item) {
+                    if(i==0){
+                        appname+=item.webname
+                    }else{
+                        appname+="，"+item.webname
+                    }
+                    appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
+                    console.log(appname)
+                });
                 if(i%2){
                     list = '<div class="sc_zdgray">' +
+                        '<span></span>' +
                         '<span>'+item.mobile+'</span>' +
                         '<span>'+item.registCount+'</span>' +
+                        '<span style="'+otext+'">'+appname+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '</div>';
                 }else{
                     list = '<div>' +
+                        '<span></span>' +
                         '<span>'+item.mobile+'</span>' +
                         '<span>'+item.registCount+'</span>' +
+                        '<span style="'+otext+'">'+appname+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '</div>';
                 }
@@ -385,23 +439,44 @@
                 $(".rp_bluelist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
             }
             $.each(res.data.blue,function (i,item) {
+                var appname = '';
+                var appspsn = '';
+                var otext = '';
+                if(item.data.length<=3){
+                    otext = "text-align:center;"
+                }else{
+                    otext = "text-align:left;"
+                }
+                $.each(item.data,function (i,item) {
+                    if(i==0){
+                        appname+=item.webname
+                    }else{
+                        appname+="，"+item.webname
+                    }
+                    appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
+                    console.log(appname)
+                });
                 if(i%2){
                     list = '<div class="sc_zdgray">' +
+                        '<span></span>' +
                         '<span>'+item.mobile+'</span>' +
                         '<span>'+item.registCount+'</span>' +
+                        '<span style="'+otext+'">'+appname+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '</div>';
                 }else{
                     list = '<div>' +
+                        '<span></span>' +
                         '<span>'+item.mobile+'</span>' +
                         '<span>'+item.registCount+'</span>' +
+                        '<span style="'+otext+'">'+appname+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '</div>';
                 }
                 $(".rp_bluelist").append(list);
             });
 
-            $(".re_shuomin2").html("其中达到蓝色预警人员"+num.red.length+"人，橙色预警"+num.yellow.length+"人，红色预警"+num.blue.length+"人;");
+            $(".re_shuomin2").html("其中达到红色预警人员"+num.red.length+"人，橙色预警"+num.yellow.length+"人，蓝色预警"+num.blue.length+"人;");
             //水印
             watermark();
         }

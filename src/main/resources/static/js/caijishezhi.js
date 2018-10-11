@@ -9,7 +9,7 @@ $(function () {
     function timeshow() {
         setTimeout(function () {
             $(".treeul .oneli").hover(function () {
-                layer.tips('任务创建时间'+$(this).find('label').attr('data-time'),$(this));
+                layer.tips('任务创建时间：'+$(this).find('label').attr('data-time'),$(this));
                 // layer.tips('创建时间'+$(this).find('label').attr('data-time'),$(this), {
                 //     tips: [1, '#3595CC'],
                 //     time: 4000

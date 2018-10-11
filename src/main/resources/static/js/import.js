@@ -66,7 +66,6 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                     }
                     appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
                     console.log(item.webtype)
-
                 });
                 switch (item.warnInfo){
                     case "红色预警":

@@ -211,7 +211,7 @@
 
     getuserlist("",0,10,"","");
     function getuserlist(name,pageNum,pageSize,username,mobile) {
-        $(".user_list").empty();
+        //$(".user_list").empty();
         $.ajax({
             url: "/api/findUser",
             type: "post",
@@ -256,6 +256,7 @@
                             '<td>' +
                             '    <span data-href="'+item.id+'" class="iconfont icon-bianji"></span>' +
                             '    <span data-href="'+item.id+'" class="iconfont icon-shanchu"></span>' +
+                            '    <span data-href="'+item.id+'" class="iconfont icon-hao"></span>' +
                             '</td>' +
                             '</tr>';
                     }else{
@@ -272,6 +273,7 @@
                             '<td>' +
                             '    <span data-href="'+item.id+'" class="iconfont icon-bianji"></span>' +
                             '    <span data-href="'+item.id+'" class="iconfont icon-shanchu"></span>' +
+                            '    <span data-href="'+item.id+'" class="iconfont icon-hao"></span>' +
                             '</td>' +
                             '</tr>';
                     }
