@@ -43,6 +43,7 @@ public class UserService implements IUserService {
     @Override
     public User create(User user, String userid) throws CustomerException {
         User loginUser = (User) SecurityUtils.getSubject().getPrincipal();
+        user.setCreator(loginUser.getUsername());
         if (StringUtils.isBlank(userid)) {
             user.setJobLevel("group");
         } else {
@@ -62,7 +63,6 @@ public class UserService implements IUserService {
             return null;
         }
         user.setDomain(loginUser.getDomain());
-        user.setCreator(loginUser.getUsername());
         if (user.getIfEnable() == null) {
             user.setIfEnable(false);
         }
