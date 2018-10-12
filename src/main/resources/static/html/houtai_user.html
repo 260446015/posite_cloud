@@ -498,7 +498,7 @@
     function adduser() {
 
         $.ajax({
-            url: "/api/create",
+            url: "/api/create?userid="+$("#propo_box").attr("data-href"),
             type: "post",
             xhrFields: {
                 withCredentials: true
@@ -517,7 +517,7 @@
                 ifEnable:true,
                 // userid:$("#propo_box").attr("data-href")
             }),
-            contentType: "application/json?userid="+$("#propo_box").attr("data-href"),
+            contentType: "application/json",
             success: function (res) {
                 console.log(res);
                 if (res.code != 0) {
