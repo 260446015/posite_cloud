@@ -55,7 +55,7 @@ public class UserController extends BaseController {
     @RequiresRoles(value = "admin")
     @SystemControllerLog(description = "创建用户")
     @ApiOperation(value = "创建更改用户")
-    public ApiResult create(@RequestBody User user, String userid) {
+    public ApiResult create(@RequestBody User user, @RequestParam(value = "userid") String userid) {
         User result;
         try {
             result = userService.create(user, userid);
