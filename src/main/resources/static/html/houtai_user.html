@@ -38,6 +38,23 @@
             min-width: 290px;
             margin-right: 50px;
         }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        .sc_zdgli{
+            border-bottom: 1px solid #edeef2;
+            border-top: 1px solid #edeef2;
+            display: none;
+        }
+        .user_list .icon-zhankaigengduo:before {
+            content: "\e610";
+            font-size: 12px;
+        }
+        .user_list .icon-shouqi:before {
+            content: "\e65a";
+            font-size: 12.5px;
+        }
     </style>
 </head>
 <body>
@@ -159,14 +176,13 @@
         <label>过期时间</label>
         <input type="text" class="layui-input ba_guoqitime" id="timeout" placeholder="请选择过期时间">
     </div>
-    <div class="bz_li">
-        <label style="margin-bottom: 10px;">是否有权查看积分预警</label>
-        <div class="layui-input-block fl">
-            <input type="radio" name="sex21" value="group" title="是" checked="">
-            <input type="radio" name="sex21" value="normal" title="否">
-        </div>
-    </div>
-
+    <!--<div class="bz_li">-->
+        <!--<label style="margin-bottom: 10px;">是否有权查看积分预警</label>-->
+        <!--<div class="layui-input-block fl">-->
+            <!--<input type="radio" name="sex21" value="group" title="是" checked="">-->
+            <!--<input type="radio" name="sex21" value="normal" title="否">-->
+        <!--</div>-->
+    <!--</div>-->
     <div class="" style="text-align: center;clear: both;">
         <span class="layui-btn layui-btn-normal baocunbtn pro_queding">确定</span>
         <span class="layui-btn layui-btn-normal baocunbtn pro_quxiao">取消</span>
@@ -236,46 +252,87 @@
                     setPageNo(count, pageSize);
                 }
                 $.each(res.data.dataList,function (i,item) {
-                    var aaa
-                    if(item.ifEnable){
+                    var aaa;
+                    var oclass = '';
+                    if(item.data.ifEnable){
                         aaa = "已启用"
                     }else{
                         aaa = "已禁用"
                     }
                     if(i%2){
-                        list = '<tr class="sc_zdgray">' +
-                            '<td>'+(i+1)+'</td>' +
-                            '<td>'+item.name+'</td>' +
-                            '<td>'+item.username+'</td>' +
-                            '<td>'+item.age+'</td>' +
-                            '<td>'+item.mobile+'</td>' +
-                            '<td>'+item.email+'</td>' +
-                            '<td>'+item.department+'</td>' +
-                            '<td>'+item.job+'</td>' +
-                            '<td><span data-href="'+item.id+'" class="layui-btn layui-btn-normal baocunbtn">'+aaa+'</span></td>' +
-                            '<td>' +
-                            '    <span data-href="'+item.id+'" class="iconfont icon-bianji"></span>' +
-                            '    <span data-href="'+item.id+'" class="iconfont icon-shanchu"></span>' +
-                            '    <span data-href="'+item.id+'" class="iconfont icon-hao"></span>' +
-                            '</td>' +
-                            '</tr>';
+                        oclass = 'sc_zdgray'
+                    }
+                    list = '<tr class="'+oclass+'">' +
+                        '<td>'+(i+1)+'</td>' +
+                        '<td>'+item.data.name+'</td>' +
+                        '<td>'+item.data.username+'</td>' +
+                        '<td>'+item.data.age+'</td>' +
+                        '<td>'+item.data.mobile+'</td>' +
+                        '<td>'+item.data.email+'</td>' +
+                        '<td>'+item.data.department+'</td>' +
+                        '<td>'+item.data.job+'</td>' +
+                        '<td><span data-href="'+item.data.id+'" class="layui-btn layui-btn-normal baocunbtn">'+aaa+'</span></td>' +
+                        '<td>' +
+                        '    <span data-href="'+item.data.id+'" class="iconfont icon-bianji"></span>' +
+                        '    <span data-href="'+item.data.id+'" class="iconfont icon-shanchu"></span>' +
+                        '    <span data-href="'+item.data.id+'" class="iconfont icon-hao"></span>' +
+                        '    <span data-href="'+item.data.id+'" class="zhan_kai iconfont icon-zhankaigengduo" data-key="true"></span>' +
+                        '</td>' +
+                        '</tr>' +
+                        '<tr class="sc_zdgli">' +
+                        '<td>'+(i+1)+'</td>' +
+                        '<td>'+item.data.name+'</td>' +
+                        '<td>'+item.data.username+'</td>' +
+                        '<td>'+item.data.age+'</td>' +
+                        '<td>'+item.data.mobile+'</td>' +
+                        '<td>'+item.data.email+'</td>' +
+                        '<td>'+item.data.department+'</td>' +
+                        '<td>'+item.data.job+'</td>' +
+                        '<td><span data-href="'+item.data.id+'" class="layui-btn layui-btn-normal baocunbtn">'+aaa+'</span></td>' +
+                        '<td>' +
+                        '    <span data-href="'+item.data.id+'" class="iconfont icon-bianji"></span>' +
+                        '    <span data-href="'+item.data.id+'" class="iconfont icon-shanchu"></span>' +
+                        '    <span data-href="'+item.data.id+'" class="iconfont icon-hao"></span>' +
+                        '</td>' +
+                        '</tr>'+
+                        '<tr class="sc_zdgli">' +
+                        '<td>'+(i+1)+'</td>' +
+                        '<td>'+item.data.name+'</td>' +
+                        '<td>'+item.data.username+'</td>' +
+                        '<td>'+item.data.age+'</td>' +
+                        '<td>'+item.data.mobile+'</td>' +
+                        '<td>'+item.data.email+'</td>' +
+                        '<td>'+item.data.department+'</td>' +
+                        '<td>'+item.data.job+'</td>' +
+                        '<td><span data-href="'+item.data.id+'" class="layui-btn layui-btn-normal baocunbtn">'+aaa+'</span></td>' +
+                        '<td>' +
+                        '    <span data-href="'+item.data.id+'" class="iconfont icon-bianji"></span>' +
+                        '    <span data-href="'+item.data.id+'" class="iconfont icon-shanchu"></span>' +
+                        '    <span data-href="'+item.data.id+'" class="iconfont icon-hao"></span>' +
+                        '</td>' +
+                        '</tr>';
+                    if(i%2){
+
                     }else{
-                        list = '<tr>' +
-                            '<td>'+(i+1)+'</td>' +
-                            '<td>'+item.name+'</td>' +
-                            '<td>'+item.username+'</td>' +
-                            '<td>'+item.age+'</td>' +
-                            '<td>'+item.mobile+'</td>' +
-                            '<td>'+item.email+'</td>' +
-                            '<td>'+item.department+'</td>' +
-                            '<td>'+item.job+'</td>' +
-                            '<td><span data-href="'+item.id+'" class="layui-btn layui-btn-normal baocunbtn">'+aaa+'</span></td>' +
-                            '<td>' +
-                            '    <span data-href="'+item.id+'" class="iconfont icon-bianji"></span>' +
-                            '    <span data-href="'+item.id+'" class="iconfont icon-shanchu"></span>' +
-                            '    <span data-href="'+item.id+'" class="iconfont icon-hao"></span>' +
-                            '</td>' +
-                            '</tr>';
+                        // list = '<tr>' +
+                        //     '<td>'+(i+1)+'</td>' +
+                        //     '<td>'+item.name+'</td>' +
+                        //     '<td>'+item.username+'</td>' +
+                        //     '<td>'+item.age+'</td>' +
+                        //     '<td>'+item.mobile+'</td>' +
+                        //     '<td>'+item.email+'</td>' +
+                        //     '<td>'+item.department+'</td>' +
+                        //     '<td>'+item.job+'</td>' +
+                        //     '<td><span data-href="'+item.id+'" class="layui-btn layui-btn-normal baocunbtn">'+aaa+'</span></td>' +
+                        //     '<td>' +
+                        //     '    <span data-href="'+item.id+'" class="iconfont icon-bianji"></span>' +
+                        //     '    <span data-href="'+item.id+'" class="iconfont icon-shanchu"></span>' +
+                        //     '    <span data-href="'+item.id+'" class="iconfont icon-hao"></span>' +
+                        //     '</td>' +
+                        //     '</tr>'+
+                        //     '<tr>' +
+                        //     '<td colspan="10">ZXZx</td>' +
+                        //     '</tr>';
                     }
                     $(".user_list").append(list);
                 });
@@ -422,6 +479,7 @@
             item.value = "";
         });
         $(".pro_queding").attr("data-href","2");
+        $("#propo_box").attr("data-href","");
         layer.open({
             title: '新增用户',
             area: ['760px', '390px'],
@@ -438,6 +496,7 @@
 
     //添加用户方法
     function adduser() {
+
         $.ajax({
             url: "/api/create",
             type: "post",
@@ -455,13 +514,14 @@
                 username: $(".ba_username").val(),
                 mobile:$(".ba_mobile").val(),
                 age:$(".ba_age").val(),
-                ifEnable:true
+                ifEnable:true,
+                // userid:$("#propo_box").attr("data-href")
             }),
-            contentType: "application/json",
+            contentType: "application/json?userid="+$("#propo_box").attr("data-href"),
             success: function (res) {
                 console.log(res);
                 if (res.code != 0) {
-                    //return layer.msg(res.message, {anim: 6});
+                    return layer.msg(res.message, {anim: 6});
                 }
                 getuserlist("",0,10,"","");
                 layer.closeAll();
@@ -512,6 +572,7 @@
         $("#propo_box").hide();
     });
 
+    //添加用户提交
     $(".pro_queding").click(function () {
         var list = 0;
         $(".propo_box").find(".layui-input").each(function (i,item) {
@@ -538,6 +599,36 @@
         var list = [$(".bo_username").val(),$(".bo_name").val(),$(".bo_mobile").val()];
         $(".listpage").attr("data-href",JSON.stringify(list));
         getuserlist($(".bo_name").val(),0,10,$(".bo_username").val(),$(".bo_mobile").val());
+    });
+
+    //子用户收起展开
+    $(".user_list").on("click",".zhan_kai",function () {
+        if($(this).attr("data-key")=="true"){
+            $(this).attr({"data-key":false,"class":"zhan_kai iconfont icon-shouqi"});
+        }else{
+            $(this).attr({"data-key":true,"class":"zhan_kai iconfont icon-zhankaigengduo"});
+        }
+    });
+
+    //给子用户添加用户
+    $(".user_list").on("click",".icon-hao",function () {
+        $(".propo_box").find(".layui-input").each(function (i,item) {
+            item.value = "";
+        });
+        $(".pro_queding").attr("data-href","2");
+        $("#propo_box").attr("data-href",$(this).attr("data-href"));
+        layer.open({
+            title: '新增用户',
+            area: ['760px', '390px'],
+            type: 1,
+            skin: 'layui-layer-lan', //样式类名
+            closeBtn: 1, //不显示关闭按钮
+            anim: 1,
+            content: $('#propo_box'),
+            cancel: function () {
+                $("#propo_box").hide();
+            }
+        });
     });
 </script>
 </html>
