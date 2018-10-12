@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title class="title" data-href="index">采集设置</title>
+    <title class="title" data-href="index">PKI登录</title>
     <meta name="renderer" content="webkit"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=0, maximum-scale=0, user-scalable=no">
@@ -126,6 +126,7 @@
             if (ReceiveJsonData.FunctionType == "VikeyFind") {
                 if (ReceiveJsonData.ErrorCode == 0) {
                     console.log("已找到ViKey加密锁数量：" + ReceiveJsonData.Count);
+                    login();
                 }
                 else {
                     console.log("查找失败 ERRORCODE：" + ReceiveJsonData.ErrorCode);
@@ -142,6 +143,7 @@
             else if (ReceiveJsonData.FunctionType == "VikeyUserLogin") {
                 if (ReceiveJsonData.ErrorCode == 0) {
                     console.log("用户登录成功");
+                    ViKeyReadData();
                 }
                 else {
                     return layer.msg("用户登录失败");
@@ -223,7 +225,6 @@
     function again()    //再次获取加密狗
     {
         ViKeyInterface.FindViKey();
-        login();
     }
 
     function login()    //调用登录
@@ -233,18 +234,6 @@
         layer.prompt({id:'promitlist',title: '请输入PKI验证密码', formType: 1}, function (pass, index) {
             ViKeyUserLogon(pass);
         });
-
-        // layer.open({
-        //            title: "用户验证",
-        //            area: [200, 200],
-        //            type: 1,
-        //            closeBtn: 1, //不显示关闭按钮
-        //            anim: 2,
-        //            content: $('#member_password'),
-        //            cancel: function () {
-        //               $('#member_password').hide();
-        //            }
-        //           });
     }
 
     function ViKeyHID()   //获取硬件序列号
@@ -257,7 +246,7 @@
     {
         var ViKeyIndex = 0;
         ViKeyInterface.VikeyUserLogin(ViKeyIndex, password);
-        ViKeyReadData();
+
     }
 
     function ViKeyAdminLogon()   //以管理员权限登录
@@ -292,6 +281,7 @@
         var pwd = $("#UserPin2").val();
         if (pwd == null || pwd == "") {
             return layer.msg("尚未安装插件，或插件尚未正常运行");
+            ViKeyFind();
         } else {
             ViKeyUserLogon(pwd);
         }
