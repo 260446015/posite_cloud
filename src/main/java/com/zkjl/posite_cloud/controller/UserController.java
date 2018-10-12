@@ -55,10 +55,10 @@ public class UserController extends BaseController {
     @RequiresRoles(value = "admin")
     @SystemControllerLog(description = "创建用户")
     @ApiOperation(value = "创建更改用户")
-    public ApiResult create(@RequestBody User user) {
+    public ApiResult create(@RequestBody User user, String userid) {
         User result;
         try {
-            result = userService.create(user);
+            result = userService.create(user, userid);
         } catch (Exception e) {
             logger.error("创建用户失败!", e.getMessage());
             return error("创建用户失败!");
@@ -219,7 +219,7 @@ public class UserController extends BaseController {
         UserVo result = new UserVo();
         try {
             User user = this.getCurrentUser();
-            BeanUtils.copyProperties(user,result);
+            BeanUtils.copyProperties(user, result);
         } catch (Exception e) {
             return success(null);
         }
@@ -282,6 +282,7 @@ public class UserController extends BaseController {
         }
         return mapList;
     }
+
     public static byte[] strToByteArray(String str) {
         if (str == null) {
             return null;
@@ -291,20 +292,17 @@ public class UserController extends BaseController {
     }
 
 
-    public static void main(String[] args){
-        int[]	dwCount=new int[1];
-        short	Index = 0;
-        int[]	HID= new int[1];
-        long retval=0;
-        ViKeyJavaObj viKeyJavaObj=new ViKeyJavaObj();
+    public static void main(String[] args) {
+        int[] dwCount = new int[1];
+        short Index = 0;
+        int[] HID = new int[1];
+        long retval = 0;
+        ViKeyJavaObj viKeyJavaObj = new ViKeyJavaObj();
         // 查找加密狗
         retval = viKeyJavaObj.ViKeyFind(dwCount);
-        if (retval == viKeyJavaObj.VIKEY_SUCCESS)
-        {
-            System.out.println("系统中找到ViKey加密狗数量:"+dwCount[0]);
-        }
-        else
-        {
+        if (retval == viKeyJavaObj.VIKEY_SUCCESS) {
+            System.out.println("系统中找到ViKey加密狗数量:" + dwCount[0]);
+        } else {
             System.out.println("系统中没有找到ViKey加密狗");
             return;
         }
@@ -312,12 +310,9 @@ public class UserController extends BaseController {
         Index = 0;
         //获取加密狗硬件ID
         retval = viKeyJavaObj.ViKeyGetHID(Index, HID);
-        if (retval == viKeyJavaObj.VIKEY_SUCCESS)
-        {
-            System.out.println("获取加密狗的硬件ID:"+HID[0]);
-        }
-        else
-        {
+        if (retval == viKeyJavaObj.VIKEY_SUCCESS) {
+            System.out.println("获取加密狗的硬件ID:" + HID[0]);
+        } else {
             System.out.println("获取加密狗类型错误");
             return;
         }

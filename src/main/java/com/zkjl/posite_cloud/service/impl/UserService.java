@@ -41,14 +41,15 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User create(User user) throws CustomerException {
+    public User create(User user, String userid) throws CustomerException {
         User loginUser = (User) SecurityUtils.getSubject().getPrincipal();
-        if (StringUtils.isBlank(user.getJobLevel())) {
-            if (loginUser.getJobLevel().equals("admin")) {
-                user.setJobLevel("group");
-            } else if (loginUser.getJobLevel().equals("group")) {
-                user.setJobLevel("normal");
-            }
+        if (StringUtils.isBlank(userid)) {
+            user.setJobLevel("group");
+        } else {
+            user.setJobLevel("normal");
+            Optional<User> byId = userRepository.findById(userid);
+            User user1 = byId.orElse(null);
+            user.setCreator(user1.getUsername());
         }
         User check = userRepository.findByUsername(user.getUsername());
         if (null != check) {
