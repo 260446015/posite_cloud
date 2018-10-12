@@ -44,6 +44,8 @@ public class UserService implements IUserService {
     public User create(User user, String userid) throws CustomerException {
         User loginUser = (User) SecurityUtils.getSubject().getPrincipal();
         user.setCreator(loginUser.getUsername());
+        user.setSearchCount(2000);
+        user.setTotalSerachCount(2000);
         if (StringUtils.isBlank(userid)) {
             if (loginUser.getJobLevel().equals("admin")) {
                 user.setJobLevel("group");

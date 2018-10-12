@@ -33,7 +33,7 @@ public class MarkWarnTask {
     private JobInfoRepository jobInfoRepository;
     @Resource
     private MongoTemplate mongoTemplate;
-    @Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void doMark(){
         logger.info("处理标记人员开始！");
         Query query = new Query();
