@@ -90,7 +90,7 @@
         <div class="htbtnbox">
             <a href="houtai_user.html" class="ht_btn ht_active">用户管理</a>
             <!--<a href="houtai_quanxian.html" class="ht_btn">权限管理</a>-->
-            <a style="border-right: 1px solid #ccc;" href="houtai_rizhi.html" class="ht_btn">日志管理</a>
+            <a style="border-right: 1px solid #ccc;" href="houtai_rizhi.html" class="ht_btn rizhiguanli">日志管理</a>
         </div>
 
         <div class="sc_title">用户列表</div>
@@ -192,6 +192,7 @@
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
 <script>
+    var zdryscuserdata = JSON.parse(sessionStorage.getItem("zdryscuser"));
     layui.use(['laypage', 'form','upload','laydate']);
     var upload = layui.upload;
     var laypage = layui.laypage;
@@ -227,7 +228,7 @@
 
     getuserlist("",0,10,"","");
     function getuserlist(name,pageNum,pageSize,username,mobile) {
-        //$(".user_list").empty();
+        $(".user_list").empty();
         $.ajax({
             url: "/api/findUser",
             type: "post",
@@ -251,7 +252,12 @@
                     count = res.data.totalNumber;
                     setPageNo(count, pageSize);
                 }
+                var olisaaa = "";
+                if(zdryscuserdata.jobLevel=="group"){
+                    olisaaa = "display:none;"
+                }
                 $.each(res.data.dataList,function (i,item) {
+                    var _index = i;
                     var aaa;
                     var oclass = '';
                     if(item.data.ifEnable){
@@ -261,6 +267,12 @@
                     }
                     if(i%2){
                         oclass = 'sc_zdgray'
+                    }
+                    var ahide = "true";
+                    var acolor = "";
+                    if(!item.element){
+                        ahide = "false";
+                        acolor = "color:#ccc;"
                     }
                     list = '<tr class="'+oclass+'">' +
                         '<td>'+(i+1)+'</td>' +
@@ -275,65 +287,35 @@
                         '<td>' +
                         '    <span data-href="'+item.data.id+'" class="iconfont icon-bianji"></span>' +
                         '    <span data-href="'+item.data.id+'" class="iconfont icon-shanchu"></span>' +
-                        '    <span data-href="'+item.data.id+'" class="iconfont icon-hao"></span>' +
-                        '    <span data-href="'+item.data.id+'" class="zhan_kai iconfont icon-zhankaigengduo" data-key="true"></span>' +
-                        '</td>' +
-                        '</tr>' +
-                        '<tr class="sc_zdgli">' +
-                        '<td>'+(i+1)+'</td>' +
-                        '<td>'+item.data.name+'</td>' +
-                        '<td>'+item.data.username+'</td>' +
-                        '<td>'+item.data.age+'</td>' +
-                        '<td>'+item.data.mobile+'</td>' +
-                        '<td>'+item.data.email+'</td>' +
-                        '<td>'+item.data.department+'</td>' +
-                        '<td>'+item.data.job+'</td>' +
-                        '<td><span data-href="'+item.data.id+'" class="layui-btn layui-btn-normal baocunbtn">'+aaa+'</span></td>' +
-                        '<td>' +
-                        '    <span data-href="'+item.data.id+'" class="iconfont icon-bianji"></span>' +
-                        '    <span data-href="'+item.data.id+'" class="iconfont icon-shanchu"></span>' +
-                        '    <span data-href="'+item.data.id+'" class="iconfont icon-hao"></span>' +
-                        '</td>' +
-                        '</tr>'+
-                        '<tr class="sc_zdgli">' +
-                        '<td>'+(i+1)+'</td>' +
-                        '<td>'+item.data.name+'</td>' +
-                        '<td>'+item.data.username+'</td>' +
-                        '<td>'+item.data.age+'</td>' +
-                        '<td>'+item.data.mobile+'</td>' +
-                        '<td>'+item.data.email+'</td>' +
-                        '<td>'+item.data.department+'</td>' +
-                        '<td>'+item.data.job+'</td>' +
-                        '<td><span data-href="'+item.data.id+'" class="layui-btn layui-btn-normal baocunbtn">'+aaa+'</span></td>' +
-                        '<td>' +
-                        '    <span data-href="'+item.data.id+'" class="iconfont icon-bianji"></span>' +
-                        '    <span data-href="'+item.data.id+'" class="iconfont icon-shanchu"></span>' +
-                        '    <span data-href="'+item.data.id+'" class="iconfont icon-hao"></span>' +
+                        '    <span data-href="'+item.data.id+'" class="iconfont icon-hao" style="'+olisaaa+'"></span>' +
+                        '    <span data-href="'+item.data.id+'" style="'+acolor+olisaaa+'" class="zhan_kai iconfont icon-zhankaigengduo" data-key="true" data-num="'+_index+'" data-list="'+ahide+'"></span>' +
                         '</td>' +
                         '</tr>';
-                    if(i%2){
-
-                    }else{
-                        // list = '<tr>' +
-                        //     '<td>'+(i+1)+'</td>' +
-                        //     '<td>'+item.name+'</td>' +
-                        //     '<td>'+item.username+'</td>' +
-                        //     '<td>'+item.age+'</td>' +
-                        //     '<td>'+item.mobile+'</td>' +
-                        //     '<td>'+item.email+'</td>' +
-                        //     '<td>'+item.department+'</td>' +
-                        //     '<td>'+item.job+'</td>' +
-                        //     '<td><span data-href="'+item.id+'" class="layui-btn layui-btn-normal baocunbtn">'+aaa+'</span></td>' +
-                        //     '<td>' +
-                        //     '    <span data-href="'+item.id+'" class="iconfont icon-bianji"></span>' +
-                        //     '    <span data-href="'+item.id+'" class="iconfont icon-shanchu"></span>' +
-                        //     '    <span data-href="'+item.id+'" class="iconfont icon-hao"></span>' +
-                        //     '</td>' +
-                        //     '</tr>'+
-                        //     '<tr>' +
-                        //     '<td colspan="10">ZXZx</td>' +
-                        //     '</tr>';
-                    }
+                    $.each(item.element,function (i,item) {
+                        var aaa;
+                        var oclass = '';
+                        if(item.data.ifEnable){
+                            aaa = "已启用"
+                        }else{
+                            aaa = "已禁用"
+                        }
+                        list += '</tr>' +
+                            '<tr class="sc_zdgli sc_zdgnext'+_index+'">' +
+                            '<td>'+(_index+1)+'-'+(i+1)+'</td>' +
+                            '<td>'+item.data.name+'</td>' +
+                            '<td>'+item.data.username+'</td>' +
+                            '<td>'+item.data.age+'</td>' +
+                            '<td>'+item.data.mobile+'</td>' +
+                            '<td>'+item.data.email+'</td>' +
+                            '<td>'+item.data.department+'</td>' +
+                            '<td>'+item.data.job+'</td>' +
+                            '<td><span data-href="'+item.data.id+'" class="layui-btn layui-btn-normal baocunbtn">'+aaa+'</span></td>' +
+                            '<td>' +
+                            '    <span data-href="'+item.data.id+'" class="iconfont icon-bianji"></span>' +
+                            '    <span data-href="'+item.data.id+'" class="iconfont icon-shanchu"></span>' +
+                            '</td>' +
+                            '</tr>';
+                    })
                     $(".user_list").append(list);
                 });
             }
@@ -603,11 +585,18 @@
 
     //子用户收起展开
     $(".user_list").on("click",".zhan_kai",function () {
+        var num = $(this).attr("data-num");
+        if($(this).attr("data-list")=="false"){
+            return
+        }
         if($(this).attr("data-key")=="true"){
             $(this).attr({"data-key":false,"class":"zhan_kai iconfont icon-shouqi"});
+            $(".sc_zdgnext"+num).show();
         }else{
             $(this).attr({"data-key":true,"class":"zhan_kai iconfont icon-zhankaigengduo"});
+            $(".sc_zdgnext"+num).hide();
         }
+        console.log($(".sc_zdgnext"+num))
     });
 
     //给子用户添加用户
