@@ -187,6 +187,8 @@ public class ApiService implements IApiService {
         JSONObject result = new JSONObject();
         List<JobInfo> total = jobInfoRepository.findByUsername(username);
         User byUsername = userRepository.findByUsername(username);
+        result.put("searchCount",byUsername.getSearchCount());
+        result.put("totalSerachCount",byUsername.getTotalSerachCount());
         if (total.size() == 0) {
             result.put("successData", 0);
             result.put("totalCount", 0);
@@ -206,8 +208,6 @@ public class ApiService implements IApiService {
         if(keys.size() == 0){
             result.put("percent", "100%");
         }
-        result.put("searchCount",byUsername.getSearchCount());
-        result.put("totalSerachCount",byUsername.getTotalSerachCount());
         return result;
     }
 

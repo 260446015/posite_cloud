@@ -37,7 +37,7 @@ public class MarkWarnTask {
     public void doMark(){
         logger.info("处理标记人员开始！");
         Query query = new Query();
-        query.addCriteria(Criteria.where("handleMark").is(null).and("data").ne(null)).limit(1000).with(Sort.by(Sort.Direction.DESC, "creationTime"));
+        query.addCriteria(Criteria.where("handleMark").is(null).and("data").ne(null)).limit(10000).with(Sort.by(Sort.Direction.DESC, "creationTime"));
         List<JobInfo> all = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
         Map<String, CreditsWarn> confs = new HashMap<>();
         CreditsWarn conf;
