@@ -12,6 +12,7 @@ import com.zkjl.posite_cloud.domain.vo.UserVo;
 import com.zkjl.posite_cloud.service.IFileService;
 import com.zkjl.posite_cloud.service.IUserService;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,7 +132,7 @@ public class UserController extends BaseController {
      * @return
      */
     @PostMapping(value = "findUser")
-    @RequiresRoles(value = "admin")
+    @RequiresRoles(value = {"admin","group"},logical = Logical.OR)
     public ApiResult findUser(@RequestBody UserDTO userDTO) {
         PageImpl<JSONObject> result;
         User login;
