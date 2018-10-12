@@ -45,7 +45,11 @@ public class UserService implements IUserService {
         User loginUser = (User) SecurityUtils.getSubject().getPrincipal();
         user.setCreator(loginUser.getUsername());
         if (StringUtils.isBlank(userid)) {
-            user.setJobLevel("group");
+            if (loginUser.getJobLevel().equals("admin")) {
+                user.setJobLevel("group");
+            } else if (loginUser.getJobLevel().equals("group")) {
+                user.setJobLevel("normal");
+            }
         } else {
             user.setJobLevel("normal");
             Optional<User> byId = userRepository.findById(userid);

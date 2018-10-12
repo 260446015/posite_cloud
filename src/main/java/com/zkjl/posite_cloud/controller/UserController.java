@@ -53,7 +53,7 @@ public class UserController extends BaseController {
      * @return
      */
     @PostMapping(value = "create")
-    @RequiresRoles(value = "admin")
+    @RequiresRoles(value = {"admin","group"},logical = Logical.OR)
     @SystemControllerLog(description = "创建用户")
     @ApiOperation(value = "创建更改用户")
     public ApiResult create(@RequestBody User user, @RequestParam(value = "userid") String userid) {
