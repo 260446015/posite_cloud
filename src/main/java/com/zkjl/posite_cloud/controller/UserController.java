@@ -61,7 +61,7 @@ public class UserController extends BaseController {
             result = userService.create(user, userid);
         } catch (Exception e) {
             logger.error("创建用户失败!", e.getMessage());
-            return error("创建用户失败!");
+            return error("创建用户失败!" + e.getMessage());
         }
         if (result == null) {
             return error("创建用户需指定用户级别");
