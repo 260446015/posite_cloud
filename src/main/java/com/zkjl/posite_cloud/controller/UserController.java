@@ -1,5 +1,6 @@
 package com.zkjl.posite_cloud.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
 import com.zkjl.posite_cloud.common.ViKeyJavaObj;
@@ -132,7 +133,7 @@ public class UserController extends BaseController {
     @PostMapping(value = "findUser")
     @RequiresRoles(value = "admin")
     public ApiResult findUser(@RequestBody UserDTO userDTO) {
-        PageImpl<User> result;
+        PageImpl<JSONObject> result;
         User login;
         try {
             login = this.getCurrentUser();

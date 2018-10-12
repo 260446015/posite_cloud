@@ -83,7 +83,7 @@ public class ApiController extends BaseController {
             username = this.getCurrentUser().getUsername();
             result = apiService.realTimeData(username);
         } catch (Exception e) {
-            log.error("获取数据实时进度出错!", e.getMessage());
+            log.error("获取数据实时进度出错!" + e.getMessage());
             return error("获取数据实时进度出错!");
         }
         return success(result);
@@ -103,7 +103,7 @@ public class ApiController extends BaseController {
             username = this.getCurrentUser().getUsername();
             result = apiService.developmentData(username);
         } catch (Exception e) {
-            log.error("获取占比分析出错!", e.getMessage());
+            log.error("获取占比分析出错!" + e.getMessage());
             return error("获取占比分析出错!");
         }
         return success(result);
@@ -123,7 +123,7 @@ public class ApiController extends BaseController {
             username = this.getCurrentUser().getUsername();
             result = apiService.realTimeRegist(username);
         } catch (Exception e) {
-            log.error("获取实时注册信息出错!", e.getMessage());
+            log.error("获取实时注册信息出错!" + e.getMessage());
             return error("获取实时注册信息出错!");
         }
         return success(result);
@@ -222,12 +222,12 @@ public class ApiController extends BaseController {
     /**
      * 任务指定接口
      */
-    @PostMapping(value = "assignment",params = {"taskid","userid"})
+    @PostMapping(value = "assignment", params = {"taskid", "userid"})
     public ApiResult taskAssignment(@RequestParam(value = "taskid[]") String[] taskid,
                                     @RequestParam(value = "userid[]") String[] userid) {
         boolean result;
         try {
-            if(taskid.length == 0 || userid.length == 0){
+            if (taskid.length == 0 || userid.length == 0) {
                 return error("请确保传入的参数长度不为0");
             }
             result = apiService.taskAssignment(taskid, userid);

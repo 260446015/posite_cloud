@@ -1,6 +1,7 @@
 package com.zkjl.posite_cloud.service;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.domain.dto.LogDTO;
 import com.zkjl.posite_cloud.domain.dto.UserDTO;
 import com.zkjl.posite_cloud.domain.pojo.Log;
@@ -18,7 +19,7 @@ public interface IUserService {
 
     PageImpl<Log> findLog(LogDTO log);
 
-    PageImpl<User> findUser(UserDTO userDTO, User login);
+    PageImpl<JSONObject> findUser(UserDTO userDTO, User login);
 
     User findUserById(String id);
 
