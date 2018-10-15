@@ -15,6 +15,8 @@ import com.zkjl.posite_cloud.service.IApiService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -63,6 +65,7 @@ public class ApiService implements IApiService {
     private static final Logger log = LoggerFactory.getLogger(ApiService.class);
 
     @Override
+    @CacheEvict(key = "#p0.username", value = "redisJob")
     public JobDTO createJob(JobDTO jobDTO) throws CustomerException {
         checkMobile(jobDTO);
         String taskId = getTaskId(jobDTO);
@@ -377,6 +380,7 @@ public class ApiService implements IApiService {
     }
 
     @Override
+    @Cacheable(key = "#p0", value = "redisJob")
     public JSONObject listAllJob(String username) {
         JSONObject result = new JSONObject();
 //        List<JobinfoVO> jsonObject = listJob2(username);
@@ -390,6 +394,7 @@ public class ApiService implements IApiService {
             result.put("mark", 1);
             result.put("user", null);
             result.put("username", username);
+            result.put("userid", byUsername.getId());
             List<User> secondUser = userRepository.findByCreator(username);
             if (secondUser.size() != 0) {
                 JSONArray secondArr = new JSONArray();
@@ -402,6 +407,7 @@ public class ApiService implements IApiService {
                     element.put("user", null);
                     element.put("mark", 2);
                     element.put("username", elementUsername);
+                    element.put("userid", aSecondUser.getId());
                     List<User> thirdUser = userRepository.findByCreator(elementUsername);
                     if (thirdUser.size() != 0) {
                         JSONArray thirdArr = new JSONArray();
@@ -413,6 +419,7 @@ public class ApiService implements IApiService {
                             elementThird.put("job", jobinfoVOS1);
                             elementThird.put("mark", 3);
                             elementThird.put("username", elementUsernameThird);
+                            elementThird.put("userid", thirdUser.get(i).getId());
                             thirdArr.add(elementThird);
                         }
                         element.put("user", thirdArr);
@@ -430,6 +437,7 @@ public class ApiService implements IApiService {
             result.put("mark", 2);
             result.put("user", null);
             result.put("username", username);
+            result.put("userid", byUsername.getId());
             List<User> secondUser = userRepository.findByCreator(username);
             if (secondUser.size() != 0) {
                 JSONArray sendArr = new JSONArray();
@@ -441,6 +449,7 @@ public class ApiService implements IApiService {
                     element.put("job", jobinfoVOS);
                     element.put("mark", 3);
                     element.put("username", elementUsername);
+                    element.put("userid", secondUser.get(i).getId());
                     sendArr.add(element);
                 }
                 result.put("user", sendArr);
@@ -451,6 +460,7 @@ public class ApiService implements IApiService {
             normalData.addAll(listAssignJob(byUsername.getId(), username));
             result.put("job", normalData);
             result.put("username", username);
+            result.put("username", byUsername.getId());
             result.put("mark", 3);
         }
 
@@ -670,6 +680,7 @@ public class ApiService implements IApiService {
     }
 
     @Override
+    @CacheEvict(value = "redisJob",key = "#p1")
     public boolean deleteBatch(String[] ids, String username) {
         boolean flag = false;
         try {

@@ -7,6 +7,7 @@
 <body>
 <button id="test">点击</button>
 <button id="test2">点击2</button>
+<button id="test3">点击3</button>
 </body>
 <script src="../js/common/jquery-3.3.1.min.js"></script>
 <script>
@@ -29,6 +30,20 @@
             url: "/api/updatePersonMark",
             data: data,
             type: "patch",
+            success: function (res) {
+                console.log(res.data);
+            }
+        })
+    })
+    $("#test3").click(function () {
+        var data = {
+            "taskid[]": ["123"],
+            "userid[]": "321"
+        };
+        $.ajax({
+            url: "/api/assignment",
+            data: data,
+            type: "post",
             success: function (res) {
                 console.log(res.data);
             }
