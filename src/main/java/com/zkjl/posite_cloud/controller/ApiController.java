@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -208,7 +209,7 @@ public class ApiController extends BaseController {
      * @return
      */
     @PostMapping(value = "deleteBatch")
-    public ApiResult deleteBatch(List<DeleteJobDTO> deletes) {
+    public ApiResult deleteBatch(@RequestBody List<DeleteJobDTO> deletes) {
         boolean flag;
         String username;
         try {

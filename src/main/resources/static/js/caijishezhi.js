@@ -357,7 +357,7 @@ $(function () {
             var userid = $(this).parent().parent().siblings("span").find("input").attr("id");
             if(item.getAttribute("class")=="layui-unselect layui-form-checkbox layui-form-checked"){
                 olist.push(oid);
-                alist.push({"userid":userid,"reneuid":oid})
+                alist.push({"userid":userid,"taskid":oid})
             }
         });
         if(olist.length == 0){
@@ -365,24 +365,23 @@ $(function () {
         }
         console.log(alist)
         console.log(olist)
-        // $.ajax({
-        //     url: "/api/deleteBatch",
-        //     type: "get",
-        //     xhrFields: {
-        //         withCredentials: true
-        //     },
-        //     data: {
-        //         ids:olist
-        //     },
-        //     success: function (res) {
-        //         if (res.code != 0) {
-        //             //return layer.msg(res.message, {anim: 6});
-        //         }
-        //         getrenwu();
-        //         layer.closeAll();
-        //         layer.msg("删除成功");
-        //     }
-        // });
+        $.ajax({
+            url: "/api/deleteBatch",
+            type: "post",
+            xhrFields: {
+                withCredentials: true
+            },
+            contentType:"application/json",
+            data: JSON.stringify(alist),
+            success: function (res) {
+                if (res.code != 0) {
+                    //return layer.msg(res.message, {anim: 6});
+                }
+                getrenwu();
+                layer.closeAll();
+                layer.msg("删除成功");
+            }
+        });
     }
     //历史报告跳转
     $(".re_history").click(function () {

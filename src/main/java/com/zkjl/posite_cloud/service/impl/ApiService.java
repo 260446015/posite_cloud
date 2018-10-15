@@ -705,7 +705,8 @@ public class ApiService implements IApiService {
 
     @Override
     public boolean deleteBatch(List<DeleteJobDTO> deletes,String username) {
-        deletes.forEach(action ->{
+        for (int i = 0; i < deletes.size(); i++) {
+            DeleteJobDTO action = deletes.get(i);
             String taskid = action.getTaskid();
             String userid = action.getUserid();
             if(StringUtils.isBlank(userid)){
@@ -718,9 +719,9 @@ public class ApiService implements IApiService {
                     e.printStackTrace();
                 }
             }else{
-                mongoTemplate.remove(new Query(Criteria.where("taskid").is(taskid).and(userid).is(userid)), Constans.T_ASSIGN_TASK);
+                mongoTemplate.remove(new Query(Criteria.where("taskid").is(taskid).and("userid").is(userid)), Constans.T_ASSIGN_TASK);
             }
-        });
+        }
         return false;
     }
 
