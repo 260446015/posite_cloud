@@ -707,6 +707,8 @@ public class ApiService implements IApiService {
         for (int i = 0; i < userid.length; i++) {
             for (int j = 0; j < taskid.length; j++) {
                 AssignTask assignTask = new AssignTask();
+                String _id = MD5Util.encrypt(userid[i] + taskid[j]);
+                assignTask.setId(_id);
                 assignTask.setUserid(userid[i]);
                 assignTask.setTaskid(taskid[j]);
                 assignTask.setCreateTime(Calendar.getInstance().getTime());
