@@ -9,6 +9,7 @@ import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
 import com.zkjl.posite_cloud.domain.pojo.*;
 import com.zkjl.posite_cloud.domain.vo.JobinfoVO;
+import com.zkjl.posite_cloud.enums.MarkEnum;
 import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IApiService;
 import org.apache.commons.lang3.StringUtils;
@@ -67,7 +68,7 @@ public class ApiService implements IApiService {
         String taskId = getTaskId(jobDTO);
         List<JobInfo> preSaveDatas = new ArrayList<>();
         List<String> mobiles = Arrays.asList(jobDTO.getDatas().split(","));
-        checkAllowImport(jobDTO,mobiles);
+        checkAllowImport(jobDTO, mobiles);
         for (String mobile : mobiles) {
             JobInfo jobInfo = new JobInfo();
             jobInfo.setTaskid(taskId);
@@ -90,15 +91,15 @@ public class ApiService implements IApiService {
         return jobDTO;
     }
 
-    private void checkAllowImport(JobDTO jobDTO,List<String> mobiles) throws CustomerException {
+    private void checkAllowImport(JobDTO jobDTO, List<String> mobiles) throws CustomerException {
         User byUsername = userRepository.findByUsername(jobDTO.getUsername());
         int searchCount = byUsername.getSearchCount();
         int totalSerachCount = byUsername.getTotalSerachCount();
-        if(searchCount <= 0 || searchCount < mobiles.size()){
+        if (searchCount <= 0 || searchCount < mobiles.size()) {
             throw new CustomerException("查询可用数量不足，请联系管理员进行修改");
         }
         searchCount = totalSerachCount - mobiles.size();
-        log.info("当前用户:"+jobDTO.getUsername()+",剩余数量:"+searchCount);
+        log.info("当前用户:" + jobDTO.getUsername() + ",剩余数量:" + searchCount);
         byUsername.setSearchCount(searchCount);
         userRepository.save(byUsername);
     }
@@ -113,7 +114,7 @@ public class ApiService implements IApiService {
                 check.add(aSplit);
             }
         }
-        if(check.size() == 0){
+        if (check.size() == 0) {
             throw new CustomerException("传入的数据不能为空，请确认数据传入无误");
         }
         String join = StringUtils.join(check, ",");
@@ -187,8 +188,8 @@ public class ApiService implements IApiService {
         JSONObject result = new JSONObject();
         List<JobInfo> total = jobInfoRepository.findByUsername(username);
         User byUsername = userRepository.findByUsername(username);
-        result.put("searchCount",byUsername.getSearchCount());
-        result.put("totalSerachCount",byUsername.getTotalSerachCount());
+        result.put("searchCount", byUsername.getSearchCount());
+        result.put("totalSerachCount", byUsername.getTotalSerachCount());
         if (total.size() == 0) {
             result.put("successData", 0);
             result.put("totalCount", 0);
@@ -205,7 +206,7 @@ public class ApiService implements IApiService {
         String format = percent.format(successCount.divide(totalCount, 4, RoundingMode.HALF_UP));
         result.put("percent", format);
         Set keys = redisTemplate.keys(username + "*");
-        if(keys.size() == 0){
+        if (keys.size() == 0) {
             result.put("percent", "100%");
         }
         return result;
@@ -331,6 +332,7 @@ public class ApiService implements IApiService {
 
     @Override
     public JSONObject getSentiment(SentimentDTO sentimentDTO, String userSentiment) {
+
         long c = System.currentTimeMillis() / 1000;
         String token = MD5Utils.generateToken(c);
         Map<String, Object> params = new HashMap<>();
@@ -344,26 +346,18 @@ public class ApiService implements IApiService {
         //相关词
         JSONArray array = new JSONArray();
         Set<String> check = new HashSet<>();
-        check.add("赌博");
-        check.add("贷款");
-        check.add("色情");
-        check.add("黄色");
-        check.add("主播");
-        check.add("直播");
-        check.add("游戏");
-        /*String area = "";
-        try {
-            String myIP = IpUtil.getMyIP();
-            area = IpUtil.baiduGetCityCode(myIP);
-            check.add(area);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+        String[] msg = sentimentDTO.getMsg();
+        for (String input : msg) {
+            check.add(input);
+        }
         if (!StringUtils.isBlank(userSentiment)) {
             String[] split = userSentiment.split(",");
             Collections.addAll(check, split);
         }
         array.addAll(check);
+        if (log.isInfoEnabled()) {
+            log.info("查询舆情开始,参数为:userSentiment:" + userSentiment + ",舆情参数:" + check + ",sentimentDTO:" + sentimentDTO);
+        }
         json.put("industry", 1000);
         //排序字段
         json.put("sortField", "publishTime");
@@ -374,7 +368,6 @@ public class ApiService implements IApiService {
         //查询时间范围
         json.put("start_time", sentimentDTO.getBeginDate());
         json.put("end_time", sentimentDTO.getEndDate());
-        System.out.println(json.toString());
         long st = System.currentTimeMillis();
         JSONObject response = RequestUtils.sendPost(Constans.SENTIMENT_URL + "?" + assembling, json.toString());
         long et = System.currentTimeMillis();
@@ -389,26 +382,26 @@ public class ApiService implements IApiService {
 //        List<JobinfoVO> jsonObject = listJob2(username);
 //        result.put("job", jsonObject);
         User byUsername = userRepository.findByUsername(username);
-        if(byUsername.getJobLevel().equals("admin")){
+        if (byUsername.getJobLevel().equals("admin")) {
 
             List<JobinfoVO> adminData = listJob2(username);
-            adminData.addAll(listAssignJob(byUsername.getId(),username));
-            result.put("job",adminData);
-            result.put("mark",1);
-            result.put("user",null);
-            result.put("username",username);
+            adminData.addAll(listAssignJob(byUsername.getId(), username));
+            result.put("job", adminData);
+            result.put("mark", 1);
+            result.put("user", null);
+            result.put("username", username);
             List<User> secondUser = userRepository.findByCreator(username);
-            if(secondUser.size() != 0){
+            if (secondUser.size() != 0) {
                 JSONArray secondArr = new JSONArray();
                 for (User aSecondUser : secondUser) {
                     JSONObject element = new JSONObject();
                     String elementUsername = aSecondUser.getUsername();
                     List<JobinfoVO> jobinfoVOS = listJob2(elementUsername);
-                    jobinfoVOS.addAll(listAssignJob(aSecondUser.getId(),elementUsername));
+                    jobinfoVOS.addAll(listAssignJob(aSecondUser.getId(), elementUsername));
                     element.put("job", jobinfoVOS);
                     element.put("user", null);
                     element.put("mark", 2);
-                    element.put("username",elementUsername);
+                    element.put("username", elementUsername);
                     List<User> thirdUser = userRepository.findByCreator(elementUsername);
                     if (thirdUser.size() != 0) {
                         JSONArray thirdArr = new JSONArray();
@@ -416,10 +409,10 @@ public class ApiService implements IApiService {
                             JSONObject elementThird = new JSONObject();
                             String elementUsernameThird = thirdUser.get(i).getUsername();
                             List<JobinfoVO> jobinfoVOS1 = listJob2(elementUsernameThird);
-                            jobinfoVOS1.addAll(listAssignJob(thirdUser.get(i).getId(),elementUsernameThird));
+                            jobinfoVOS1.addAll(listAssignJob(thirdUser.get(i).getId(), elementUsernameThird));
                             elementThird.put("job", jobinfoVOS1);
-                            elementThird.put("mark",3);
-                            elementThird.put("username",elementUsernameThird);
+                            elementThird.put("mark", 3);
+                            elementThird.put("username", elementUsernameThird);
                             thirdArr.add(elementThird);
                         }
                         element.put("user", thirdArr);
@@ -427,38 +420,38 @@ public class ApiService implements IApiService {
                     }
                     secondArr.add(element);
                 }
-                result.put("user",secondArr);
+                result.put("user", secondArr);
 
             }
-        }else if(byUsername.getJobLevel().equals("group")){
+        } else if (byUsername.getJobLevel().equals("group")) {
             List<JobinfoVO> groupData = listJob2(username);
-            groupData.addAll(listAssignJob(byUsername.getId(),username));
-            result.put("job",groupData);
-            result.put("mark",2);
-            result.put("user",null);
-            result.put("username",username);
+            groupData.addAll(listAssignJob(byUsername.getId(), username));
+            result.put("job", groupData);
+            result.put("mark", 2);
+            result.put("user", null);
+            result.put("username", username);
             List<User> secondUser = userRepository.findByCreator(username);
-            if(secondUser.size() != 0){
+            if (secondUser.size() != 0) {
                 JSONArray sendArr = new JSONArray();
                 for (int i = 0; i < secondUser.size(); i++) {
                     JSONObject element = new JSONObject();
                     String elementUsername = secondUser.get(i).getUsername();
                     List<JobinfoVO> jobinfoVOS = listJob2(elementUsername);
-                    jobinfoVOS.addAll(listAssignJob(secondUser.get(i).getId(),elementUsername));
-                    element.put("job",jobinfoVOS);
-                    element.put("mark",3);
-                    element.put("username",elementUsername);
+                    jobinfoVOS.addAll(listAssignJob(secondUser.get(i).getId(), elementUsername));
+                    element.put("job", jobinfoVOS);
+                    element.put("mark", 3);
+                    element.put("username", elementUsername);
                     sendArr.add(element);
                 }
-                result.put("user",sendArr);
+                result.put("user", sendArr);
 
             }
-        }else {
+        } else {
             List<JobinfoVO> normalData = listJob2(username);
-            normalData.addAll(listAssignJob(byUsername.getId(),username));
-            result.put("job",normalData);
-            result.put("username",username);
-            result.put("mark",3);
+            normalData.addAll(listAssignJob(byUsername.getId(), username));
+            result.put("job", normalData);
+            result.put("username", username);
+            result.put("mark", 3);
         }
 
         return result;
@@ -504,20 +497,20 @@ public class ApiService implements IApiService {
         });
         result.sort(Comparator.comparing(JobinfoVO::getCreationTime));
         JSONObject nextData = new JSONObject();
-        nextData.put("job",result);
+        nextData.put("job", result);
         List<User> byCreator = userRepository.findByCreator(username);
-        if(byCreator.size() != 0){
-            byCreator.forEach(action ->{
+        if (byCreator.size() != 0) {
+            byCreator.forEach(action -> {
                 JSONObject next = new JSONObject();
-                next.put(action.getUsername(),null);
+                next.put(action.getUsername(), null);
 
             });
         }
-        resultData.put(username,result);
+        resultData.put(username, result);
         return resultData;
     }
 
-    private List<JobinfoVO> listAssignJob(String userid,String username){
+    private List<JobinfoVO> listAssignJob(String userid, String username) {
         List<AssignTask> assignTasks = assignTaskRepository.findByUserid(userid);
         List<String> taskids = assignTasks.stream().map(AssignTask::getTaskid).collect(Collectors.toList());
         Aggregation agg = Aggregation.newAggregation(
@@ -557,18 +550,19 @@ public class ApiService implements IApiService {
         });
         result.sort(Comparator.comparing(JobinfoVO::getCreationTime));
         JSONObject nextData = new JSONObject();
-        nextData.put("job",result);
+        nextData.put("job", result);
         List<User> byCreator = userRepository.findByCreator(username);
-        if(byCreator.size() != 0){
-            byCreator.forEach(action ->{
+        if (byCreator.size() != 0) {
+            byCreator.forEach(action -> {
                 JSONObject next = new JSONObject();
-                next.put(action.getUsername(),null);
+                next.put(action.getUsername(), null);
 
             });
         }
         return result;
 
     }
+
     private List<JobinfoVO> listJob2(String username) {
         Aggregation agg = Aggregation.newAggregation(
                 Aggregation.match(Criteria.where("username").is(username)),
@@ -607,12 +601,12 @@ public class ApiService implements IApiService {
         });
         result.sort(Comparator.comparing(JobinfoVO::getCreationTime));
         JSONObject nextData = new JSONObject();
-        nextData.put("job",result);
+        nextData.put("job", result);
         List<User> byCreator = userRepository.findByCreator(username);
-        if(byCreator.size() != 0){
-            byCreator.forEach(action ->{
+        if (byCreator.size() != 0) {
+            byCreator.forEach(action -> {
                 JSONObject next = new JSONObject();
-                next.put(action.getUsername(),null);
+                next.put(action.getUsername(), null);
 
             });
         }
@@ -660,7 +654,7 @@ public class ApiService implements IApiService {
         result.put("successCount", successCount);
         result.put("totalCount", byTaskId.size());
         Set keys = redisTemplate.keys("*" + taskId + "*");
-        if(keys.size()  == 0){
+        if (keys.size() == 0) {
             result.put("percent", "100%");
         }
         return result;
@@ -711,6 +705,23 @@ public class ApiService implements IApiService {
         try {
             assignTaskRepository.saveAll(saveData);
         } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updatePersonMark(Integer handleMark, String id) throws CustomerException {
+        Optional<JobInfo> byId = jobInfoRepository.findById(id);
+        JobInfo jobInfo = byId.orElse(null);
+        if (jobInfo == null) {
+            throw new CustomerException("未找到相应的重点人员!");
+        }
+        jobInfo.setHandleMark(handleMark);
+        try {
+            jobInfoRepository.save(jobInfo);
+        } catch (Exception e) {
+            log.error("标记重点人员失败,参数:" + handleMark + "," + id);
             return false;
         }
         return true;

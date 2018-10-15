@@ -5,6 +5,7 @@ import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
+import com.zkjl.posite_cloud.domain.pojo.JobInfo;
 import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IApiService;
 import io.swagger.annotations.ApiOperation;
@@ -222,7 +223,7 @@ public class ApiController extends BaseController {
     /**
      * 任务指定接口
      */
-    @PostMapping(value = "assignment", params = {"taskid", "userid"})
+    @PostMapping(value = "assignment", params = {"taskid[]", "userid[]"})
     public ApiResult taskAssignment(@RequestParam(value = "taskid[]") String[] taskid,
                                     @RequestParam(value = "userid[]") String[] userid) {
         boolean result;
@@ -237,5 +238,24 @@ public class ApiController extends BaseController {
         }
         return success(result);
     }
+
+    /**
+     * 标记用户处理状态
+     *
+     * @param handleMark
+     * @param id
+     * @return
+     */
+    @PatchMapping(value = "updatePersonMark", params = {"handleMark", "id"})
+    public ApiResult updatePersonMark(Integer handleMark, String id) {
+        boolean flag;
+        try {
+            flag = apiService.updatePersonMark(handleMark, id);
+        } catch (Exception e) {
+            return error("标记用户处理状态");
+        }
+        return success(flag);
+    }
+
 
 }

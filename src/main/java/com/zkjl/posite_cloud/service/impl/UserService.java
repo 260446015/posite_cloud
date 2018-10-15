@@ -47,6 +47,7 @@ public class UserService implements IUserService {
         if(StringUtils.isBlank(user.getId())){
             user.setSearchCount(2000);
             user.setTotalSerachCount(2000);
+            user.setSentiment("赌博,贷款,色情,直播,游戏");
         }
         if (StringUtils.isBlank(userid)) {
             if (loginUser.getJobLevel().equals("admin")) {

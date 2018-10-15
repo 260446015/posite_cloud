@@ -36,4 +36,6 @@ public interface IApiService {
     JSONObject listAllJob(String username);
 
     boolean taskAssignment(String[] taskid, String[] userid);
+
+    boolean updatePersonMark(Integer handleMark, String id) throws CustomerException;
 }

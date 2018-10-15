@@ -5,16 +5,31 @@
     <title>Title</title>
 </head>
 <body>
-    <button id="test">点击</button>
+<button id="test">点击</button>
+<button id="test2">点击2</button>
 </body>
 <script src="../js/common/jquery-3.3.1.min.js"></script>
 <script>
     $("#test").click(function () {
-        var data = {"taskid":["504042239ec8e4c9f2c70e2de45000b2","504042239ec8e4c9f2c70e2de45000b2"]};
+        var data = {"taskid": ["504042239ec8e4c9f2c70e2de45000b2", "504042239ec8e4c9f2c70e2de45000b2"]};
         $.ajax({
-            url:"/api/exportPosite",
-            data:data,
-            success:function (res) {
+            url: "/api/exportPosite",
+            data: data,
+            success: function (res) {
+                console.log(res.data);
+            }
+        })
+    })
+    $("#test2").click(function () {
+        var data = {
+            "handleMark": 0,
+            "id": "123"
+        };
+        $.ajax({
+            url: "/api/updatePersonMark",
+            data: data,
+            type: "patch",
+            success: function (res) {
                 console.log(res.data);
             }
         })
