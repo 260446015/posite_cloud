@@ -11,7 +11,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @EnableAspectJAutoProxy
 @EnableScheduling
-@EnableCaching
+//@EnableCaching
 public class PositeCloudApplication {
 
     public static void main(String[] args) {
