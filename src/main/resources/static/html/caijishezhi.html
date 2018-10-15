@@ -74,12 +74,21 @@
         }
         .oneli label{
             cursor: pointer;
-            width: 90%;
+            width: 86%;
             display: inline-block;
         }
         .treeul .re_active{
             background: rgba(0,0,0,.3);
             color: #fff;
+        }
+        #zhipai{
+            color: #333;
+            background: #fff;
+            padding: 20px;
+        }
+        #zhipai span{
+            color: #1E9FFF;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -118,14 +127,15 @@
             </div>
             <div class="sc_pilaing layui-form">
                 <input type="checkbox" class="quanxuna" name="like1[read]" lay-skin="primary" title="全选" lay-filter="quanxuan">
-                <label data-href="true" class="shoufang iconfont icon-zhankaigengduo"></label>
-                <label class="piliangdelete">批量删除</label>
+                <label data-href="true" class="hovermesg shoufang iconfont icon-zhankaigengduo"  data-hove="一键展开收起用户列表" style="margin-left: 6px;"></label>
+                <label class="piliangdelete hovermesg" style="margin-left: 6px;" data-hove="一键删除选中的任务">批量删除</label>
+                <label class="renwuzhipai hovermesg"  data-hove="将某个任务指派给某个用户" >任务指派</label>
             </div>
             <ul class="sc_renwu layui-form">
                 <!--<li><span>2018-23-12 12:!2:!2</span><a>生成报告</a></li>-->
             </ul>
             <div class="tree layui-form">
-                <ul class="treeul"></ul>
+                <ul class="treeul" style="padding-bottom: 30px;"></ul>
             </div>
         </div>
 

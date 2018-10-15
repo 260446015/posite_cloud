@@ -8,12 +8,11 @@ $(function () {
     //任务创建时间显示
     function timeshow() {
         setTimeout(function () {
-            $(".treeul .oneli").hover(function () {
-                layer.tips('任务创建时间：'+$(this).find('label').attr('data-time'),$(this));
-                // layer.tips('创建时间'+$(this).find('label').attr('data-time'),$(this), {
-                //     tips: [1, '#3595CC'],
-                //     time: 4000
-                // });
+            var layerclose;
+            $(".treeul .oneli").mouseenter(function () {
+                layerclose = layer.tips('任务创建时间：'+$(this).find('label').attr('data-time'),$(this));
+            }).mouseleave(function () {
+                layer.close(layerclose);
             });
         },1000);
     }
@@ -70,11 +69,12 @@ $(function () {
                 }
                 //开始一级user
                 $.each(res.data.user,function (i,item) {
+                    //console.log(item)
                     var oli = '<li>' +
-                        '<span><input type="checkbox" name="deletespan" lay-skin="primary"><label>'+item.username+'</label></span>' +
+                        '<span class="checkspan"><input type="checkbox" name="deletespan" lay-skin="primary" id="'+item.userid+'"><label>'+item.username+'</label></span>' +
                         '<ul style="display: none;">'
                     $.each(item.job,function (i,item) {
-                        console.log(item)
+                        //console.log(item)
                         //一级下li
                         var otext = "";
                         if(item.taskname){
@@ -91,7 +91,7 @@ $(function () {
                     //一级下用户
                     $.each(item.user,function (i,item) {
                         oli += '<li>' +
-                            '<span><input type="checkbox" name="deletespan" lay-skin="primary"><label>'+item.username+'</label></span>' +
+                            '<span class="checkspan"><input type="checkbox" name="deletespan" lay-skin="primary" id="'+item.userid+'"><label>'+item.username+'</label></span>' +
                             '<ul style="display: none;">'
                         //二级下li
                         $.each(item.job,function (i,item) {
@@ -157,8 +157,8 @@ $(function () {
         });
     }
     //点击切换
-    $(".treeul").on("click",".oneli",function () {
-        var _this = $(this).find("label")
+    $(".treeul").on("click",".oneli label",function () {
+        var _this = $(this);
         $(".im_contenlist").empty();
         $(".treeul").find("li").removeClass("re_active");
         _this.parent("li").addClass("re_active");
@@ -351,34 +351,38 @@ $(function () {
     //批量删除方法
     function piliangshanchu() {
         var olist = [];
-        $(".treeul").find(".layui-form-checkbox").each(function (i,item) {
+        var alist = [];
+        $(".treeul").find(".oneli>.layui-form-checkbox").each(function (i,item) {
             var oid = $(this).siblings("input").attr("id");
+            var userid = $(this).parent().parent().siblings("span").find("input").attr("id");
             if(item.getAttribute("class")=="layui-unselect layui-form-checkbox layui-form-checked"){
-                olist.push(oid)
+                olist.push(oid);
+                alist.push({"userid":userid,"reneuid":oid})
             }
         });
         if(olist.length == 0){
             return layer.msg("请标选您要删除的任务");
         }
-        //console.log(olist)
-        $.ajax({
-            url: "/api/deleteBatch",
-            type: "get",
-            xhrFields: {
-                withCredentials: true
-            },
-            data: {
-                ids:olist
-            },
-            success: function (res) {
-                if (res.code != 0) {
-                    //return layer.msg(res.message, {anim: 6});
-                }
-                getrenwu();
-                layer.closeAll();
-                layer.msg("删除成功");
-            }
-        });
+        console.log(alist)
+        console.log(olist)
+        // $.ajax({
+        //     url: "/api/deleteBatch",
+        //     type: "get",
+        //     xhrFields: {
+        //         withCredentials: true
+        //     },
+        //     data: {
+        //         ids:olist
+        //     },
+        //     success: function (res) {
+        //         if (res.code != 0) {
+        //             //return layer.msg(res.message, {anim: 6});
+        //         }
+        //         getrenwu();
+        //         layer.closeAll();
+        //         layer.msg("删除成功");
+        //     }
+        // });
     }
     //历史报告跳转
     $(".re_history").click(function () {
@@ -400,4 +404,83 @@ $(function () {
             });
         }
     });
+    //任务指派
+    $(".renwuzhipai").click(function () {
+        var olist = [];
+        var alist = [];
+        var clist = [];
+        var dlist = [];
+        $(".treeul").find(".oneli>.layui-form-checkbox").each(function (i,item) {
+            var oid = $(this).siblings("input").attr("id");
+            var innerhtml = $(this).siblings("label").html();
+            if(item.getAttribute("class")=="layui-unselect layui-form-checkbox layui-form-checked"){
+                olist.push(oid);
+                clist.push(innerhtml);
+            }
+        });
+        $(".treeul").find(".checkspan>.layui-form-checkbox").each(function (i,item) {
+            var oid = $(this).siblings("input").attr("id");
+            var innerhtml = $(this).siblings("label").html();
+            if(item.getAttribute("class")=="layui-unselect layui-form-checkbox layui-form-checked"){
+                alist.push(oid);
+                dlist.push(innerhtml);
+            }
+        });
+        if(olist.length == 0){
+            return layer.msg('请标选需要被指派任务');
+        }
+        if(alist.length == 0){
+            return layer.msg('请标选需要指派的用户');
+        }
+        layer.alert('您确定要将任务<span>'+clist+'</span>，指派给用户<span>'+dlist+'</span>吗,操作完成后，用户将可查看被指派的任务；', {
+            title:'任务指派',
+            id:'zhipai',
+            skin: 'layui-layer-lan',
+            btn:['确定',"取消"]
+            ,closeBtn: 0
+            ,anim: 4 //动画类型
+            ,btn1:function () {
+                rnewuzhipai(olist,alist);
+            }
+        });
+    });
+    //指派方法
+    function rnewuzhipai(renwulist,userlist) {
+        $.ajax({
+            url: "/api/assignment",
+            type: "post",
+            data: {
+                taskid:renwulist,
+                userid:userlist
+            },
+            success: function (res) {
+                console.log(res);
+                if (res.code != 0) {
+                    //return layer.msg(res.message, {anim: 6});
+                }
+                layer.closeAll();
+                getrenwu();
+            }
+        })
+    }
+    //功能说明
+    var settme;
+    var lsyerzhipai;
+    $(".hovermesg").mouseenter(function () {
+        var _this = $(this);
+        var time = 0;
+        var ohtml = _this.attr("data-hove");
+        settme = setInterval(function () {
+            time++;
+            if(time>8){
+                clearInterval(settme);
+                lsyerzhipai = layer.tips(ohtml,_this);
+            }
+        },100);
+    }).mouseleave(function () {
+        clearInterval(settme);
+        setTimeout(function () {
+            layer.close(lsyerzhipai);
+        },300);
+    })
 })
