@@ -421,6 +421,7 @@ public class ReportService extends CreditsService implements IReportService {
     @Override
     public void exportPosite(String taskid, String username, HttpServletResponse response,HttpServletRequest request) throws CustomerException {
         JSONObject report = report(taskid, username);
+
         String fileName = DateUtils.getFormatStringByDay(Calendar.getInstance().getTime());
         OutputStream os = null;
         try {
