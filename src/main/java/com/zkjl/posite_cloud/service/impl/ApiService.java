@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.Constans;
 import com.zkjl.posite_cloud.common.util.*;
 import com.zkjl.posite_cloud.dao.*;
+import com.zkjl.posite_cloud.domain.dto.DeleteJobDTO;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
 import com.zkjl.posite_cloud.domain.pojo.*;
@@ -680,8 +681,8 @@ public class ApiService implements IApiService {
     }
 
     @Override
-    @CacheEvict(value = "redisJob",key = "#p1")
-    public boolean deleteBatch(String[] ids, String username) {
+    @CacheEvict(value = "redisJob", key = "#p1")
+    public boolean deleteBatch(String[] ids, String userid, String username) {
         boolean flag = false;
         try {
             for (int i = 0; i < ids.length; i++) {
@@ -694,11 +695,33 @@ public class ApiService implements IApiService {
                     e.printStackTrace();
                 }
             }
+
             flag = true;
         } catch (Exception e) {
             log.error("根据任务id删除任务出错!", e.getMessage());
         }
         return flag;
+    }
+
+    @Override
+    public boolean deleteBatch(List<DeleteJobDTO> deletes,String username) {
+        deletes.forEach(action ->{
+            String taskid = action.getTaskid();
+            String userid = action.getUserid();
+            if(StringUtils.isBlank(userid)){
+                mongoTemplate.remove(new Query(Criteria.where("taskid").is(taskid)), Constans.T_REDISTASK);
+                mongoTemplate.remove(new Query(Criteria.where("taskid").is(taskid)), Constans.T_MOBILEDATAS);
+                try {
+                    Set keys = redisTemplate.keys(username + "_" + taskid + "_*");
+                    redisTemplate.delete(keys);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }else{
+                mongoTemplate.remove(new Query(Criteria.where("taskid").is(taskid).and(userid).is(userid)), Constans.T_ASSIGN_TASK);
+            }
+        });
+        return false;
     }
 
     @Override

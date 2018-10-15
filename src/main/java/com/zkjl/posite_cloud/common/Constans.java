@@ -10,6 +10,7 @@ public abstract class Constans {
     public static final String T_CREDITSWARN = "creditswarn";
     public static final String T_REDISTASK = "redistask";
     public static final String T_CRON_CONFIG = "cron_config";
+    public static final String T_ASSIGN_TASK = "assign_task";
 
 
     /**

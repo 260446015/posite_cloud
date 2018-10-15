@@ -3,6 +3,7 @@ package com.zkjl.posite_cloud.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
+import com.zkjl.posite_cloud.domain.dto.DeleteJobDTO;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
 import com.zkjl.posite_cloud.domain.pojo.JobInfo;
@@ -203,16 +204,16 @@ public class ApiController extends BaseController {
     /**
      * 批量删除任务
      *
-     * @param ids
+     * @param deletes
      * @return
      */
-    @GetMapping(value = "deleteBatch")
-    public ApiResult deleteBatch(@RequestParam(value = "ids[]") String[] ids) {
+    @PostMapping(value = "deleteBatch")
+    public ApiResult deleteBatch(List<DeleteJobDTO> deletes) {
         boolean flag;
         String username;
         try {
             username = this.getCurrentUser().getUsername();
-            flag = apiService.deleteBatch(ids, username);
+            flag = apiService.deleteBatch(deletes, username);
         } catch (Exception e) {
             log.error("批量删除任务出错!", e.getMessage());
             return error("批量删除任务进度出错!");

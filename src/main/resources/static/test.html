@@ -8,6 +8,7 @@
 <button id="test">点击</button>
 <button id="test2">点击2</button>
 <button id="test3">点击3</button>
+<button id="test4">点击4</button>
 </body>
 <script src="../js/common/jquery-3.3.1.min.js"></script>
 <script>
@@ -44,6 +45,20 @@
             url: "/api/assignment",
             data: data,
             type: "post",
+            success: function (res) {
+                console.log(res.data);
+            }
+        })
+    })
+
+    $("#test4").click(function () {
+        var data = {
+            "taskid": "504042239ec8e4c9f2c70e2de45000b2"
+        };
+        $.ajax({
+            url: "/api/exportPosite",
+            data: data,
+            type: "get",
             success: function (res) {
                 console.log(res.data);
             }
