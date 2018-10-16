@@ -65,7 +65,6 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                         appname+="，"+item.webname
                     }
                     appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
-                    console.log(item.webtype)
                 });
                 switch (item.warnInfo){
                     case "红色预警":
@@ -92,6 +91,7 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                         '<span>'+item.sorce+'</span>' +
                         '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
                         '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
+                        '<span>操作</span>' +
                         '</div>';
                 }else{
                     list = '<div>' +
@@ -99,6 +99,7 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                         '<span>'+item.sorce+'</span>' +
                         '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
                         '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
+                        '<span>操作</span>' +
                         '</div>';
                 }
                 $(".zd_boxlist").append(list);

@@ -363,8 +363,8 @@ $(function () {
         if(olist.length == 0){
             return layer.msg("请标选您要删除的任务");
         }
-        console.log(alist)
-        console.log(olist)
+        // console.log(alist)
+        // console.log(olist)
         $.ajax({
             url: "/api/deleteBatch",
             type: "post",
