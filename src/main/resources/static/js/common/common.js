@@ -106,9 +106,9 @@ $(".logout").click(function () {
             }
             sessionStorage.removeItem("zdryscuser");
             if($(".title").attr("data-href")=="shou"){
-                window.location = "loginban.html";
+                window.location = "loginnew.html";
             }else{
-                window.location = "../loginban.html";
+                window.location = "../loginnew.html";
             }
         }
     });
