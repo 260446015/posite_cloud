@@ -1,17 +1,23 @@
 
 function ViKeySocketInterface()
 {
+/*if(window.WebSocket != undefined) {
+
+ console.log("支持WebSocket");
+ var ViKeySocket= new WebSocket("ws://localhost:8189/test");
+ alert(ViKeySocket.readyState);//查看websocket当前状态
+ ViKeySocket.onopen = function()
+ 	{
+ 		alert(ViKeySocket.readyState);//查看websocket当前状态
+ 	}
+
+}*/
 	var u = document.URL;
     var url;
     var strSocketResult = '';
-    if (u.substring(0, 5) == "https") 
-	{
-		url = "wss://localhost:8189/test";
-	}
-	else 
-	{
-		url = "ws://localhost:8189/test";
-	}
+
+	url = "ws://localhost:8189/test";
+
     
     var ViKeySocket;
 	if (typeof MozWebSocket != "undefined") 
@@ -22,7 +28,7 @@ function ViKeySocketInterface()
 	{
 		this.ViKeySocket = new WebSocket(url);
 	}
-	
+
 	this.ViKeySocket.onopen = function()
 	{
 		Initialize();
