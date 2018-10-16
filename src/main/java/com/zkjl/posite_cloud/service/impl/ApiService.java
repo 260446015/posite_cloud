@@ -704,21 +704,22 @@ public class ApiService implements IApiService {
     }
 
     @Override
-    public boolean deleteBatch(List<DeleteJobDTO> deletes,String username) {
+    public boolean deleteBatch(List<DeleteJobDTO> deletes, String username) {
         for (int i = 0; i < deletes.size(); i++) {
             DeleteJobDTO action = deletes.get(i);
             String taskid = action.getTaskid();
             String userid = action.getUserid();
-            if(StringUtils.isBlank(userid)){
+            if (StringUtils.isBlank(userid)) {
                 mongoTemplate.remove(new Query(Criteria.where("taskid").is(taskid)), Constans.T_REDISTASK);
                 mongoTemplate.remove(new Query(Criteria.where("taskid").is(taskid)), Constans.T_MOBILEDATAS);
+                mongoTemplate.remove(new Query(Criteria.where("taskid").is(taskid)), Constans.T_ASSIGN_TASK);
                 try {
                     Set keys = redisTemplate.keys(username + "_" + taskid + "_*");
                     redisTemplate.delete(keys);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }else{
+            } else {
                 mongoTemplate.remove(new Query(Criteria.where("taskid").is(taskid).and("userid").is(userid)), Constans.T_ASSIGN_TASK);
             }
         }

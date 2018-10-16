@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.zkjl.posite_cloud.common.Constans;
 import com.zkjl.posite_cloud.common.util.DateUtils;
+import com.zkjl.posite_cloud.common.util.POIUtils;
 import com.zkjl.posite_cloud.common.util.PageUtil;
 import com.zkjl.posite_cloud.dao.CreditsRepository;
 import com.zkjl.posite_cloud.dao.JobInfoRepository;
@@ -14,6 +15,7 @@ import com.zkjl.posite_cloud.domain.pojo.JobInfo;
 import com.zkjl.posite_cloud.domain.pojo.Redistask;
 import com.zkjl.posite_cloud.domain.vo.JobinfoVO;
 import com.zkjl.posite_cloud.domain.vo.RedistaskVO;
+import com.zkjl.posite_cloud.enums.ExportEnum;
 import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IReportService;
 import org.springframework.data.domain.PageImpl;
@@ -296,12 +298,12 @@ public class ReportService extends CreditsService implements IReportService {
     @Override
     public JSONObject reportByMobileBatch(String[] ids, String username, Boolean ifSelectAll) {
         List<JobInfo> preDatas;
-        if(Boolean.TRUE.equals(ifSelectAll)){
+        if (Boolean.TRUE.equals(ifSelectAll)) {
             Query query = new Query();
             Criteria criteria = Criteria.where("username").is(username).and("data").exists(true);
             query.addCriteria(criteria);
             preDatas = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
-        }else{
+        } else {
             Iterable<JobInfo> allById = jobInfoRepository.findAllById(Arrays.asList(ids));
             preDatas = Lists.newArrayList(allById);
         }
@@ -419,57 +421,28 @@ public class ReportService extends CreditsService implements IReportService {
     }
 
     @Override
-    public void exportPosite(String taskid, String username, HttpServletResponse response,HttpServletRequest request) throws CustomerException {
+    public void exportPosite(String taskid, String username, HttpServletResponse response, HttpServletRequest request) throws CustomerException {
         JSONObject report = report(taskid, username);
-        String fileName = DateUtils.getFormatStringByDay(Calendar.getInstance().getTime());
-        OutputStream os = null;
         try {
-            os = response.getOutputStream();
-//            response.reset();
-            // 设定输出文件头
-//            response.setHeader("Content-disposition", "attachment; filename=" + new String(fileName.getBytes("UTF-8"), "UTF-8") + ".xls");
-            // 定义输出类型
-//            response.setContentType("application/x-download;charset=utf-8");
-            setHeader(request,response,fileName+".xls");
-            Map<String,String> header = new HashMap<>();
-//            ExcelUtil.exportExcel(header,report,os);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                os.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        System.out.println("11111");
-    }
-
-    private void setHeader(HttpServletRequest request, HttpServletResponse response, String fileName) {
-        try {
-            if (response != null) {
-                String filename = "";
-                if (isIE(request)) {
-                    filename = new String(fileName);
-                    filename = URLEncoder.encode(filename, "UTF-8");
-                } else {
-                    filename = new String((fileName).getBytes(), "iso-8859-1");
-                }
-                String header = "attachment; filename=\"" + filename + "\"";
-                response.reset();
-                response.setContentType("APPLICATION/OCTET-STREAM");
-                response.setHeader("Content-Disposition", header);
-            }
-        } catch (IOException e) {
+            conformDataList(report, response, request);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
-    private static boolean isIE(HttpServletRequest request) {
-        String agent = request.getHeader("User-Agent").toUpperCase();
-        boolean isIE = ((agent != null && agent.indexOf("MSIE") != -1)
-                || (null != agent && -1 != agent.indexOf("LIKE GECKO"))); // 判断版本,后边是判断IE11的
 
-        return isIE;
+    private void conformDataList(JSONObject report, HttpServletResponse response, HttpServletRequest request) throws Exception {
+        List<JSONObject> red = (List<JSONObject>) report.get("red");
+        List<JSONObject> yellow = (List<JSONObject>) report.get("yellow");
+        List<JSONObject> blue = (List<JSONObject>) report.get("blue");
+        List<JSONObject> conformData = new ArrayList<>();
+        conformData.addAll(red);
+        conformData.addAll(yellow);
+        conformData.addAll(blue);
+        POIUtils.writeExceXlsx(conformData, ExportEnum.getTitles(), response, request);
+
     }
+
+
 }
