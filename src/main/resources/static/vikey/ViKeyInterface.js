@@ -18,7 +18,6 @@ function ViKeySocketInterface()
 
 	url = "ws://localhost:8189/test";
 
-    
     var ViKeySocket;
 	if (typeof MozWebSocket != "undefined") 
 	{
