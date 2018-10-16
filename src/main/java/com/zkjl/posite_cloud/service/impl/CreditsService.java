@@ -13,6 +13,8 @@ import com.zkjl.posite_cloud.domain.pojo.JobInfo;
 import com.zkjl.posite_cloud.domain.pojo.User;
 import com.zkjl.posite_cloud.service.ICreditsService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -34,6 +36,7 @@ public class CreditsService implements ICreditsService {
     private CreditsRepository creditsRepository;
     @Resource
     private MongoTemplate mongoTemplate;
+    private static Logger logger = LoggerFactory.getLogger(CreditsService.class);
 
     @Override
     public PageImpl<JSONObject> creditsWarining(CreditsDTO creditsDTO) throws Exception {
@@ -162,8 +165,8 @@ public class CreditsService implements ICreditsService {
             data.put("registCount", action.getData().size());
             data.put("sorce", totalSorce);
             data.put("data", action.getData());
-            data.put("id",action.getId());
-            data.put("dataKind",dataKind);
+            data.put("id", action.getId());
+            data.put("dataKind", dataKind);
             data.put("creationTime", DateUtils.getFormatString(action.getCreationTime()));
             data.put("warnInfo", getWarnLevel(totalSorce, conf));
             result.add(data);
@@ -174,8 +177,8 @@ public class CreditsService implements ICreditsService {
 
     @Override
     public boolean sendEmail(JSONObject data, User user) throws Exception {
-        EmailUtils.sendEamil(data, user);
-        return false;
+            EmailUtils.sendEamil(data, user);
+            return true;
     }
 
     @Override
