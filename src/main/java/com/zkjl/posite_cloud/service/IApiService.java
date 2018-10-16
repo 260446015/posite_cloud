@@ -1,6 +1,7 @@
 package com.zkjl.posite_cloud.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zkjl.posite_cloud.domain.dto.DeleteJobDTO;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
 import com.zkjl.posite_cloud.exception.CustomerException;
@@ -31,9 +32,13 @@ public interface IApiService {
 
     JSONObject searchByTaskidPlan(String taskId);
 
-    boolean deleteBatch(String[] ids, String username);
+    boolean deleteBatch(String[] ids, String userid, String username);
+
+    boolean deleteBatch(List<DeleteJobDTO> deletes, String username);
 
     JSONObject listAllJob(String username);
 
     boolean taskAssignment(String[] taskid, String[] userid);
+
+    boolean updatePersonMark(Integer handleMark, String id) throws CustomerException;
 }

@@ -49,6 +49,9 @@ public class ScheduleTask implements SchedulingConfigurer {
 
 //    @Scheduled(cron = "0 0/5 * * * ?")
     public void timerToNow() {
+        if(logger.isInfoEnabled()){
+            logger.info("---------------定时发送邮件开始----------------");
+        }
         Query query = new Query();
         query.addCriteria(Criteria.where("ifSendEmail").is(null).and("data").ne(null)).limit(1000).with(Sort.by(Sort.Direction.DESC, "creationTime"));
         List<JobInfo> all = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
@@ -96,6 +99,7 @@ public class ScheduleTask implements SchedulingConfigurer {
                     logger.error("失败原因:"+e.getMessage());
                 }
             }
+
         }
     }
 

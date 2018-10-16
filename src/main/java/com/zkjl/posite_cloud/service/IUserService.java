@@ -1,6 +1,7 @@
 package com.zkjl.posite_cloud.service;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.domain.dto.LogDTO;
 import com.zkjl.posite_cloud.domain.dto.UserDTO;
 import com.zkjl.posite_cloud.domain.pojo.Log;
@@ -12,13 +13,13 @@ public interface IUserService {
 
     User selectByUsernameAndPassword(String username, String password);
 
-    User create(User user) throws CustomerException;
+    User create(User user, String userid) throws CustomerException;
 
     Boolean delete(String id);
 
     PageImpl<Log> findLog(LogDTO log);
 
-    PageImpl<User> findUser(UserDTO userDTO, User login);
+    PageImpl<JSONObject> findUser(UserDTO userDTO, User login);
 
     User findUserById(String id);
 

@@ -1,5 +1,6 @@
 package com.zkjl.posite_cloud.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
 import com.zkjl.posite_cloud.common.ViKeyJavaObj;
@@ -11,6 +12,7 @@ import com.zkjl.posite_cloud.domain.vo.UserVo;
 import com.zkjl.posite_cloud.service.IFileService;
 import com.zkjl.posite_cloud.service.IUserService;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,16 +53,16 @@ public class UserController extends BaseController {
      * @return
      */
     @PostMapping(value = "create")
-    @RequiresRoles(value = "admin")
+    @RequiresRoles(value = {"admin","group"},logical = Logical.OR)
     @SystemControllerLog(description = "创建用户")
     @ApiOperation(value = "创建更改用户")
-    public ApiResult create(@RequestBody User user) {
+    public ApiResult create(@RequestBody User user, @RequestParam(value = "userid") String userid) {
         User result;
         try {
-            result = userService.create(user);
+            result = userService.create(user, userid);
         } catch (Exception e) {
             logger.error("创建用户失败!", e.getMessage());
-            return error("创建用户失败!");
+            return error("创建用户失败!" + e.getMessage());
         }
         if (result == null) {
             return error("创建用户需指定用户级别");
@@ -130,9 +132,9 @@ public class UserController extends BaseController {
      * @return
      */
     @PostMapping(value = "findUser")
-    @RequiresRoles(value = "admin")
+    @RequiresRoles(value = {"admin","group"},logical = Logical.OR)
     public ApiResult findUser(@RequestBody UserDTO userDTO) {
-        PageImpl<User> result;
+        PageImpl<JSONObject> result;
         User login;
         try {
             login = this.getCurrentUser();
@@ -218,7 +220,7 @@ public class UserController extends BaseController {
         UserVo result = new UserVo();
         try {
             User user = this.getCurrentUser();
-            BeanUtils.copyProperties(user,result);
+            BeanUtils.copyProperties(user, result);
         } catch (Exception e) {
             return success(null);
         }
@@ -281,6 +283,7 @@ public class UserController extends BaseController {
         }
         return mapList;
     }
+
     public static byte[] strToByteArray(String str) {
         if (str == null) {
             return null;
@@ -290,20 +293,17 @@ public class UserController extends BaseController {
     }
 
 
-    public static void main(String[] args){
-        int[]	dwCount=new int[1];
-        short	Index = 0;
-        int[]	HID= new int[1];
-        long retval=0;
-        ViKeyJavaObj viKeyJavaObj=new ViKeyJavaObj();
+    public static void main(String[] args) {
+        int[] dwCount = new int[1];
+        short Index = 0;
+        int[] HID = new int[1];
+        long retval = 0;
+        ViKeyJavaObj viKeyJavaObj = new ViKeyJavaObj();
         // 查找加密狗
         retval = viKeyJavaObj.ViKeyFind(dwCount);
-        if (retval == viKeyJavaObj.VIKEY_SUCCESS)
-        {
-            System.out.println("系统中找到ViKey加密狗数量:"+dwCount[0]);
-        }
-        else
-        {
+        if (retval == viKeyJavaObj.VIKEY_SUCCESS) {
+            System.out.println("系统中找到ViKey加密狗数量:" + dwCount[0]);
+        } else {
             System.out.println("系统中没有找到ViKey加密狗");
             return;
         }
@@ -311,12 +311,9 @@ public class UserController extends BaseController {
         Index = 0;
         //获取加密狗硬件ID
         retval = viKeyJavaObj.ViKeyGetHID(Index, HID);
-        if (retval == viKeyJavaObj.VIKEY_SUCCESS)
-        {
-            System.out.println("获取加密狗的硬件ID:"+HID[0]);
-        }
-        else
-        {
+        if (retval == viKeyJavaObj.VIKEY_SUCCESS) {
+            System.out.println("获取加密狗的硬件ID:" + HID[0]);
+        } else {
             System.out.println("获取加密狗类型错误");
             return;
         }

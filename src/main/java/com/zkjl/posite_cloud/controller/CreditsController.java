@@ -47,7 +47,7 @@ public class CreditsController extends BaseController {
             creditsDTO.setUsername(username);
             result = creditsService.creditsWarining(creditsDTO);
         } catch (Exception e) {
-            log.error("分析积分预警失败！", e.getMessage());
+            log.error("分析积分预警失败！" + e.getMessage());
             return error("分析积分预警失败！");
         }
         if (result == null) {

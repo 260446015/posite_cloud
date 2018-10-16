@@ -3,8 +3,10 @@ package com.zkjl.posite_cloud.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.ApiResult;
 import com.zkjl.posite_cloud.common.SystemControllerLog;
+import com.zkjl.posite_cloud.domain.dto.DeleteJobDTO;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
+import com.zkjl.posite_cloud.domain.pojo.JobInfo;
 import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IApiService;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,7 +86,7 @@ public class ApiController extends BaseController {
             username = this.getCurrentUser().getUsername();
             result = apiService.realTimeData(username);
         } catch (Exception e) {
-            log.error("获取数据实时进度出错!", e.getMessage());
+            log.error("获取数据实时进度出错!" + e.getMessage());
             return error("获取数据实时进度出错!");
         }
         return success(result);
@@ -103,7 +106,7 @@ public class ApiController extends BaseController {
             username = this.getCurrentUser().getUsername();
             result = apiService.developmentData(username);
         } catch (Exception e) {
-            log.error("获取占比分析出错!", e.getMessage());
+            log.error("获取占比分析出错!" + e.getMessage());
             return error("获取占比分析出错!");
         }
         return success(result);
@@ -123,7 +126,7 @@ public class ApiController extends BaseController {
             username = this.getCurrentUser().getUsername();
             result = apiService.realTimeRegist(username);
         } catch (Exception e) {
-            log.error("获取实时注册信息出错!", e.getMessage());
+            log.error("获取实时注册信息出错!" + e.getMessage());
             return error("获取实时注册信息出错!");
         }
         return success(result);
@@ -202,16 +205,16 @@ public class ApiController extends BaseController {
     /**
      * 批量删除任务
      *
-     * @param ids
+     * @param deletes
      * @return
      */
-    @GetMapping(value = "deleteBatch")
-    public ApiResult deleteBatch(@RequestParam(value = "ids[]") String[] ids) {
+    @PostMapping(value = "deleteBatch")
+    public ApiResult deleteBatch(@RequestBody List<DeleteJobDTO> deletes) {
         boolean flag;
         String username;
         try {
             username = this.getCurrentUser().getUsername();
-            flag = apiService.deleteBatch(ids, username);
+            flag = apiService.deleteBatch(deletes, username);
         } catch (Exception e) {
             log.error("批量删除任务出错!", e.getMessage());
             return error("批量删除任务进度出错!");
@@ -222,12 +225,12 @@ public class ApiController extends BaseController {
     /**
      * 任务指定接口
      */
-    @PostMapping(value = "assignment",params = {"taskid","userid"})
+    @PostMapping(value = "assignment", params = {"taskid[]", "userid[]"})
     public ApiResult taskAssignment(@RequestParam(value = "taskid[]") String[] taskid,
                                     @RequestParam(value = "userid[]") String[] userid) {
         boolean result;
         try {
-            if(taskid.length == 0 || userid.length == 0){
+            if (taskid.length == 0 || userid.length == 0) {
                 return error("请确保传入的参数长度不为0");
             }
             result = apiService.taskAssignment(taskid, userid);
@@ -237,5 +240,24 @@ public class ApiController extends BaseController {
         }
         return success(result);
     }
+
+    /**
+     * 标记用户处理状态
+     *
+     * @param handleMark
+     * @param id
+     * @return
+     */
+    @PatchMapping(value = "updatePersonMark", params = {"handleMark", "id"})
+    public ApiResult updatePersonMark(Integer handleMark, String id) {
+        boolean flag;
+        try {
+            flag = apiService.updatePersonMark(handleMark, id);
+        } catch (Exception e) {
+            return error("标记用户处理状态");
+        }
+        return success(flag);
+    }
+
 
 }

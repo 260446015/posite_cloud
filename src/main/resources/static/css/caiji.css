@@ -71,9 +71,9 @@ body .layui-form-checkbox[lay-skin=primary] {
 }
 .sc_pilaing{
     padding: 0 10px;
-    overflow: hidden;
     height: 30px;
     line-height: 30px;
+    padding-bottom: 6px;
 }
 .layui-form-checkbox[lay-skin=primary] span {
     margin-top: 6px;

@@ -1,5 +1,7 @@
 package com.zkjl.posite_cloud.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.zkjl.posite_cloud.common.util.DateUtils;
 import com.zkjl.posite_cloud.common.util.PageUtil;
 import com.zkjl.posite_cloud.dao.LogRepository;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -38,14 +41,25 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User create(User user) throws CustomerException {
+    public User create(User user, String userid) throws CustomerException {
         User loginUser = (User) SecurityUtils.getSubject().getPrincipal();
-        if(StringUtils.isBlank(user.getJobLevel())){
+        user.setCreator(loginUser.getUsername());
+        if(StringUtils.isBlank(user.getId())){
+            user.setSearchCount(2000);
+            user.setTotalSerachCount(2000);
+            user.setSentiment("赌博,贷款,色情,直播,游戏");
+        }
+        if (StringUtils.isBlank(userid)) {
             if (loginUser.getJobLevel().equals("admin")) {
                 user.setJobLevel("group");
             } else if (loginUser.getJobLevel().equals("group")) {
                 user.setJobLevel("normal");
             }
+        } else {
+            user.setJobLevel("normal");
+            Optional<User> byId = userRepository.findById(userid);
+            User user1 = byId.orElse(null);
+            user.setCreator(user1.getUsername());
         }
         User check = userRepository.findByUsername(user.getUsername());
         if (null != check) {
@@ -58,7 +72,6 @@ public class UserService implements IUserService {
             return null;
         }
         user.setDomain(loginUser.getDomain());
-        user.setCreator(loginUser.getUsername());
         if (user.getIfEnable() == null) {
             user.setIfEnable(false);
         }
@@ -119,9 +132,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public PageImpl<User> findUser(UserDTO userDTO, User login) {
-        String domain = login.getDomain();
-        List<User> users = userRepository.findByDomain(domain);
+    public PageImpl<JSONObject> findUser(UserDTO userDTO, User login) {
+        String creator = login.getUsername();
+        List<User> users = userRepository.findByCreator(creator);
         users.remove(login);
         if (users.size() == 0) {
             return null;
@@ -167,7 +180,50 @@ public class UserService implements IUserService {
             }
             return flag;
         }).collect(Collectors.toList());
-        return (PageImpl<User>) PageUtil.pageBeagin(collect.size(), userDTO.getPageNum(), userDTO.getPageSize(), collect);
+        List<JSONObject> result = new ArrayList<>();
+
+        if (login.getJobLevel().equals("admin")) {
+            collect.forEach(action -> {
+                JSONObject data = new JSONObject();
+                data.put("data", action);
+                data.put("element", null);
+                List<User> byCreator = userRepository.findByCreator(action.getUsername());
+                if (byCreator.size() != 0) {
+                    JSONArray nextArr = new JSONArray();
+                    byCreator.forEach(action2 -> {
+                        JSONObject secondData = new JSONObject();
+                        secondData.put("data", action2);
+                        secondData.put("element", null);
+                        List<User> byCreator1 = userRepository.findByCreator(action2.getUsername());
+                        if (byCreator1.size() != 0) {
+                            secondData.put("element", byCreator);
+                        }
+                        nextArr.add(secondData);
+                    });
+                    data.put("element", nextArr);
+                }
+                result.add(data);
+            });
+        } else if (login.getJobLevel().equals("group")) {
+            collect.forEach(action -> {
+                JSONObject data = new JSONObject();
+                data.put("data", action);
+                data.put("element", null);
+                List<User> byCreator = userRepository.findByCreator(action.getUsername());
+                if (byCreator.size() != 0) {
+                    data.put("element", byCreator);
+                }
+                result.add(data);
+            });
+        } else {
+            collect.forEach(action -> {
+                JSONObject data = new JSONObject();
+                data.put("data", action);
+                result.add(data);
+            });
+        }
+
+        return (PageImpl<JSONObject>) PageUtil.pageBeagin(result.size(), userDTO.getPageNum(), userDTO.getPageSize(), result);
     }
 
     @Override
@@ -265,7 +321,7 @@ public class UserService implements IUserService {
             throw new CustomerException("密码错误");
         } else {
 //            if (RegUtil.checkPass(newPassword)) {
-                check.setPassword(newPassword);
+            check.setPassword(newPassword);
 //            } else {
 //                throw new CustomerException("密码格式不对");
 //            }

@@ -26,5 +26,5 @@ public interface IReportService {
 
     JSONObject reportByPlat(String[] taskid, String webtype, String username);
 
-    void exportPosite(String[] taskid, String username, HttpServletResponse response, HttpServletRequest request) throws CustomerException;
+    void exportPosite(String taskid, String username, HttpServletResponse response, HttpServletRequest request) throws CustomerException;
 }

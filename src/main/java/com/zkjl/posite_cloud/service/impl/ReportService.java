@@ -3,7 +3,6 @@ package com.zkjl.posite_cloud.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
-import com.sargeraswang.util.ExcelUtil.ExcelUtil;
 import com.zkjl.posite_cloud.common.Constans;
 import com.zkjl.posite_cloud.common.util.DateUtils;
 import com.zkjl.posite_cloud.common.util.PageUtil;
@@ -420,15 +419,9 @@ public class ReportService extends CreditsService implements IReportService {
     }
 
     @Override
-    public void exportPosite(String[] taskid, String username, HttpServletResponse response,HttpServletRequest request) throws CustomerException {
-        Query query = new Query();
-        Criteria criteria = Criteria.where("taskid").in(taskid).and("data").exists(true);
-        query.addCriteria(criteria);
-        List<JobInfo> list = mongoTemplate.find(query, JobInfo.class, Constans.T_MOBILEDATAS);
-        if (list.size() == 0) {
-            throw new CustomerException("导出数据为空，请确认数据无误后，再进行导出");
-        }
-        List<JSONObject> result = generatorList(list, username);
+    public void exportPosite(String taskid, String username, HttpServletResponse response,HttpServletRequest request) throws CustomerException {
+        JSONObject report = report(taskid, username);
+
         String fileName = DateUtils.getFormatStringByDay(Calendar.getInstance().getTime());
         OutputStream os = null;
         try {
@@ -440,7 +433,7 @@ public class ReportService extends CreditsService implements IReportService {
 //            response.setContentType("application/x-download;charset=utf-8");
             setHeader(request,response,fileName+".xls");
             Map<String,String> header = new HashMap<>();
-            ExcelUtil.exportExcel(header,result,os);
+//            ExcelUtil.exportExcel(header,report,os);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

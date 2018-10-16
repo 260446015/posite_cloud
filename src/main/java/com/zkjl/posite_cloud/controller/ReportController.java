@@ -134,7 +134,7 @@ public class ReportController extends BaseController {
     }
 
     @GetMapping(value = "exportPosite")
-    public void exportPosite(@RequestParam(value = "taskid[]") String[] taskid, HttpServletResponse response, HttpServletRequest request){
+    public void exportPosite(@RequestParam(value = "taskid") String taskid, HttpServletResponse response, HttpServletRequest request){
         String username = this.getCurrentUser().getUsername();
         try {
             reportService.exportPosite(taskid,username,response,request);

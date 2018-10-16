@@ -144,7 +144,7 @@ if(zdryscuserdata){
     if(zdryscuserdata.jobLevel=="normal"){
         $(".com_jifen,.com_gunli").hide();
     }else if(zdryscuserdata.jobLevel=="group"){
-        $(".com_gunli").hide();
+        $(".rizhiguanli").hide();
     }
     if(zdryscuserdata.image){
         $(".headerimg").html('<img src="/'+zdryscuserdata.image+'" alt="">');
