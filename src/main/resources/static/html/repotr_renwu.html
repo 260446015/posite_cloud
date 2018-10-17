@@ -76,7 +76,8 @@
     </div>
 
     <div class="xiazai">
-        <div class="layui-btn layui-btn-normal xiazaibtn">下载</div>
+        <div class="layui-btn layui-btn-normal xiazaipclass xiazaibtn">Pdf下载</div>
+        <div style="margin-right: 10px;" class="layui-btn layui-btn-normal xiazaipclass xiazaiexcel">Excel下载</div>
     </div>
 
     <div class="section">
@@ -157,7 +158,9 @@
 <script src="../js/common/common.js?versin=0"></script>
 <script>
     var oid = window.location.search.split("?")[1];
-
+    $(".xiazaiexcel").click(function () {
+        window.location = "/api/exportPosite?taskid="+oid
+    });
     //柱形图
     var dom1 = document.getElementById("zhuxing");
     var myChart1 = echarts.init(dom1);

@@ -102,6 +102,9 @@
             $(".renwuname").css("border","1px solid red;")
             return layer.msg("请填写任务名称", {anim: 6});
         }
+        if(caijiboxval==""){
+            return layer.msg("请填写任务内容", {anim: 6});
+        }
         console.log(caijiboxval);
         $.ajax({
             url: "/api/createJob",

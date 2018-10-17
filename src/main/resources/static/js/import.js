@@ -6,6 +6,7 @@ var laypage = layui.laypage;
 var element = layui.element;
 var form = layui.form;
 
+
 function setPageNo(count,limitnum) {
     laypage.render({
         elem: 'listpage'
@@ -57,7 +58,18 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                 var appname = '';
                 var appspsn = '';
                 var odata;
-
+                var ohandleMark;
+                var oclass = "";
+                var aclass = "";
+                if(item.handleMark){
+                    if(item.handleMark>=0){
+                        ohandleMark = item.handleMark;
+                    }else{
+                        ohandleMark = 0;
+                    }
+                }else{
+                    ohandleMark = 0;
+                }
                 $.each(item.data,function (i,item) {
                     if(i==0){
                         appname+=item.webname
@@ -66,19 +78,17 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                     }
                     appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
                 });
+
+
                 switch (item.warnInfo){
                     case "红色预警":
-                        oclass = "yjfont_red";
-                        aclass = "yj_red";
+                        oclass = "border-color:#ff000078;";
                         break
                     case "橙色预警":
-                        oclass = "yjfont_orange";
-                        aclass = "yj_orange";
+                        oclass = "border-color:#ff9416;";
                         break
-                    case "蓝色预警":
-                        oclass = "yjfont_biue";
-                        aclass = "yj_blue";
-                        break
+                    default:
+                        oclass = "";
                 }
                 if(item.data==null){
                     odata = "采集中..."
@@ -91,7 +101,12 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                         '<span>'+item.sorce+'</span>' +
                         '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
                         '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
-                        '<span>操作</span>' +
+                        '<span><select id="'+item.id+'" class="sellayui" style="'+oclass+aclass+'">' +
+                        '<option value="0">未处理</option>' +
+                        '<option value="3">已通报</option>' +
+                        '<option value="1">处理中</option>' +
+                        '<option value="2">已处理</option>' +
+                        '</select></span>' +
                         '</div>';
                 }else{
                     list = '<div>' +
@@ -99,10 +114,15 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                         '<span>'+item.sorce+'</span>' +
                         '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
                         '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
-                        '<span>操作</span>' +
+                        '<span><select id="'+item.id+'" class="sellayui" style="'+oclass+aclass+'">' +
+                        '<option value="0">未处理</option>' +
+                        '<option value="3">已通报</option>' +
+                        '<option value="1">处理中</option>' +
+                        '<option value="2">已处理</option>' +
+                        '</select></span>' +
                         '</div>';
                 }
-                $(".zd_boxlist").append(list);
+                $(".zd_boxlist").append(list).find(".sellayui").eq(i).val(ohandleMark)
             });
         }
     });
@@ -141,3 +161,21 @@ $(".baocunbtn").click(function () {
     $(".listpage").attr("data-href",data);
     getimportlist($(".ba_maxcore").val(),$(".ba_minscore").val(),$(".ba_number").val(),0,10,$(".ba_pingtai").val(),$(".ba_fenlei").attr("data-href"));
 });
+
+//修改状态
+$(".zd_boxlist").on("change",".sellayui",function () {
+    //console.log($(this).val(),$(this).attr("id"))
+    var data = {
+        "handleMark": $(this).val(),
+        "id": $(this).attr("id")
+    };
+    $.ajax({
+        url: "/api/updatePersonMark",
+        data: data,
+        type: "patch",
+        success: function (res) {
+            //console.log(res.data);
+            layer.msg("状态修改成功");
+        }
+    })
+})
