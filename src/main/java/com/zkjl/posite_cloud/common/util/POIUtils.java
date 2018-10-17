@@ -339,7 +339,10 @@ public class POIUtils {
                 JSONObject integerStringMap = arr.get(i - 1);
                 for (Map.Entry<String, Object> entry : integerStringMap.entrySet()) {
                     temp = entry.getKey();
-                    value = entry.getValue().toString();
+                    try {
+                        value = entry.getValue().toString();
+                    } catch (NullPointerException e) {
+                    }
                     Integer filedDataIndex = ExportEnum.getFiledDataIndex(temp);
                     List<String> webnames = new ArrayList<>();
                     if (null != filedDataIndex) {
