@@ -166,6 +166,7 @@ public class CreditsService implements ICreditsService {
             data.put("sorce", totalSorce);
             data.put("data", action.getData());
             data.put("id", action.getId());
+            data.put("handleMark", action.getHandleMark());
             data.put("dataKind", dataKind);
             data.put("creationTime", DateUtils.getFormatString(action.getCreationTime()));
             data.put("warnInfo", getWarnLevel(totalSorce, conf));
@@ -177,8 +178,8 @@ public class CreditsService implements ICreditsService {
 
     @Override
     public boolean sendEmail(JSONObject data, User user) throws Exception {
-            EmailUtils.sendEamil(data, user);
-            return true;
+        EmailUtils.sendEamil(data, user);
+        return true;
     }
 
     @Override
