@@ -131,11 +131,14 @@
                 else if (ReceiveJsonData.FunctionType == "VikeyReadData") {
                     if (ReceiveJsonData.ErrorCode == 0) {
                         console.log("读取数据成功: " + ReceiveJsonData.Data);
+                        var readDate=ReceiveJsonData.Data;
+                        var dt=readDate.split(",");
+                        var encrypt=dt[1];
                         $.ajax({
                             url: "/login",
                             type: "post",
                             data: {
-                                password: ReceiveJsonData.Data
+                                password: dt[0]
 
                             },
                             xhrFields: {
@@ -228,7 +231,7 @@
         {
             var ViKeyIndex = 0;
             var Addr = 0;
-            var Length = 32;
+            var Length = 100;
             ViKeyInterface.VikeyReadData(ViKeyIndex, Addr, Length);
         }
 
