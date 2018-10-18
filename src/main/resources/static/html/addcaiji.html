@@ -145,12 +145,11 @@
             xhrFields: {
                 withCredentials: true
             },
-            data: JSON.stringify({
-                datas: datalist,
-                status: "start",
-                taskname: $(".renwuname").val()
-            }),
-            contentType: "application/json",
+            data: {
+                "datas[]": datalist,
+                "status": "start",
+                "taskname": $(".renwuname").val()
+            },
             success: function (res) {
                 console.log(res);
                 if (res.code != 0) {

@@ -45,7 +45,7 @@ public class UserService implements IUserService {
         User loginUser = (User) SecurityUtils.getSubject().getPrincipal();
         user.setCreator(loginUser.getUsername());
         if(StringUtils.isBlank(user.getId())){
-            user.setSearchCount(2000);
+            user.setSearchCount(0);
             user.setTotalSerachCount(2000);
             user.setSentiment("赌博,贷款,色情,直播,游戏");
         }
