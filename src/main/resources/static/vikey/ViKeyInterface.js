@@ -12,6 +12,7 @@ function ViKeySocketInterface()
  	}
 
 }*/
+    function Initialize(){}
 	var u = document.URL;
     var url;
     var strSocketResult = '';
