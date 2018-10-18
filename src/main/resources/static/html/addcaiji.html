@@ -77,7 +77,7 @@
        </div>
        <div class="uploadbox" id="test10">
            <img src="../img/iploadimg.png" alt="">
-           <p>点击上传，或将文件拖拽到此处</p>
+           <p class="namewenjian">点击上传，或将文件拖拽到此处</p>
        </div>
        <input type="file" id="test10input" onchange="upload(this)"/>
        <p class="shuoming">注意事项：上传的文件格式为txt文件，文件中各手机号占一整行，下一行回车键隔开；</p>
@@ -93,7 +93,12 @@
 <script>
     //数据读取
     function upload(input) {
-        console.log(input.files[0].name)
+        if(input.files[0].name.split("txt")){
+            if(input.files[0].name.split("txt").length<2){
+                $("#test10input").empty();
+                return layer.msg("文件不符合规则，请上传txt文本文件")
+            }
+        }
         //支持chrome IE10
         if (window.FileReader) {
             var file = input.files[0];
@@ -102,7 +107,7 @@
             reader.readAsText(file,'gb2312');
             reader.onload = function() {
                 //console.log(this.result);
-                datachuli(this.result)
+                datachuli(this.result,input.files[0].name)
             }
         }
         //支持IE 7 8 9 10
@@ -111,7 +116,7 @@
             xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
             xmlDoc.async = false;
             xmlDoc.load(input.value);
-            datachuli(xmlDoc.xml)
+            datachuli(xmlDoc.xml,input.files[0].name)
             //console.log(xmlDoc.xml);
         }
         //支持FF
@@ -120,10 +125,10 @@
             xmlDoc = document.implementation.createDocument("", "", null);
             xmlDoc.async = false;
             xmlDoc.load(input.value);
-            datachuli(xmlDoc.xml)
+            datachuli(xmlDoc.xml,input.files[0].name)
             //console.log(xmlDoc.xml);
         } else {
-            alert('error');
+            return layer.msg("文件不符合规则，请上传txt文本文件")
         }
     }
     //读取事件
@@ -131,14 +136,32 @@
         $("#test10input").click()
     });
     //数据处理
-    function datachuli(odata) {
+    function datachuli(odata,name) {
         var data = odata.split("\n")
-        console.log(data)
         var datalist = [];
         $.each(data,function (i,item) {
-            datalist.push(encrypt(item))
+            if((/^1[34578]\d{9}$/.test(parseInt(item)))){
+                datalist.push(encrypt(item))
+            }
         });
-        console.log(datalist)
+        //console.log(datalist)
+        if(datalist.length==0){
+            $("#test10input").empty();
+            return  layer.alert('文件内容为空，或不符合要求格式标准,请检查文件编码格式是否为utf-8格式', {
+                skin: 'layui-layer-lan'
+                ,closeBtn: 0
+                ,anim: 4 //动画类型
+            });
+        }else{
+            $(".namewenjian").html(name+'；可用数据'+datalist.length+"条；");
+            $("#uploadactive").fadeIn().attr("data-code",JSON.stringify(datalist));
+        }
+    }
+    $("#uploadactive").click(function () {
+        if($(".renwuname").val()==""){
+            $(".renwuname").css("border","1px solid red;")
+            return layer.msg("请填写任务名称", {anim: 6});
+        }
         $.ajax({
             url: "/api/createJob",
             type: "post",
@@ -146,7 +169,7 @@
                 withCredentials: true
             },
             data: JSON.stringify({
-                datas: datalist,
+                datas: JSON.parse($(this).attr("data-code")),
                 status: "start",
                 taskname: $(".renwuname").val()
             }),
@@ -158,6 +181,6 @@
                 }
             }
         })
-    }
+    })
 </script>
 </html>

@@ -88,16 +88,8 @@
 <script>
 
     $(".uploadbtn").click(function () {
+        var shujulist = [];
         var caijiboxval = $(".caijibox").val();
-        // if(caijiboxval==""){
-        //     return;
-        // }
-        //
-        // var list = [];
-        //
-        // $.each(caijiboxval.split(","),function (i,item) {
-        //     list.push(item)
-        // })
         if($(".renwuname").val()==""){
             $(".renwuname").css("border","1px solid red;")
             return layer.msg("请填写任务名称", {anim: 6});
@@ -105,26 +97,34 @@
         if(caijiboxval==""){
             return layer.msg("请填写任务内容", {anim: 6});
         }
-        console.log(caijiboxval);
+        $.each(caijiboxval.split(","),function (i,item) {
+            if((/^1[34578]\d{9}$/.test(parseInt(item)))){
+                shujulist.push(encrypt(item))
+            }
+        });
+        if(shujulist.length==0){
+            return layer.msg("请输入符合要求的数据", {anim: 6});
+        }
+        console.log(shujulist);
         $.ajax({
             url: "/api/createJob",
-            type: "get",
+            type: "post",
             xhrFields: {
                 withCredentials: true
             },
-            data:{
-                datas: caijiboxval,
+            data: JSON.stringify({
+                datas: shujulist,
                 status: "start",
-                taskname:$(".renwuname").val()
-            },
+                taskname: $(".renwuname").val()
+            }),
+            contentType: "application/json",
             success: function (res) {
                 console.log(res);
                 if (res.code != 0) {
                     //return layer.msg(res.message, {anim: 6});
                 }
-                window.location = "caijishezhi.html";
             }
-        });
+        })
     });
 </script>
 </html>
