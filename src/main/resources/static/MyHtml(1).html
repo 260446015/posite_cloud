@@ -13,7 +13,7 @@
 <script type="text/javascript">  
   
    	//加密
-    function Encrypt(word){  
+    function encrypt(word){
          var key = CryptoJS.enc.Utf8.parse("13223wrwe4345678");//秘钥   
   
          var srcs = CryptoJS.enc.Utf8.parse(word);  
@@ -21,7 +21,7 @@
          return encrypted.toString();  
     }  
     //解密
-    function Decrypt(word){  
+    function decrypt(word){
          var key = CryptoJS.enc.Utf8.parse("13223wrwe4345678");  //秘钥   
   
          var decrypt = CryptoJS.AES.decrypt(word, key, {mode:CryptoJS.mode.ECB,padding: CryptoJS.pad.Pkcs7});  

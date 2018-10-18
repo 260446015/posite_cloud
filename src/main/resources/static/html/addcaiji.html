@@ -15,7 +15,7 @@
     <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
     <META HTTP-EQUIV="expires" CONTENT="0">
 
-    <script src="../js/common/jquery-3.3.1.min.js"></script>
+
     <!--animate-->
     <link rel="stylesheet" href="../css/common/animate.css">
     <!--layui-->
@@ -28,6 +28,10 @@
     <style>
         body{
             background: #edeef2;
+        }
+        #test10input{
+            position: fixed;
+            z-index: -1;
         }
     </style>
 </head>
@@ -75,64 +79,85 @@
            <img src="../img/iploadimg.png" alt="">
            <p>点击上传，或将文件拖拽到此处</p>
        </div>
+       <input type="file" id="test10input" onchange="upload(this)"/>
        <p class="shuoming">注意事项：上传的文件格式为txt文件，文件中各手机号占一整行，下一行回车键隔开；</p>
        <button class="layui-btn layui-btn-fluid uploadbtn layui-btn-normal" id="uploadactive" style="display: none;">确定</button>
    </div>
 </section>
 </body>
+<script src="../js/common/jquery-3.3.1.min.js"></script>
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
+<script type="text/javascript" src="../js/jiami/aes.js"></script>
+<script type="text/javascript" src="../js/jiami/mode-ecb.js"></script>
 <script>
-    layui.use(['laypage', 'layer','upload']);
-    var upload = layui.upload;
-    var laypage = layui.laypage;
-    uploadonemore()
-    //文件上传
-    function uploadonemore() {
-        upload.render({
-            elem: '#test10'
-            , url: '/api/file/upload'
-            , accept: 'file' //普通文件
-            , data: {
-                taskname:function () {
-                    return $(".renwuname").val()
-                }
-            },
+    //数据读取
+    function upload(input) {
+        console.log(input.files[0].name)
+        //支持chrome IE10
+        if (window.FileReader) {
+            var file = input.files[0];
+            filename = file.name.split(".")[0];
+            var reader = new FileReader();
+            reader.readAsText(file,'gb2312');
+            reader.onload = function() {
+                //console.log(this.result);
+                datachuli(this.result)
+            }
+        }
+        //支持IE 7 8 9 10
+        else if (typeof window.ActiveXObject != 'undefined'){
+            var xmlDoc;
+            xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+            xmlDoc.async = false;
+            xmlDoc.load(input.value);
+            datachuli(xmlDoc.xml)
+            //console.log(xmlDoc.xml);
+        }
+        //支持FF
+        else if (document.implementation && document.implementation.createDocument) {
+            var xmlDoc;
+            xmlDoc = document.implementation.createDocument("", "", null);
+            xmlDoc.async = false;
+            xmlDoc.load(input.value);
+            datachuli(xmlDoc.xml)
+            //console.log(xmlDoc.xml);
+        } else {
+            alert('error');
+        }
+    }
+    //读取事件
+    $("#test10").click(function () {
+        $("#test10input").click()
+    });
+    //数据处理
+    function datachuli(odata) {
+        var data = odata.split("\n")
+        console.log(data)
+        var datalist = [];
+        $.each(data,function (i,item) {
+            datalist.push(encrypt(item))
+        });
+        console.log(datalist)
+        $.ajax({
+            url: "/api/createJob",
+            type: "post",
             xhrFields: {
                 withCredentials: true
-            }
-            , auto: false
-            , bindAction: "#uploadactive"
-            , choose: function (obj) {
-                obj.preview(function (index, file, result) {
-                    var typeup = file.name.split(".").pop();
-                    if(typeup=="txt"||typeup=="xls"||typeup=="xlsx"){
-                        console.log(typeup)
-                        $("#uploadactive").fadeIn();
-                    }else{
-                        layer.msg("当前不支持"+typeup+"格式文件上传！")
-                    }
-                });
-            }
-            , before: function (obj) {
-                var loa = layer.load(1, {shade: [0.1, '#000']})
-            }
-            , done: function (res) {
+            },
+            data: JSON.stringify({
+                datas: datalist,
+                status: "start",
+                taskname: $(".renwuname").val()
+            }),
+            contentType: "application/json",
+            success: function (res) {
                 console.log(res);
-                if($(".renwuname").val()==""){
-                    $(".renwuname").css("border","1px solid red;")
-                    return layer.msg("请填写任务名称", {anim: 6});
-                }
                 if (res.code != 0) {
                     //return layer.msg(res.message, {anim: 6});
                 }
-                window.location = "caijishezhi.html";
             }
-            , error: function (index, upload) {
-
-            }
-        });
+        })
     }
-
 </script>
 </html>
