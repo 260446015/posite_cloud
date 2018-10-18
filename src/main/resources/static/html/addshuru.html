@@ -125,7 +125,10 @@
                 if (res.code != 0) {
                     //return layer.msg(res.message, {anim: 6});
                 }
-                layer.msg("数据上传成功")
+                layer.msg("数据上传成功,3s后自动返回采集列表页面；");
+                setTimeout(function () {
+                    window.location = "caijishezhi.html";
+                },3000);
             }
         })
     });

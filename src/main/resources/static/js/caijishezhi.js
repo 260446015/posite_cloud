@@ -10,7 +10,11 @@ $(function () {
         setTimeout(function () {
             var layerclose;
             $(".treeul .oneli").mouseenter(function () {
-                layerclose = layer.tips('任务创建时间：'+$(this).find('label').attr('data-time'),$(this));
+                var total = "";
+                if($(this).find('label').attr('data-num')!="null"){
+                    total = "；号码数量："+$(this).find('label').attr('data-num');
+                }
+                layerclose = layer.tips('任务创建时间：'+$(this).find('label').attr('data-time')+total,$(this));
             }).mouseleave(function () {
                 layer.close(layerclose);
             });
@@ -83,9 +87,9 @@ $(function () {
                             otext = zdrysc.timechange(item.creationTime);
                         }
                         if(item.ifFinish){
-                            oli += '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label id="'+item.taskId+'" data-code="'+item.ifFinish+'" data-href="'+item.reportStatus+'" data-time="'+item.creationTime+'">'+otext+'</label></li>';
+                            oli += '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label id="'+item.taskId+'" data-code="'+item.ifFinish+'" data-href="'+item.reportStatus+'" data-time="'+item.creationTime+'" data-num="'+item.uploadSize+'">'+otext+'</label></li>';
                         }else{
-                            oli += '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label data-href="'+item.reportStatus+'" data-code="'+item.ifFinish+'" id="'+item.taskId+'" data-time="'+item.creationTime+'">'+otext+'</label></li>';
+                            oli += '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label data-href="'+item.reportStatus+'" data-code="'+item.ifFinish+'" id="'+item.taskId+'" data-time="'+item.creationTime+'" data-num="'+item.uploadSize+'">'+otext+'</label></li>';
                         }
                     });
                     //一级下用户
@@ -102,9 +106,9 @@ $(function () {
                                 otext = zdrysc.timechange(item.creationTime);
                             }
                             if(item.ifFinish){
-                                oli += '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label id="'+item.taskId+'" data-code="'+item.ifFinish+'" data-href="'+item.reportStatus+'" data-time="'+item.creationTime+'">'+otext+'</label></li>';
+                                oli += '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label id="'+item.taskId+'" data-code="'+item.ifFinish+'" data-href="'+item.reportStatus+'" data-time="'+item.creationTime+'" data-num="'+item.uploadSize+'">'+otext+'</label></li>';
                             }else{
-                                oli += '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label data-href="'+item.reportStatus+'" data-code="'+item.ifFinish+'" id="'+item.taskId+'" data-time="'+item.creationTime+'">'+otext+'</label></li>';
+                                oli += '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label data-href="'+item.reportStatus+'" data-code="'+item.ifFinish+'" id="'+item.taskId+'" data-time="'+item.creationTime+'" data-num="'+item.uploadSize+'">'+otext+'</label></li>';
                             }
                         });
                         oli += '</ul>' +
@@ -124,13 +128,13 @@ $(function () {
                         otext = zdrysc.timechange(item.creationTime);
                     }
                     if(item.ifFinish){
-                        list = '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label id="'+item.taskId+'" data-code="'+item.ifFinish+'" data-href="'+item.reportStatus+'" data-time="'+item.creationTime+'">'+otext+'</label></li>';
+                        list = '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label id="'+item.taskId+'" data-code="'+item.ifFinish+'" data-href="'+item.reportStatus+'" data-time="'+item.creationTime+'" data-num="'+item.uploadSize+'">'+otext+'</label></li>';
                     }else{
-                        list = '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label data-href="'+item.reportStatus+'" data-code="'+item.ifFinish+'" id="'+item.taskId+'" data-time="'+item.creationTime+'">'+otext+'</label></li>';
+                        list = '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label data-href="'+item.reportStatus+'" data-code="'+item.ifFinish+'" id="'+item.taskId+'" data-time="'+item.creationTime+'" data-num="'+item.uploadSize+'">'+otext+'</label></li>';
                     }
                     $(".treeul").append(list);
                 });
-                //树形菜单业务
+                //树形菜单服务
                 refreshcaidan();
                 //时间显示刷新
                 timeshow();
