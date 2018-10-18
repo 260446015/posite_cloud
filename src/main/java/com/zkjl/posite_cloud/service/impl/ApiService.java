@@ -77,9 +77,9 @@ public class ApiService implements IApiService {
             jobInfo.setTaskid(taskId);
             jobInfo.setUsername(jobDTO.getUsername());
             jobInfo.setCreationTime(Calendar.getInstance().getTime());
-            jobInfo.setMobile(mobile.split("`")[0]);
+            jobInfo.setMobile(mobile.split("`")[0].trim());
             try {
-                jobInfo.setMobileUser(mobile.split("`")[1]);
+                jobInfo.setMobileUser(mobile.split("`")[1].trim());
             } catch (Exception e) {
                 jobInfo.setMobileUser("");
             }
