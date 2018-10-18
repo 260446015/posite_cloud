@@ -16,4 +16,5 @@ public class JobinfoVO implements Serializable {
     private Boolean ifFinish;
     private String taskname;
     private Boolean reportStatus;
+    private Integer uploadSize;
 }

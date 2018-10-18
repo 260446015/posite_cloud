@@ -86,7 +86,7 @@ public class ApiService implements IApiService {
             preSaveDatas.add(jobInfo);
         }
         jobInfoRepository.saveAll(preSaveDatas);
-        redistaskRepository.save(new Redistask(jobDTO.getUsername(), taskId, false, jobDTO.getTaskname()));
+        redistaskRepository.save(new Redistask(jobDTO.getUsername(), taskId, false, jobDTO.getTaskname(), preSaveDatas.size()));
         Integer level = getLevel(jobDTO);
         jobDTO.setLevel(level);
         jobDTO.setTaskid(taskId);
@@ -138,7 +138,7 @@ public class ApiService implements IApiService {
         for (int i = 0; i < mobiles.size(); i++) {
             datas.add(mobiles.get(i).split("`")[0].trim());
         }
-        listOperations.rightPushAll(redisId,datas);
+        listOperations.rightPushAll(redisId, datas);
     }
 
     @Override
@@ -167,7 +167,7 @@ public class ApiService implements IApiService {
                 redistaskRepository.save(oldRedis);
                 byTaskid.forEach(action -> action.setData(null));
                 jobInfoRepository.saveAll(byTaskid);
-                Redistask newRedis = new Redistask(oldRedis.getUsername(), taskId, false, oldRedis.getTaskname());
+                Redistask newRedis = new Redistask(oldRedis.getUsername(), taskId, false, oldRedis.getTaskname(), byTaskid.size());
                 newRedis.setCreationTime(Calendar.getInstance().getTime());
                 newRedis.setIfFinish(false);
                 newRedis.setTaskid(taskId);
@@ -528,7 +528,7 @@ public class ApiService implements IApiService {
         Aggregation agg = Aggregation.newAggregation(
                 Aggregation.match(Criteria.where("taskid").in(taskids)),
                 Aggregation.sort(Sort.Direction.ASC, "creationTime"),
-                Aggregation.group("taskid").last("_version").as("_version").first("taskid").as("taskid").first("taskname").as("taskname").last("creationTime").as("creationTime").first("username").as("username")
+                Aggregation.group("taskid").last("_version").as("_version").first("taskid").as("taskid").first("taskname").as("taskname").last("creationTime").as("creationTime").first("username").as("username").last("uploadSize").as("uploadSize")
         );
 
         AggregationResults<Redistask> outputType = mongoTemplate.aggregate(agg, Constans.T_REDISTASK, Redistask.class);
@@ -545,6 +545,7 @@ public class ApiService implements IApiService {
             }
             vo.setCreationTime(DateUtils.getFormatString(element.getDate("creationTime")));
             vo.setIfFinish(true);
+            vo.setUploadSize(element.getInteger("uploadSize"));
             vo.setTaskname(element.getString("taskname"));
             vo.setReportStatus(false);
             if (element.getInteger("_version") > 0) {
@@ -579,7 +580,7 @@ public class ApiService implements IApiService {
         Aggregation agg = Aggregation.newAggregation(
                 Aggregation.match(Criteria.where("username").is(username)),
                 Aggregation.sort(Sort.Direction.ASC, "creationTime"),
-                Aggregation.group("taskid").last("_version").as("_version").first("taskid").as("taskid").first("taskname").as("taskname").last("creationTime").as("creationTime").first("username").as("username")
+                Aggregation.group("taskid").last("_version").as("_version").first("taskid").as("taskid").first("taskname").as("taskname").last("creationTime").as("creationTime").first("username").as("username").last("uploadSize").as("uploadSize")
         );
 
         AggregationResults<Redistask> outputType = mongoTemplate.aggregate(agg, Constans.T_REDISTASK, Redistask.class);
@@ -598,6 +599,7 @@ public class ApiService implements IApiService {
             vo.setIfFinish(true);
             vo.setTaskname(element.getString("taskname"));
             vo.setReportStatus(false);
+            vo.setUploadSize(element.getInteger("uploadSize"));
             if (element.getInteger("_version") > 0) {
                 vo.setReportStatus(true);
             }
