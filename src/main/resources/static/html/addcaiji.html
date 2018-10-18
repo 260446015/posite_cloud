@@ -88,11 +88,13 @@
 <script src="../js/common/jquery-3.3.1.min.js"></script>
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
+<script src="../vikey/ViKeyInterface.js"></script>
 <script type="text/javascript" src="../js/jiami/aes.js"></script>
 <script type="text/javascript" src="../js/jiami/mode-ecb.js"></script>
 <script>
     //数据读取
     function upload(input) {
+        $("#uploadactive").attr("data-code","");
         if(input.files[0].name.split("txt")){
             if(input.files[0].name.split("txt").length<2){
                 $("#test10input").empty();
@@ -162,7 +164,6 @@
             $(".renwuname").css("border","1px solid red;")
             return layer.msg("请填写任务名称", {anim: 6});
         }
-        console.log(JSON.parse($(this).attr("data-code")))
         $.ajax({
             url: "/api/createJob",
             type: "post",
@@ -174,12 +175,12 @@
                 "status": "start",
                 "taskname": $(".renwuname").val()
             },
-            contentType: "application/json",
             success: function (res) {
                 console.log(res);
                 if (res.code != 0) {
                     //return layer.msg(res.message, {anim: 6});
                 }
+                layer.msg("数据上传成功")
             }
         })
     })

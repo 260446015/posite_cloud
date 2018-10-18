@@ -76,7 +76,7 @@
             <br/>
             1.文本框输入单一号码采集
             <br/>
-            2.文本框输入多个号码采集，用“，”分割
+            2.文本框输入多个号码采集，用英文“,”分割
             <br/>
             3.号段采集，号段输入在文本框中，多个用“，”分割</p>
         <button class="layui-btn layui-btn-fluid uploadbtn layui-btn-normal">确定</button>
@@ -85,6 +85,9 @@
 </body>
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
+<script src="../vikey/ViKeyInterface.js"></script>
+<script type="text/javascript" src="../js/jiami/aes.js"></script>
+<script type="text/javascript" src="../js/jiami/mode-ecb.js"></script>
 <script>
 
     $(".uploadbtn").click(function () {
@@ -112,17 +115,17 @@
             xhrFields: {
                 withCredentials: true
             },
-            data: JSON.stringify({
-                datas: shujulist,
-                status: "start",
-                taskname: $(".renwuname").val()
-            }),
-            contentType: "application/json",
+            data: {
+                "datas[]": shujulist,
+                "status": "start",
+                "taskname": $(".renwuname").val()
+            },
             success: function (res) {
                 console.log(res);
                 if (res.code != 0) {
                     //return layer.msg(res.message, {anim: 6});
                 }
+                layer.msg("数据上传成功")
             }
         })
     });
