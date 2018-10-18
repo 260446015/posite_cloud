@@ -28,17 +28,17 @@ public class Redistask implements Serializable {
     private Date creationTime;
     private String taskname;
     private Integer _version;
-    private Integer dataSize;
+    private Integer uploadSize;
     private List<JobInfo> datas;
 
-    public Redistask(String username, String taskid, Boolean ifFinish, String taskname, Integer dataSize) {
+    public Redistask(String username, String taskid, Boolean ifFinish, String taskname, Integer uploadSize) {
         this.username = username;
         this.taskid = taskid;
         this.ifFinish = ifFinish;
         this.creationTime = Calendar.getInstance().getTime();
         this.taskname = taskname;
         this._version = 0;
-        this.dataSize = dataSize;
+        this.uploadSize = uploadSize;
     }
 
     public Redistask() {
