@@ -133,9 +133,6 @@ zdrysc.timechange = function (time) {
     var s = (timedata.getSeconds() > 9 ? timedata.getSeconds() : '0' + timedata.getSeconds());
     return y+'-'+m+'-'+d+'  '+h+':'+min+':'+s;
 };
-
-
-
 //个人信息设置
 var zdryscuserdata = JSON.parse(sessionStorage.getItem("zdryscuser"));
 if(zdryscuserdata){
