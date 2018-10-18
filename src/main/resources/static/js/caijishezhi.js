@@ -66,8 +66,9 @@ $(function () {
             success: function (res) {
                 console.log(res)
                 if (res.code != 0) {
-                    //return layer.msg(res.message, {anim: 6});
+                    return layer.msg(res.message, {anim: 6});
                 }
+                gobacklogout(res.code);
                 if(res.data.length==0){
                     $(".treeul,.im_contenlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
                 }
@@ -226,15 +227,21 @@ $(function () {
                         odata = appname;
                     }
                     var list;
+                    var number;
+                    if((/^1[34578]\d{9}$/.test(item.mobile))){
+                        number = item.mobile;
+                    }else{
+                        number = decrypt(item.mobile);
+                    }
                     if(i%2){
                         list = '<div class="sc_zdgray">' +
-                            '<span>'+item.mobile+'</span>' +
+                            '<span>'+number+'</span>' +
                             '<span class="cr sc_zdspan" data-href="'+appspsn+'"> '+odata+'</span>' +
                             '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
                             '</div>';
                     }else{
                         list = '<div>' +
-                            '<span>'+item.mobile+'</span>' +
+                            '<span>'+number+'</span>' +
                             '<span class="cr sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
                             '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
                             '</div>';

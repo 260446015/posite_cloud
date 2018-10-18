@@ -12,7 +12,7 @@ $(function () {
             },
             data: {},
             success: function (res) {
-                console.log(res)
+                //console.log(res)
                 //console.log(res.data.percent);
                 if (res.code != 0) {
                     //return layer.msg(res.message, {anim: 6});
@@ -134,15 +134,21 @@ $(function () {
                     $.each(item.webnames,function (i,item) {
                         appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
                     });
+                    var number;
+                    if((/^1[34578]\d{9}$/.test(item.mobile))){
+                        number = item.mobile;
+                    }else{
+                        number = decrypt(item.mobile);
+                    }
                     if(i%2){
                         list = '<li class="sc_zdgray" data-href="'+appspsn+'">' +
-                            '<span>'+item.mobile+'</span>' +
+                            '<span>'+number+'</span>' +
                             '<span>'+item.webtype+'</span>' +
                             '<span>'+item.app+'</span>' +
                             '</li>';
                     }else{
                         list = '<li data-href="'+appspsn+'">' +
-                            '<span>'+item.mobile+'</span>' +
+                            '<span>'+number+'</span>' +
                             '<span>'+item.webtype+'</span>' +
                             '<span>'+item.app+'</span>' +
                             '</li>';
@@ -296,17 +302,23 @@ $(function () {
                             aclass = "yj_blue";
                             break
                     }
+                    var number;
+                    if((/^1[34578]\d{9}$/.test(item.mobile))){
+                        number = item.mobile;
+                    }else{
+                        number = decrypt(item.mobile);
+                    }
                     if(i%2){
                         list = '<div class="sc_zdgray" data-href="'+appspsn+'">' +
                             '<span>Top '+(i+1)+'</span>' +
-                            '<span>'+item.mobile+'</span>' +
+                            '<span>'+number+'</span>' +
                             '<span>'+item.registCount+'</span>' +
                             '<span class="'+oclass+'">'+item.warnInfo+'</span>' +
                             '</div>';
                     }else{
                         list = '<div data-href="'+appspsn+'">' +
                             '<span>Top '+(i+1)+'</span>' +
-                            '<span>'+item.mobile+'</span>' +
+                            '<span>'+number+'</span>' +
                             '<span>'+item.registCount+'</span>' +
                             '<span class="'+oclass+'">'+item.warnInfo+'</span>' +
                             '</div>';
@@ -416,6 +428,7 @@ $(function () {
                 if (res.code != 0) {
                     return layer.msg(res.message, {anim: 6});
                 }
+                gobacklogout(res.code);
                 $.each(res.data.dataList,function (i,item) {
                     var list = '<li><a href="html/systemmessage.html">'+item.content+'</a></li>'
                     $(".gongg_list").append(list);

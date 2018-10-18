@@ -47,6 +47,7 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
             if (res.code != 0) {
                 //return layer.msg(res.message, {anim: 6});
             }
+            gobacklogout(res.code);
             if (0 === pageNum) {
                 count = res.data.totalNumber;
                 setPageNo(count,pageSize);
@@ -78,8 +79,6 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                     }
                     appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
                 });
-
-
                 switch (item.warnInfo){
                     case "红色预警":
                         oclass = "border-color:#ff000078;";
@@ -95,9 +94,15 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                 }else{
                     odata = appname;
                 }
+                var number;
+                if((/^1[34578]\d{9}$/.test(item.mobile))){
+                    number = item.mobile;
+                }else{
+                    number = decrypt(item.mobile);
+                }
                 if(i%2){
                     list = '<div class="sc_zdgray">' +
-                        '<span>'+item.mobile+'</span>' +
+                        '<span>'+number+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
                         '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
@@ -110,7 +115,7 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                         '</div>';
                 }else{
                     list = '<div>' +
-                        '<span>'+item.mobile+'</span>' +
+                        '<span>'+number+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
                         '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +

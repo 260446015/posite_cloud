@@ -148,3 +148,14 @@ if(zdryscuserdata){
         $("#demo1").html('<img src="/'+zdryscuserdata.image+'" alt="">');
     }
 }
+
+
+function gobacklogout(code) {
+    if(code=="-8"){
+        if($(".title").attr("data-href")=="shou"){
+            window.location = "loginnew.html";
+        }else{
+            window.location = "../loginnew.html";
+        }
+    }
+}

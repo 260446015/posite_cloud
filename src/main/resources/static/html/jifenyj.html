@@ -144,6 +144,8 @@
 </body>
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
+<script type="text/javascript" src="../js/jiami/aes.js"></script>
+<script type="text/javascript" src="../js/jiami/mode-ecb.js"></script>
 <script>
 
     //分页设置
@@ -234,9 +236,15 @@
                     }else{
                         odata = appname;
                     }
+                    var number;
+                    if((/^1[34578]\d{9}$/.test(item.mobile))){
+                        number = item.mobile;
+                    }else{
+                        number = decrypt(item.mobile);
+                    }
                     if(i%2){
                         list = "<div class='sc_zdgray'>" +
-                            "<span>"+item.mobile+"</span>" +
+                            "<span>"+number+"</span>" +
                             "<span>"+item.sorce+"</span>" +
                             "<span class='sc_zdspan' data-href='"+appspsn+"'>"+odata+"</span>" +
                             "<span class='"+oclass+"'>"+item.warnInfo+"</span>" +
@@ -244,7 +252,7 @@
                             "</div>";
                     }else{
                         list = "<div>" +
-                            "<span>"+item.mobile+"</span>" +
+                            "<span>"+number+"</span>" +
                             "<span>"+item.sorce+"</span>" +
                             "<span class='sc_zdspan' data-href='"+appspsn+"'>"+odata+"</span>" +
                             "<span class='"+oclass+"'>"+item.warnInfo+"</span>" +

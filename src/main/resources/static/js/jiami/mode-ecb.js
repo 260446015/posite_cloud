@@ -107,10 +107,6 @@ code.google.com/p/crypto-js/wiki/License
 // console.log(miyaocanshu)
 
 
-
-
-
-
 CryptoJS.mode.ECB = (function () {
     var ECB = CryptoJS.lib.BlockCipherMode.extend();
 

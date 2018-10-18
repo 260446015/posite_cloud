@@ -17,8 +17,8 @@ function watermark(settings) {
         watermark_alpha:0.3,//水印透明度
         watermark_fontsize:'16px',//水印字体大小
         watermark_font:'微软雅黑',//水印字体
-        watermark_width:300,//水印宽度
-        watermark_height:300,//水印长度
+        watermark_width:200,//水印宽度
+        watermark_height:200,//水印长度
         watermark_angle:40//水印倾斜度数
     };
     //采用配置项替换默认值，作用类似jquery.extend

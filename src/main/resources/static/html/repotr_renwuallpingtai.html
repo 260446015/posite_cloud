@@ -153,6 +153,8 @@
 </body>
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/echarts.min.js"></script>
+<script type="text/javascript" src="../js/jiami/aes.js"></script>
+<script type="text/javascript" src="../js/jiami/mode-ecb.js"></script>
 <script src="../js/shuiyin.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
 <script>
@@ -372,10 +374,16 @@
                     appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
                     console.log(appname)
                 });
+                var number;
+                if((/^1[34578]\d{9}$/.test(item.mobile))){
+                    number = item.mobile;
+                }else{
+                    number = decrypt(item.mobile);
+                }
                 if(i%2){
                     list = '<div class="sc_zdgray">' +
                         '<span></span>' +
-                        '<span>'+item.mobile+'</span>' +
+                        '<span>'+number+'</span>' +
                         '<span>'+item.registCount+'</span>' +
                         '<span>'+appname+'</span>' +
                         '<span>'+item.sorce+'</span>' +
@@ -383,7 +391,7 @@
                 }else{
                     list = '<div>' +
                         '<span></span>' +
-                        '<span>'+item.mobile+'</span>' +
+                        '<span>'+number+'</span>' +
                         '<span>'+item.registCount+'</span>' +
                         '<span>'+appname+'</span>' +
                         '<span>'+item.sorce+'</span>' +
@@ -414,10 +422,16 @@
                     appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
                     console.log(appname)
                 });
+                var number;
+                if((/^1[34578]\d{9}$/.test(item.mobile))){
+                    number = item.mobile;
+                }else{
+                    number = decrypt(item.mobile);
+                }
                 if(i%2){
                     list = '<div class="sc_zdgray">' +
                         '<span></span>' +
-                        '<span>'+item.mobile+'</span>' +
+                        '<span>'+number+'</span>' +
                         '<span>'+item.registCount+'</span>' +
                         '<span style="'+otext+'">'+appname+'</span>' +
                         '<span>'+item.sorce+'</span>' +
@@ -425,7 +439,7 @@
                 }else{
                     list = '<div>' +
                         '<span></span>' +
-                        '<span>'+item.mobile+'</span>' +
+                        '<span>'+number+'</span>' +
                         '<span>'+item.registCount+'</span>' +
                         '<span style="'+otext+'">'+appname+'</span>' +
                         '<span>'+item.sorce+'</span>' +
@@ -456,10 +470,16 @@
                     appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
                     console.log(appname)
                 });
+                var number;
+                if((/^1[34578]\d{9}$/.test(item.mobile))){
+                    number = item.mobile;
+                }else{
+                    number = decrypt(item.mobile);
+                }
                 if(i%2){
                     list = '<div class="sc_zdgray">' +
                         '<span></span>' +
-                        '<span>'+item.mobile+'</span>' +
+                        '<span>'+number+'</span>' +
                         '<span>'+item.registCount+'</span>' +
                         '<span style="'+otext+'">'+appname+'</span>' +
                         '<span>'+item.sorce+'</span>' +
@@ -467,7 +487,7 @@
                 }else{
                     list = '<div>' +
                         '<span></span>' +
-                        '<span>'+item.mobile+'</span>' +
+                        '<span>'+number+'</span>' +
                         '<span>'+item.registCount+'</span>' +
                         '<span style="'+otext+'">'+appname+'</span>' +
                         '<span>'+item.sorce+'</span>' +
