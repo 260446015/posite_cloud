@@ -162,17 +162,18 @@
             $(".renwuname").css("border","1px solid red;")
             return layer.msg("请填写任务名称", {anim: 6});
         }
+        console.log(JSON.parse($(this).attr("data-code")))
         $.ajax({
             url: "/api/createJob",
             type: "post",
             xhrFields: {
                 withCredentials: true
             },
-            data: JSON.stringify({
-                datas: JSON.parse($(this).attr("data-code")),
-                status: "start",
-                taskname: $(".renwuname").val()
-            }),
+            data: {
+                "datas[]": JSON.parse($(this).attr("data-code")),
+                "status": "start",
+                "taskname": $(".renwuname").val()
+            },
             contentType: "application/json",
             success: function (res) {
                 console.log(res);

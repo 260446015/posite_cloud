@@ -6,7 +6,6 @@ import com.zkjl.posite_cloud.common.SystemControllerLog;
 import com.zkjl.posite_cloud.domain.dto.DeleteJobDTO;
 import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
-import com.zkjl.posite_cloud.domain.pojo.JobInfo;
 import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IApiService;
 import io.swagger.annotations.ApiOperation;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -32,9 +31,9 @@ public class ApiController extends BaseController {
     @Resource
     private IApiService apiService;
 
-    @GetMapping(value = "createJob")
+    @PostMapping(value = "createJob")
     @SystemControllerLog(description = "添加采集-手动录入")
-    public ApiResult createRedisJob(String datas, HttpServletRequest request) {
+    public ApiResult createRedisJob(@RequestParam(value = "datas[]") String[] datas, HttpServletRequest request) {
         JobDTO jobInfo;
         String taskname = request.getParameter("taskname");
         try {
@@ -42,10 +41,15 @@ public class ApiController extends BaseController {
             if (StringUtils.isEmpty(username)) {
                 throw new CustomerException("用户名为空");
             }
+            if (StringUtils.isEmpty(taskname)) {
+                throw new CustomerException("任务名为空");
+            }
             JobDTO jobDTO = new JobDTO();
             jobDTO.setUsername(username);
             jobDTO.setTaskname(taskname);
-            jobDTO.setDatas(datas);
+            String s = Arrays.toString(datas);
+            s = s.replace("[", "").replace("]", "");
+            jobDTO.setDatas(s);
             jobDTO.setStatus("start");
             jobInfo = apiService.createJob(jobDTO);
         } catch (Exception e) {

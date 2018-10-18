@@ -10,7 +10,6 @@ import com.zkjl.posite_cloud.domain.dto.JobDTO;
 import com.zkjl.posite_cloud.domain.dto.SentimentDTO;
 import com.zkjl.posite_cloud.domain.pojo.*;
 import com.zkjl.posite_cloud.domain.vo.JobinfoVO;
-import com.zkjl.posite_cloud.enums.MarkEnum;
 import com.zkjl.posite_cloud.exception.CustomerException;
 import com.zkjl.posite_cloud.service.IApiService;
 import org.apache.commons.lang3.StringUtils;
@@ -99,10 +98,10 @@ public class ApiService implements IApiService {
         User byUsername = userRepository.findByUsername(jobDTO.getUsername());
         int searchCount = byUsername.getSearchCount();
         int totalSerachCount = byUsername.getTotalSerachCount();
-        if (searchCount <= 0 || searchCount < mobiles.size()) {
+        if ((totalSerachCount - searchCount) <= 0 || (totalSerachCount - searchCount) < mobiles.size()) {
             throw new CustomerException("查询可用数量不足，请联系管理员进行修改");
         }
-        searchCount = totalSerachCount - mobiles.size();
+        searchCount += mobiles.size();
         log.info("当前用户:" + jobDTO.getUsername() + ",剩余数量:" + searchCount);
         byUsername.setSearchCount(searchCount);
         userRepository.save(byUsername);
@@ -114,9 +113,7 @@ public class ApiService implements IApiService {
         log.info("校验数据之前的数量:" + split.length);
         Set<String> check = new HashSet<>();
         for (String aSplit : split) {
-            if (RegUtil.checkMobile(aSplit)) {
-                check.add(aSplit);
-            }
+            check.add(aSplit);
         }
         if (check.size() == 0) {
             throw new CustomerException("传入的数据不能为空，请确认数据传入无误");
@@ -192,7 +189,7 @@ public class ApiService implements IApiService {
         JSONObject result = new JSONObject();
         List<JobInfo> total = jobInfoRepository.findByUsername(username);
         User byUsername = userRepository.findByUsername(username);
-        result.put("searchCount", byUsername.getSearchCount());
+        result.put("searchCount", (byUsername.getTotalSerachCount() - byUsername.getSearchCount()));
         result.put("totalSerachCount", byUsername.getTotalSerachCount());
         if (total.size() == 0) {
             result.put("successData", 0);
