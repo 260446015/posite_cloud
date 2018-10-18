@@ -134,7 +134,11 @@ public class ApiService implements IApiService {
         log.info("当前生成的redisId:" + redisId);
         ListOperations listOperations = stringRedisTemplate.opsForList();
         List<String> mobiles = Arrays.asList(jobDTO.getDatas().split(","));
-        mobiles.forEach(mobile -> listOperations.rightPush(redisId, mobile.split("`")[0]));
+        Set<String> datas = new HashSet<>();
+        for (int i = 0; i < mobiles.size(); i++) {
+            datas.add(mobiles.get(i).split("`")[0].trim());
+        }
+        listOperations.rightPushAll(redisId,datas);
     }
 
     @Override
