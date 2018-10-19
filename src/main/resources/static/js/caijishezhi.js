@@ -65,10 +65,10 @@ $(function () {
             data:{},
             success: function (res) {
                 console.log(res)
-                if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
-                }
                 gobacklogout(res.code);
+                if (res.code != 0) {
+                    //return layer.msg(res.message, {anim: 6});
+                }
                 if(res.data.length==0){
                     $(".treeul,.im_contenlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
                 }

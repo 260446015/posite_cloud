@@ -36,8 +36,39 @@ $(function () {
     }
 
     //舆情信息
-    yuqinghuoqu(0,11);
+    getguanjianci("1");
+    //舆情关键词获取
+    function getguanjianci(num) {
+        $.ajax({
+            url: "/api/findSentiment",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {},
+            success: function (res) {
+                if (res.code != 0) {
+                    //return layer.msg(res.message, {anim: 6});
+                }
+                console.log(res)
+                var list = "";
+                $.each(res.data,function (i,item) {
+                    if(i==0){
+                        list+=item;
+                    }else{
+                        list+=","+item;
+                    }
+                });
+                sessionStorage.setItem("yqlist",JSON.stringify(res.data));
+                if(num=="1"){
+                    yuqinghuoqu(0,11);
+                }
+                $(".yq_guanjianci").val(list);
+            }
+        });
+    }
     function yuqinghuoqu(pagenum,pagesize) {
+        var yqmsg = JSON.parse(sessionStorage.getItem("yqlist"));
         //近7天时间
         var time1 = new Date();
         time1.setTime(time1.getTime());
@@ -61,9 +92,7 @@ $(function () {
             data: JSON.stringify({
                 "beginDate": timer2,
                 "endDate": timer1,
-                "msg": [
-                    "赌博","贷款","色情","黄色","主播","直播","游戏","承德"
-                ],
+                "msg": yqmsg,
                 "pageNum": pagenum,
                 "pageSize": pagesize
             }),
@@ -102,12 +131,7 @@ $(function () {
             }
         });
     }
-    //点击详情
-    // $(".sc_yuqing").on("click","a",function () {
-    //     sessionStorage.setItem("yuqingdetial",$(this).find(".none").html());
-    //     sessionStorage.setItem("yuqingval",$(this).attr("data-href"));
-    //     window.location = "html/yuqingdetial.html";
-    // });
+
 
     //获取实时注册情况
     var keynum = 0;
@@ -426,7 +450,7 @@ $(function () {
             success: function (res) {
                 //console.log(res)
                 if (res.code != 0) {
-                    return layer.msg(res.message, {anim: 6});
+                    //return layer.msg(res.message, {anim: 6});
                 }
                 gobacklogout(res.code);
                 $.each(res.data.dataList,function (i,item) {

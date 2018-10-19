@@ -245,6 +245,7 @@
             contentType: "application/json",
             success: function (res) {
                 console.log(res);
+                gobacklogout(res.code);
                 if (res.code != 0) {
                     //return layer.msg(res.message, {anim: 6});
                 }

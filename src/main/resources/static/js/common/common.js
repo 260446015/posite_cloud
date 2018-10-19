@@ -152,10 +152,14 @@ if(zdryscuserdata){
 
 function gobacklogout(code) {
     if(code=="-8"){
-        if($(".title").attr("data-href")=="shou"){
-            window.location = "loginnew.html";
-        }else{
-            window.location = "../loginnew.html";
-        }
+        layer.msg("登录已过期，将在3s后返回登录页；")
+        setTimeout(function () {
+            if($(".title").attr("data-href")=="shou"){
+                window.location = "loginnew.html";
+            }else{
+                window.location = "../loginnew.html";
+            }
+        },3000)
+        return
     }
 }

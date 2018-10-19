@@ -123,7 +123,7 @@
         <div class="layui-form" style="margin-top: 10px;">
             <textarea style="margin-top: 20px;" placeholder="请输入内容" class="layui-textarea yq_guanjianci"></textarea>
         </div>
-        <div class="yq_boxtest">舆情词是围绕相关词可能发生的舆论，一般以动词为主，如贪污，受贿，滥用职权等。多个词请用 “，”隔开，以便区分。</div>
+        <div class="yq_boxtest">舆情词是围绕相关词可能发生的舆论，一般以动词为主，如贪污，受贿，滥用职权等。多个词请用英文“，”隔开，以便区分。</div>
 
         <div class="" style="text-align: center;">
             <div class="layui-btn layui-btn-normal baocunbtn yq_baocun">保存</div>
@@ -135,6 +135,7 @@
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
 <script>
+    var number = 0;
     layui.use(['laypage', 'layer','upload','laydate']);
     var laypage = layui.laypage;
     var laydate = layui.laydate;
@@ -179,10 +180,39 @@
             }
         });
     }
-
+    //舆情关键词获取
+    function getguanjianci(num) {
+        $.ajax({
+            url: "/api/findSentiment",
+            type: "get",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {},
+            success: function (res) {
+                if (res.code != 0) {
+                    //return layer.msg(res.message, {anim: 6});
+                }
+                console.log(res)
+                var list = "";
+                $.each(res.data,function (i,item) {
+                    if(i==0){
+                        list+=item;
+                    }else{
+                        list+=","+item;
+                    }
+                });
+                sessionStorage.setItem("yqlist",JSON.stringify(res.data));
+                if(num=="1"){
+                    yuqinghuoqu(0,11);
+                }
+                $(".yq_guanjianci").val(list);
+            }
+        });
+    }
     //舆情信息
-    yuqinghuoqu(0,10);
     function yuqinghuoqu(pagenum,pagesize) {
+        var yqmsg = JSON.parse(sessionStorage.getItem("yqlist"));
         $(".zd_boxlist").empty();
         $.ajax({
             url: "/api/sentiment",
@@ -193,6 +223,7 @@
             data: JSON.stringify({
                 "beginDate": $(".ba_time1").val(),
                 "endDate": $(".ba_time2").val(),
+                "msg":yqmsg,
                 "pageNum": pagenum,
                 "pageSize": pagesize
             }),
@@ -257,30 +288,7 @@
     });
 
     //关键词获取
-    function getguanjianci() {
-        $.ajax({
-            url: "/api/findSentiment",
-            type: "get",
-            xhrFields: {
-                withCredentials: true
-            },
-            data: {},
-            success: function (res) {
-                if (res.code != 0) {
-                    //return layer.msg(res.message, {anim: 6});
-                }
-                var list = "";
-                $.each(res.data,function (i,item) {
-                    if(i==0){
-                        list+=item;
-                    }else{
-                        list+=","+item;
-                    }
-                });
-                $(".yq_guanjianci").val(list);
-            }
-        });
-    }
+    getguanjianci(1);
 
     //关键词保存
     function setguanjainci() {
@@ -290,8 +298,6 @@
             $.each(lister.split('，'),function (i,item) {
                 list.push(item);
             })
-        }else{
-            return
         }
         $.ajax({
             url: "/api/updateSentiment",
@@ -327,10 +333,10 @@
     });
 
     //舆情详情
-    // $(".zd_boxlist").on("click","div",function () {
-    //     sessionStorage.setItem("yuqingdetial",$(this).find(".none").html());
-    //     sessionStorage.setItem("yuqingval",$(this).find(".none").attr("data-href"));
-    //     window.location = "yuqingdetial.html";
-    // });
+    $(".zd_boxlist").on("click","div",function () {
+        sessionStorage.setItem("yuqingdetial",$(this).find(".none").html());
+        sessionStorage.setItem("yuqingval",$(this).find(".none").attr("data-href"));
+        window.location = "yuqingdetial.html";
+    });
 </script>
 </html>

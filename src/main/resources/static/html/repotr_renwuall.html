@@ -223,7 +223,7 @@
         legend: {
             x : 'center',
             y : 'top',
-            data:['赌博', '网贷', '涉黄', '直播', '游戏']
+            data:['赌博', '网贷', '涉黄', '游戏','直播']
         },
         color:['#f1c12e','#a88ee2','#4384f0','#01e0a4','#47bcfb'],
         series: [
@@ -339,7 +339,7 @@
             });
             myChart3.hideLoading();
 
-            $(".re_shuomin1").html("  经筛查结果显示，此次任务，其中注册涉黄平台"+num.yellowCount+"人，赌博平台"+num.gambleCount+"人，网袋平台"+num.loansCount+"人，游戏平台"+num.gameCount+"人，直播平台"+num.livingCount+"人。共注册危险网站"+(num.yellowCount+num.gambleCount+num.loansCount+num.gameCount+num.livingCount)+"个。");
+            $(".re_shuomin1").html("  经筛查结果显示，此次任务，其中注册涉黄平台"+num.yellowCount+"人，赌博平台"+num.gambleCount+"人，网贷平台"+num.loansCount+"人，游戏平台"+num.livingCount+"人，直播平台"+num.gameCount+"人。共注册危险网站"+(num.yellowCount+num.gambleCount+num.loansCount+num.gameCount+num.livingCount)+"个。");
 
             //红色
             if(res.data.red.length==0){
