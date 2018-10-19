@@ -1,18 +1,7 @@
 
 function ViKeySocketInterface()
 {
-/*if(window.WebSocket != undefined) {
 
- console.log("支持WebSocket");
- var ViKeySocket= new WebSocket("ws://localhost:8189/test");
- alert(ViKeySocket.readyState);//查看websocket当前状态
- ViKeySocket.onopen = function()
- 	{
- 		alert(ViKeySocket.readyState);//查看websocket当前状态
- 	}
-
-}*/
-    function Initialize(){}
 	var u = document.URL;
     var url;
     var strSocketResult = '';
@@ -34,8 +23,7 @@ function ViKeySocketInterface()
 		Initialize();
 	}
 	
-	this.Initialize = function() 
-	{ 
+	function Initialize(){
 		try
 		{
 			//this.ViKeySocket.send('055');
@@ -52,50 +40,7 @@ function ViKeySocketInterface()
 		
 		return false;
 	};   
-	this.GetVersion = function() 
-	{
-		try
-		{
-			var msg = 
-			{
-				FunctionType: "GetVersion",
-				start: "start"
-			};
 
-			this.ViKeySocket.send('255|ViKeyWebSocket|'+JSON.stringify(msg));
-			return true;		
-			
-		}	
-		catch(exception)
-		{
-			OutputLog('Error'+exception);
-		}
-		
-		return false;		
-	};
-	
-	this.CheckInstall = function() 
-	{
-		try
-		{
-			var msg = 
-			{
-				FunctionType: "CheckInstall",
-				start: "start"
-			};
-
-			this.ViKeySocket.send('255|ViKeyWebSocket|'+JSON.stringify(msg));
-			this.ViKeySocket.send('255|ViKeyWebSocket|'+JSON.stringify(msg));
-			return true;		
-			
-		}	
-		catch(exception)
-		{
-			OutputLog('Error'+exception);
-		}
-		
-		return false;		
-	};
 	this.FindViKey = function() 
 	{
 		try
