@@ -1,15 +1,3 @@
-var mySwiper = new Swiper('.swiper-container',{
-    effect : 'fade',
-    navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-    },
-    loop : true,
-    fade: {
-        crossFade: false,
-    }
-
-})
 
 var ViKeyInterface;
 var bHasInstallVikey = 0;
@@ -173,6 +161,7 @@ function ViKeyReadData()   //从ViKey中读取数据
     var Addr = 0;
     var Length = 100;
     ViKeyInterface.VikeyReadData(ViKeyIndex, Addr, Length);
+
 }
 
 function Des3Encrypt()   //3Des加密
