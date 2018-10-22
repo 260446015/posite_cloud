@@ -154,8 +154,8 @@
 </body>
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/echarts.min.js"></script>
-<script type="text/javascript" src="../js/jiami/aes.js"></script><script type="text/javascript" src="../vikey/ViKeyInterface.js"></script>
-<script type="text/javascript" src="../js/jiami/mode-ecb.js"></script>
+<script type="text/javascript" src="../js/chuli/aes.js"></script>
+<script type="text/javascript" src="../js/chuli/mode-ecb.js"></script>
 <script src="../js/shuiyin.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
 <script>
@@ -359,7 +359,7 @@
                     }
                     appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
                 });
-                if((/^1[34578]\d{9}$/.test(item.mobile))){
+                if((/^\d{11}$/.test(item.mobile))){
                     number = item.mobile;
                 }else{
                     number = decrypt(item.mobile);
@@ -405,7 +405,7 @@
                     }
                     appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
                 });
-                if((/^1[34578]\d{9}$/.test(item.mobile))){
+                if((/^\d{11}$/.test(item.mobile))){
                     number = item.mobile;
                 }else{
                     number = decrypt(item.mobile);
@@ -451,7 +451,7 @@
                     }
                     appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
                 });
-                if((/^1[34578]\d{9}$/.test(item.mobile))){
+                if((/^\d{11}$/.test(item.mobile))){
                     number = item.mobile;
                 }else{
                     number = decrypt(item.mobile);

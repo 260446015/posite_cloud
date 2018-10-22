@@ -86,8 +86,8 @@
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
 <script src="../vikey/ViKeyInterface.js"></script>
-<script type="text/javascript" src="../js/jiami/aes.js"></script><script type="text/javascript" src="../vikey/ViKeyInterface.js"></script>
-<script type="text/javascript" src="../js/jiami/mode-ecb.js"></script>
+<script type="text/javascript" src="../js/chuli/aes.js"></script>
+<script type="text/javascript" src="../js/chuli/mode-ecb.js"></script>
 <script>
 
     $(".uploadbtn").click(function () {
@@ -101,7 +101,7 @@
             return layer.msg("请填写任务内容", {anim: 6});
         }
         $.each(caijiboxval.split(","),function (i,item) {
-            if((/^1[34578]\d{9}$/.test(parseInt(item)))){
+            if((/^\d{11}$/.test(parseInt(item)))){
                 shujulist.push(encrypt(item))
             }
         });

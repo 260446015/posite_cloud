@@ -135,8 +135,8 @@
 </body>
 <script src="../res/layui/layui.all.js"></script>
 <script src="../js/common/echarts.min.js"></script>
-<script type="text/javascript" src="../js/jiami/aes.js"></script><script type="text/javascript" src="../vikey/ViKeyInterface.js"></script>
-<script type="text/javascript" src="../js/jiami/mode-ecb.js"></script>
+<script type="text/javascript" src="../js/chuli/aes.js"></script>
+<script type="text/javascript" src="../js/chuli/mode-ecb.js"></script>
 <script src="../js/common/common.js?versin=0"></script>
 <script>
     var oid = window.location.search.split("?")[1];
@@ -327,7 +327,7 @@
                 $(".rp_redlist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
             }
             $.each(res.data.red,function (i,item) {
-                if((/^1[34578]\d{9}$/.test(item.mobile))){
+                if((/^\d{11}$/.test(item.mobile))){
                     number = item.mobile;
                 }else{
                     number = decrypt(item.mobile);
@@ -353,7 +353,7 @@
                 $(".rp_orangelist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
             }
             $.each(res.data.yellow,function (i,item) {
-                if((/^1[34578]\d{9}$/.test(item.mobile))){
+                if((/^\d{11}$/.test(item.mobile))){
                     number = item.mobile;
                 }else{
                     number = decrypt(item.mobile);
@@ -379,7 +379,7 @@
                 $(".rp_bluelist").append('<h3 class="kongbai"><img src="../img/zanwushuju.png" alt=""></h3>');
             }
             $.each(res.data.blue,function (i,item) {
-                if((/^1[34578]\d{9}$/.test(item.mobile))){
+                if((/^\d{11}$/.test(item.mobile))){
                     number = item.mobile;
                 }else{
                     number = decrypt(item.mobile);

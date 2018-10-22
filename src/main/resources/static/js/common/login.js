@@ -61,7 +61,11 @@ window.onload = function () {
                 var readDate=ReceiveJsonData.Data;
                 var dt=readDate.split(",");
                 var encrypt=dt[1];
-                miyao = encrypt;
+                //加密
+                var key = CryptoJS.enc.Utf8.parse("13223wrwe4345678");
+                var srcs = CryptoJS.enc.Utf8.parse(encrypt);
+                var encrypted = CryptoJS.AES.encrypt(srcs, key, {mode:CryptoJS.mode.ECB,padding: CryptoJS.pad.Pkcs7});
+                sessionStorage.setItem("userid",encrypted.toString());
                 $.ajax({
                     url: "/login",
                     type: "post",

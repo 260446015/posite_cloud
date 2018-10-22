@@ -228,7 +228,7 @@ $(function () {
                     }
                     var list;
                     var number;
-                    if((/^1[34578]\d{9}$/.test(item.mobile))){
+                    if((/^\d{11}$/.test(item.mobile))){
                         number = item.mobile;
                     }else{
                         number = decrypt(item.mobile);

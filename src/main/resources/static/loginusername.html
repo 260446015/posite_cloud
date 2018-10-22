@@ -27,6 +27,24 @@
     <link rel="stylesheet" href="css/common/common.css?version=0">
     <link rel="stylesheet" href="css/common/layout.css?version=0">
     <link rel="stylesheet" href="css/login.css?version=0">
+    <style>
+        .lobbtm {
+            height: 88%;
+        }
+        .lobbtm input{
+            height: 40px;
+            width: 80%;
+            margin: 10px auto;
+            display: block;
+            background: transparent;
+            color: #fff;
+            border-color: #03e4ff;
+        }
+        .lobbtm button {
+            height: 40px;
+            margin: 9% auto 5.5% auto;
+        }
+    </style>
 </head>
 <body>
 <div class="loginbox">
@@ -49,30 +67,56 @@
 <!--lobox-->
 <div class="lobox">
     <div class="lobtop">联知重点人筛查系统</div>
-    <div class="lobbtm">
-        <button class="btnpki">PKI登录</button>
-        <a class="downchajian" href="/vikey/数字证书驱动-zkjl.exe">数字证书驱动下载</a>
+    <div class="lobbtm layui-form">
+        <input type="text" class="layui-input username" style="margin-top: 30px;" placeholder="请输入用户名">
+        <input type="password" class="layui-input passwor" placeholder="请输入密码">
+        <button class="btnpki">登录</button>
     </div>
 </div>
 </body>
 <script src="res/layui/layui.all.js"></script>
 <script src="res/swiper/swiper.min.js"></script>
-<script type="text/javascript" src="js/chuli/aes.js"></script>
-<script type="text/javascript" src="js/chuli/mode-ecb.js"></script>
 <script src="vikey/ViKeyInterface.js"></script>
-<script src="js/common/login.js"></script>
 <script>
-var mySwiper = new Swiper('.swiper-container',{
-    effect : 'fade',
-    navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-    },
-    loop : true,
-    fade: {
-        crossFade: false,
-    }
+    var mySwiper = new Swiper('.swiper-container',{
+        effect : 'fade',
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        loop : true,
+        fade: {
+            crossFade: false,
+        }
 
-})
+    })
+
+    $(".btnpki").click(function () {
+        if($(".username").val()==""){
+            return layer.msg("请输入用户名");
+        }
+        if($(".passwor").val()==""){
+            return layer.msg("请输入密码");
+        }
+        $.ajax({
+            url: "/login",
+            type: "post",
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                username: $(".username").val(),
+                password: $(".passwor").val()
+            },
+            success: function (res) {
+                console.log(res);
+                if (res.code != 0) {
+                    return layer.msg(res.message, {anim: 6});
+                }
+                sessionStorage.setItem("zdryscuser", JSON.stringify(res.data));
+                window.location = "index.html";
+            }
+        });
+    });
 </script>
 </html>

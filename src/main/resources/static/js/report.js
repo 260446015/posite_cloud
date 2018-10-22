@@ -88,7 +88,7 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                     odata = appname;
                 }
                 var number;
-                if((/^1[34578]\d{9}$/.test(item.mobile))){
+                if((/^\d{11}$/.test(item.mobile))){
                     number = item.mobile;
                 }else{
                     number = decrypt(item.mobile);

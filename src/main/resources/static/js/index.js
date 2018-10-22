@@ -131,7 +131,12 @@ $(function () {
             }
         });
     }
-
+    //舆情详情
+    $(".sc_yuqing").on("click","a",function () {
+        sessionStorage.setItem("yuqingdetial",$(this).find(".none").html());
+        sessionStorage.setItem("yuqingval",$(this).attr("data-href"));
+        window.location = "html/yuqingdetial.html";
+    });
 
     //获取实时注册情况
     var keynum = 0;
@@ -159,7 +164,7 @@ $(function () {
                         appspsn+="<span class='sc_zdgrayspan'>"+item.webtype+"："+item.webname+"</span>";
                     });
                     var number;
-                    if((/^1[34578]\d{9}$/.test(item.mobile))){
+                    if((/^\d{11}$/.test(item.mobile))){
                         number = item.mobile;
                     }else{
                         number = decrypt(item.mobile);
@@ -327,7 +332,7 @@ $(function () {
                             break
                     }
                     var number;
-                    if((/^1[34578]\d{9}$/.test(item.mobile))){
+                    if((/^\d{11}$/.test(item.mobile))){
                         number = item.mobile;
                     }else{
                         number = decrypt(item.mobile);
