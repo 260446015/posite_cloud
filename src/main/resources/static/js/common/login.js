@@ -41,6 +41,7 @@ window.onload = function () {
                 ViKeyReadData();
             }
             else {
+                layer.closeAll();
                 return layer.msg("用户登录失败");
                 $('#member_password').hide();
                 console.log("用户权限登陆失败 ERRORCODE：" + ReceiveJsonData.ErrorCode);
@@ -133,8 +134,12 @@ function again()    //再次获取加密狗
 function login()    //调用登录
 {
     //prompt层
-
-    layer.prompt({id:'promitlist',title: '请输入PKI验证密码', formType: 1}, function (pass, index) {
+    var promptlay;
+    promptlay = layer.prompt({id:'promitlist',title: '请输入PKI验证密码', formType: 1}, function (pass, index) {
+        layer.close(promptlay);
+        layer.load(1, {
+            shade: [0.2,'#000'] //0.1透明度的白色背景
+        });
         ViKeyUserLogon(pass);
     });
 }

@@ -85,7 +85,7 @@ $(function () {
                         if(item.taskname){
                             otext = item.taskname;
                         }else{
-                            otext = zdrysc.timechange(item.creationTime);
+                            otext = item.creationTime;
                         }
                         if(item.ifFinish){
                             oli += '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label id="'+item.taskId+'" data-code="'+item.ifFinish+'" data-href="'+item.reportStatus+'" data-time="'+item.creationTime+'" data-num="'+item.uploadSize+'">'+otext+'</label></li>';
@@ -104,7 +104,7 @@ $(function () {
                             if(item.taskname){
                                 otext = item.taskname;
                             }else{
-                                otext = zdrysc.timechange(item.creationTime);
+                                otext = item.creationTime;
                             }
                             if(item.ifFinish){
                                 oli += '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label id="'+item.taskId+'" data-code="'+item.ifFinish+'" data-href="'+item.reportStatus+'" data-time="'+item.creationTime+'" data-num="'+item.uploadSize+'">'+otext+'</label></li>';
@@ -126,7 +126,7 @@ $(function () {
                     if(item.taskname){
                         otext = item.taskname;
                     }else{
-                        otext = zdrysc.timechange(item.creationTime);
+                        otext = item.creationTime;
                     }
                     if(item.ifFinish){
                         list = '<li class="oneli"><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary"><label id="'+item.taskId+'" data-code="'+item.ifFinish+'" data-href="'+item.reportStatus+'" data-time="'+item.creationTime+'" data-num="'+item.uploadSize+'">'+otext+'</label></li>';
@@ -237,13 +237,13 @@ $(function () {
                         list = '<div class="sc_zdgray">' +
                             '<span>'+number+'</span>' +
                             '<span class="cr sc_zdspan" data-href="'+appspsn+'"> '+odata+'</span>' +
-                            '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
+                            '<span>'+item.creationTime+'</span>' +
                             '</div>';
                     }else{
                         list = '<div>' +
                             '<span>'+number+'</span>' +
                             '<span class="cr sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
-                            '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
+                            '<span>'+item.creationTime+'</span>' +
                             '</div>';
                     }
                     $(".im_contenlist").append(list);

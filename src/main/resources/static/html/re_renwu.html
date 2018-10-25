@@ -122,7 +122,7 @@
                     if(item.taskname){
                         otext = item.taskname;
                     }else{
-                        otext = zdrysc.timechange(item.creationTime);
+                        otext = item.creationTime;
                     }
                     if(item.ifFinish){
                         key = "是";
@@ -136,7 +136,7 @@
                             '<span><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary" lay-filter="xuanzhong"></span>' +
                             '<span>'+otext+'</span>' +
                             '<span>'+key+'</span>' +
-                            '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
+                            '<span>'+item.creationTime+'</span>' +
                             '<span>'+ospan+'</span>' +
                             '</div>';
                     }else{
@@ -144,7 +144,7 @@
                             '<span><input id="'+item.taskId+'" type="checkbox" name="deleteli" lay-skin="primary" lay-filter="xuanzhong"></span>' +
                             '<span>'+otext+'</span>' +
                             '<span>'+key+'</span>' +
-                            '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
+                            '<span>'+item.creationTime+'</span>' +
                             '<span>'+ospan+'</span>' +
                             '</div>';
                     }

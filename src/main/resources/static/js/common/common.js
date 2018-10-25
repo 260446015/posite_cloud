@@ -106,9 +106,9 @@ $(".logout").click(function () {
             }
             sessionStorage.removeItem("zdryscuser");
             if($(".title").attr("data-href")=="shou"){
-                window.location = "loginnew.html";
+                window.location = "loginusername.html";
             }else{
-                window.location = "../loginnew.html";
+                window.location = "../loginusername.html";
             }
         }
     });
@@ -155,9 +155,9 @@ function gobacklogout(code) {
         layer.msg("登录已过期，将在3s后返回登录页；")
         setTimeout(function () {
             if($(".title").attr("data-href")=="shou"){
-                window.location = "loginnew.html";
+                window.location = "loginusername.html";
             }else{
-                window.location = "../loginnew.html";
+                window.location = "../loginusername.html";
             }
         },3000)
         return

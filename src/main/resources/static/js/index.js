@@ -405,13 +405,13 @@ $(function () {
                     if(i%2){
                         list = '<div class="sc_zdgray">' +
                             '<span class="asdasd">'+item.taskname+'</span>' +
-                            '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
+                            '<span>'+item.creationTime+'</span>' +
                             '<span>'+ospan+'</span>' +
                             '</div>';
                     }else{
                         list = '<div>' +
                             '<span class="asdasd">'+item.taskname+'</span>' +
-                            '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
+                            '<span>'+item.creationTime+'</span>' +
                             '<span>'+ospan+'</span>' +
                             '</div>';
                     }

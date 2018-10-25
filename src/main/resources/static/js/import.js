@@ -105,7 +105,7 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                         '<span>'+number+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
-                        '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
+                        '<span>'+item.creationTime+'</span>' +
                         '<span><select id="'+item.id+'" class="sellayui" style="'+oclass+aclass+'">' +
                         '<option value="0">未处理</option>' +
                         '<option value="3">已通报</option>' +
@@ -118,7 +118,7 @@ function getimportlist(maxSorce,minSorce,mobile,pageNum,pageSize,webname,webtype
                         '<span>'+number+'</span>' +
                         '<span>'+item.sorce+'</span>' +
                         '<span class="sc_zdspan" data-href="'+appspsn+'">'+odata+'</span>' +
-                        '<span>'+zdrysc.timechange(item.creationTime)+'</span>' +
+                        '<span>'+item.creationTime+'</span>' +
                         '<span><select id="'+item.id+'" class="sellayui" style="'+oclass+aclass+'">' +
                         '<option value="0">未处理</option>' +
                         '<option value="3">已通报</option>' +
