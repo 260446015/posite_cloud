@@ -1,6 +1,7 @@
 package com.zkjl.posite_cloud.domain.pojo;
 
 import com.alibaba.fastjson.JSONArray;
+import com.zkjl.posite_cloud.common.util.DateUtils;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -34,4 +35,8 @@ public class JobInfo implements Serializable {
      * 3已通报
      */
     private Integer handleMark;
+
+    public String getCreationTime() {
+        return DateUtils.getFormatString(creationTime);
+    }
 }

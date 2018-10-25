@@ -108,7 +108,7 @@ public class EmailUtils {
             return target.getString("webname");
         }).collect(Collectors.toList());
         String plat = StringUtils.join(webname, ",");
-        String date = DateUtils.getFormatString(data.getCreationTime());
+        String date = data.getCreationTime();
         JSONObject param = new JSONObject();
         param.put("title", "重点人网络筛查平台积分预警");
         param.put("content", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;尊敬的用户您好，手机号码" + data.getMobile() + "积分达到" + totalSorce + "分，系统研判为红色预警。注册违法平台有" + plat + "。采集时间为" + date + "。");

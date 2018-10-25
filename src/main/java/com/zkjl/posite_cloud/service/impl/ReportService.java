@@ -28,9 +28,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -83,7 +80,7 @@ public class ReportService extends CreditsService implements IReportService {
         }
         List<JSONObject> jsonObjects = generatorList(list, username);
         JSONObject result = getWarnKindObject(conf, jsonObjects);
-        result.put("creationTime", DateUtils.getFormatString(list.get(0).getCreationTime()));
+        result.put("creationTime", list.get(0).getCreationTime());
         getTotalKindCount(list, conf, result);
         return result;
     }
@@ -227,7 +224,7 @@ public class ReportService extends CreditsService implements IReportService {
         result.put("totalSorce", totalSorce);
         result.put("data", jobInfo.getData());
         result.put("warnLevel", getWarnLevel(totalSorce, conf));
-        result.put("creationTime", DateUtils.getFormatString(jobInfo.getCreationTime()));
+        result.put("creationTime", jobInfo.getCreationTime());
         return result;
     }
 
@@ -290,7 +287,7 @@ public class ReportService extends CreditsService implements IReportService {
         CreditsWarn conf = creditsService.findCreditsWarnConf(username);
         List<JSONObject> jsonObjects = generatorList(datas, username);
         JSONObject result = getWarnKindObject(conf, jsonObjects);
-        result.put("creationTime", DateUtils.getFormatString(datas.get(0).getCreationTime()));
+        result.put("creationTime", datas.get(0).getCreationTime());
         getTotalKindCount(datas, conf, result);
         return result;
     }
