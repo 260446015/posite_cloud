@@ -102,7 +102,7 @@ public class ApiService implements IApiService {
             throw new CustomerException("查询可用数量不足，请联系管理员进行修改");
         }
         searchCount += mobiles.size();
-        log.info("当前用户:" + jobDTO.getUsername() + ",剩余数量:" + searchCount);
+        log.info("当前用户:" + jobDTO.getUsername() + ",剩余数量:" + (totalSerachCount - searchCount));
         byUsername.setSearchCount(searchCount);
         userRepository.save(byUsername);
     }
